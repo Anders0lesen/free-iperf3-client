@@ -405,9 +405,559 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startSequence(title: String, modes: List<TestMode>) {
- ßNº¶‰žËkºwµçEÑ”™Õ¸Á…ÉÍ•1¥Ù•UÁ‘…Ñ”¡µ½‘”èQ•ÍÑ5½‘”°‘…Ñ„è)M=9=‰©•Ð¤è1¥Ù•UÁ‘…Ñ”ì(€€€€€€€Ù…°ÍÕ´€ô‘…Ñ„¹½ÁÑ)M=9=‰©•Ð ‰ÍÕ´ˆ¤(€€€€€€€Ù…°É•Ù•ÉÍ”€ô‘…Ñ„¹½ÁÑ)M=9=‰©•Ð ‰ÍÕµ}‰¥‘¥É}É•Ù•ÉÍ”ˆ¤(€€€€€€€Ù…°•±…ÁÍ•€ôµ…à (€€€€€€€€€€€ÍÕ´ü¹½ÁÑ½Õ‰±” ‰•¹ˆ°€À¸À¤€üè€À¸À°(€€€€€€€€€€€É•Ù•ÉÍ”ü¹½ÁÑ½Õ‰±” ‰•¹ˆ°€À¸À¤€üè€À¸À(€€€€€€€€¤(€€€€€€€Ù…°ÁÉ¥µ…ÉåI…Ñ”€ôÍÕ´ü¹½ÁÑ¥½¹…±½Õ‰±” ‰‰¥ÑÍ}Á•É}Í•½¹ˆ¤(€€€€€€€Ù…°É•Ù•ÉÍ•I…Ñ”€ôÉ•Ù•ÉÍ”ü¹½ÁÑ¥½¹…±½Õ‰±” ‰‰¥ÑÍ}Á•É}Í•½¹ˆ¤(€€€€€€€Ù…°¥¹Ñ•ÉÙ…±Q•áÐ€ô±¥ÍÑ=™9½Ñ9Õ±° (€€€€€€€€€€€ÍÕ´ü¹±•Ðì™½Éµ…Ñ%¹Ñ•ÉÙ…°¡¥Ð°¥˜€¡µ½‘”€ôôQ•ÍÑ5½‘”¹QA}=]91=ñðµ½‘”€ôôQ•ÍÑ5½‘”¹UA}=]91=¤€‹ŠLˆ•±Í”€‹ŠDˆ¤ô°(€€€€€€€€€€€É•Ù•ÉÍ”ü¹±•Ðì™½Éµ…Ñ%¹Ñ•ÉÙ…°¡¥Ð°€‹ŠLˆ¤ô(€€€€€€€€¤¹©½¥¹Q½MÑÉ¥¹œ ‰q¸ˆ¤¹¥™	±…¹¬ì¹Õ±°ô(€€€€€€€É•ÑÕÉ¸Ý¡•¸€¡µ½‘”¤ì(€€€€€€€€€€€Q•ÍÑ5½‘”¹QA}=]91=°Q•ÍÑ5½‘”¹UA}=]91=€´ø1¥Ù•UÁ‘…Ñ” (€€€€€€€€€€€€€€€•±…ÁÍ•‘M•½¹‘Ì€ô•±…ÁÍ•°(€€€€€€€€€€€€€€€‘½Ý¹±½…‘	¥ÑÍA•ÉM•½¹€ôÁÉ¥µ…ÉåI…Ñ”°(€€€€€€€€€€€€€€€©¥ÑÑ•É5Ì€ôÍÕ´ü¹½ÁÑ¥½¹…±½Õ‰±” ‰©¥ÑÑ•É}µÌˆ¤°(€€€€€€€€€€€€€€€±½ÍÍA•É•¹Ð€ôÍÕ´ü¹½ÁÑ¥½¹…±½Õ‰±” ‰±½ÍÑ}Á•É•¹Ðˆ¤°(€€€€€€€€€€€€€€€¥¹Ñ•ÉÙ…±Q•áÐ€ô¥¹Ñ•ÉÙ…±Q•áÐ(€€€€€€€€€€€€¤(€€€€€€€€€€€Q•ÍÑ5½‘”¹QA}	%%IQ%=90€´ø1¥Ù•UÁ‘…Ñ” (€€€€€€€€€€€€€€€•±…ÁÍ•‘M•½¹‘Ì€ô•±…ÁÍ•°(€€€€€€€€€€€€€€€ÕÁ±½…‘	¥ÑÍA•ÉM•½¹€ôÁÉ¥µ…ÉåI…Ñ”°(€€€€€€€€€€€€€€€‘½Ý¹±½…‘	¥ÑÍA•ÉM•½¹€ôÉ•Ù•ÉÍ•I…Ñ”°(€€€€€€€€€€€€€€€¥¹Ñ•ÉÙ…±Q•áÐ€ô¥¹Ñ•ÉÙ…±Q•áÐ(€€€€€€€€€€€€¤(€€€€€€€€€€€•±Í”€´ø1¥Ù•UÁ‘…Ñ” (€€€€€€€€€€€€€€€•±…ÁÍ•‘M•½¹‘Ì€ô•±…ÁÍ•°(€€€€€€€€€€€€€€€ÕÁ±½…‘	¥ÑÍA•ÉM•½¹€ôÁÉ¥µ…ÉåI…Ñ”°(€€€€€€€€€€€€€€€©¥ÑÑ•É5Ì€ôÍÕ´ü¹½ÁÑ¥½¹…±½Õ‰±” ‰©¥ÑÑ•É}µÌˆ¤°(€€€€€€€€€€€€€€€±½ÍÍA•É•¹Ð€ôÍÕ´ü¹½ÁÑ¥½¹…±½Õ‰±” ‰±½ÍÑ}Á•É•¹Ðˆ¤°(€€€€€€€€€€€€€€€¥¹Ñ•ÉÙ…±Q•áÐ€ô¥¹Ñ•ÉÙ…±Q•áÐ(€€€€€€€€€€€€¤(€€€€€€€ô(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸™½Éµ…Ñ%¹Ñ•ÉÙ…°¡ÍÕ´è)M=9=‰©•Ð°‘¥É•Ñ¥½¸èMÑÉ¥¹œ¤èMÑÉ¥¹œì(€€€€€€€Ù…°ÍÑ…ÉÐ€ôÍÕ´¹½ÁÑ½Õ‰±” ‰ÍÑ…ÉÐˆ°€À¸À¤(€€€€€€€Ù…°•¹€ôÍÕ´¹½ÁÑ½Õ‰±” ‰•¹ˆ°€À¸À¤(€€€€€€€Ù…°É…Ñ”€ôÍÕ´¹½ÁÑ½Õ‰±” ‰‰¥ÑÍ}Á•É}Í•½¹ˆ°€À¸À¤(€€€€€€€Ù…°‰åÑ•Ì€ôÍÕ´¹½ÁÑ½Õ‰±” ‰‰åÑ•Ìˆ°€À¸À¤(€€€€€€€É•ÑÕÉ¸‰Õ¥±‘MÑÉ¥¹œì(€€€€€€€€€€€…ÁÁ•¹¡™½Éµ…Ñ9Õµ‰•È¡ÍÑ…ÉÐ°€È¤¤¹…ÁÁ•¹ ‹ŠLˆ¤¹…ÁÁ•¹¡™½Éµ…Ñ9Õµ‰•È¡•¹°€È¤¤¹…ÁÁ•¹ ˆÌ€€ˆ¤(€€€€€€€€€€€…ÁÁ•¹¡‘¥É•Ñ¥½¸¤¹…ÁÁ•¹ ˆ€ˆ¤¹…ÁÁ•¹¡™½Éµ…Ñ	¥ÑÍA•ÉM•½¹¡É…Ñ”¤¤(€€€€€€€€€€€¥˜€¡‰åÑ•Ì€ø€À¤…ÁÁ•¹ ˆ€€ˆ¤¹…ÁÁ•¹¡™½Éµ…Ñ	åÑ•Ì¡‰åÑ•Ì¤¤(€€€€€€€€€€€ÍÕ´¹½ÁÑ¥½¹…±½Õ‰±” ‰©¥ÑÑ•É}µÌˆ¤ü¹±•Ðì…ÁÁ•¹ ˆ€©¥ÑÑ•È€ˆ¤¹…ÁÁ•¹¡™½Éµ…Ñ5¥±±¥Í•½¹‘Ì¡¥Ð¤¤ô(€€€€€€€€€€€ÍÕ´¹½ÁÑ¥½¹…±½Õ‰±” ‰±½ÍÑ}Á•É•¹Ðˆ¤ü¹±•Ðì…ÁÁ•¹ ˆ€±½ÍÌ€ˆ¤¹…ÁÁ•¹¡™½Éµ…ÑA•É•¹Ð¡¥Ð¤¤ô(€€€€€€€ô(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸Á…ÉÍ•¥¹…±I•ÍÕ±Ð (€€€€€€€µ½‘”èQ•ÍÑ5½‘”°(€€€€€€€•¹è)M=9=‰©•Ð°(€€€€€€€½¹¹•Ñ¥½¸èMÑÉ¥¹œü°(€€€€€€€É…Ý=ÕÑÁÕÐèMÑÉ¥¹œ(€€€€¤èQ•ÍÑI•ÍÕ±Ðì(€€€€€€€Ù…°Í•¹Ð€ô•¹¹½ÁÑ)M=9=‰©•Ð ‰ÍÕµ}Í•¹Ðˆ¤(€€€€€€€Ù…°É••¥Ù•€ô•¹¹½ÁÑ)M=9=‰©•Ð ‰ÍÕµ}É••¥Ù•ˆ¤(€€€€€€€É•ÑÕÉ¸Ý¡•¸€¡µ½‘”¤ì(€€€€€€€€€€€Q•ÍÑ5½‘”¹QP€´øQ•ÍÑI•ÍÕ±Ð¡µ½‘”°½¹¹•Ñ¥½¸°É…Ý=ÕÑÁÕÐ€ôÉ…Ý=ÕÑÁÕÐ¤(€€€€€€€€€€€Q•ÍÑ5½‘”¹QA}=]91=€´øQ•ÍÑI•ÍÕ±Ð (€€€€€€€€€€€€€€€µ½‘”°½¹¹•Ñ¥½¸°(€€€€€€€€€€€€€€€‘½Ý¹±½…‘	¥ÑÍA•ÉM•½¹€ôÉ••¥Ù•¹É•ÅÕ¥É•½Õ‰±” ‰‰¥ÑÍ}Á•É}Í•½¹ˆ°µ½‘”¤°(€€€€€€€€€€€€€€€É…Ý=ÕÑÁÕÐ€ôÉ…Ý=ÕÑÁÕÐ(€€€€€€€€€€€€¤(€€€€€€€€€€€Q•ÍÑ5½‘”¹QA}UA1=€´øQ•ÍÑI•ÍÕ±Ð (€€€€€€€€€€€€€€€µ½‘”°½¹¹•Ñ¥½¸°(€€€€€€€€€€€€€€€ÕÁ±½…‘	¥ÑÍA•ÉM•½¹€ôÍ•¹Ð¹É•ÅÕ¥É•½Õ‰±” ‰‰¥ÑÍ}Á•É}Í•½¹ˆ°µ½‘”¤°(€€€€€€€€€€€€€€€É…Ý=ÕÑÁÕÐ€ôÉ…Ý=ÕÑÁÕÐ(€€€€€€€€€€€€¤(€€€€€€€€€€€Q•ÍÑ5½‘”¹QA}	%%IQ%=90€´øì(€€€€€€€€€€€€€€€Ù…°É•Ù•ÉÍ•I••¥Ù•€ô•¹¹½ÁÑ)M=9=‰©•Ð ‰ÍÕµ}É••¥Ù•‘}‰¥‘¥É}É•Ù•ÉÍ”ˆ¤(€€€€€€€€€€€€€€€€€€€€üèÑ¡É½Ü%Á•É™…¥±ÕÉ” (€€€€€€€€€€€€€€€€€€€€€€€€‰Q¡”Í•ÉÙ•È‘¥¹½ÐÉ•ÑÕÉ¸‰¥‘¥É•Ñ¥½¹…°É•ÍÕ±ÑÌìÕÁ‘…Ñ”¥ÑÌ¥Á•É˜ÌÙ•ÉÍ¥½¸ˆ°(€€€€€€€€€€€€€€€€€€€€€€€É…Ý=ÕÑÁÕÐ(€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€Q•ÍÑI•ÍÕ±Ð (€€€€€€€€€€€€€€€€€€€µ½‘”°½¹¹•Ñ¥½¸°(€€€€€€€€€€€€€€€€€€€ÕÁ±½…‘	¥ÑÍA•ÉM•½¹€ôÍ•¹Ð¹É•ÅÕ¥É•½Õ‰±” ‰‰¥ÑÍ}Á•É}Í•½¹ˆ°µ½‘”¤°(€€€€€€€€€€€€€€€€€€€‘½Ý¹±½…‘	¥ÑÍA•ÉM•½¹€ôÉ•Ù•ÉÍ•I••¥Ù•¹É•ÅÕ¥É•½Õ‰±” ‰‰¥ÑÍ}Á•É}Í•½¹ˆ°µ½‘”¤°(€€€€€€€€€€€€€€€€€€€É…Ý=ÕÑÁÕÐ€ôÉ…Ý=ÕÑÁÕÐ(€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€ô(€€€€€€€€€€€Q•ÍÑ5½‘”¹UA}=]91=°Q•ÍÑ5½‘”¹UA}UA1=€´øì(€€€€€€€€€€€€€€€Ù…°ÍÕµµ…Éä€ôÉ••¥Ù•(€€€€€€€€€€€€€€€€€€€€üèÑ¡É½Ü%Á•É™…¥±ÕÉ” ‰¥Á•É˜Ì‘¥¹½ÐÉ•ÑÕÉ¸U@É••¥Ù•ÈÍÑ…Ñ¥ÍÑ¥Ìˆ°É…Ý=ÕÑÁÕÐ¤(€€€€€€€€€€€€€€€Ù…°É…Ñ”€ôÍÕµµ…Éä¹É•ÅÕ¥É•½Õ‰±” ‰‰¥ÑÍ}Á•É}Í•½¹ˆ°µ½‘”¤(€€€€€€€€€€€€€€€Q•ÍÑI•ÍÕ±Ð (€€€€€€€€€€€€€€€€€€€µ½‘”°½¹¹•Ñ¥½¸°(€€€€€€€€€€€€€€€€€€€ÕÁ±½…‘	¥ÑÍA•ÉM•½¹€ôÉ…Ñ”¹Ñ…­•%˜ìµ½‘”€ôôQ•ÍÑ5½‘”¹UA}UA1=ô°(€€€€€€€€€€€€€€€€€€€‘½Ý¹±½…‘	¥ÑÍA•ÉM•½¹€ôÉ…Ñ”¹Ñ…­•%˜ìµ½‘”€ôôQ•ÍÑ5½‘”¹UA}=]91=ô°(€€€€€€€€€€€€€€€€€€€©¥ÑÑ•É5Ì€ôÍÕµµ…Éä¹½ÁÑ¥½¹…±½Õ‰±” ‰©¥ÑÑ•É}µÌˆ¤€üè€À¸À°(€€€€€€€€€€€€€€€€€€€±½ÍÍA•É•¹Ð€ôÍÕµµ…Éä¹½ÁÑ¥½¹…±½Õ‰±” ‰±½ÍÑ}Á•É•¹Ðˆ¤€üè€À¸À°(€€€€€€€€€€€€€€€€€€€Á…­•ÑÌ€ôÍÕµµ…Éä¹½ÁÑ1½¹œ ‰Á…­•ÑÌˆ°€À¤¹Ñ…­•%˜ì¥Ð€ø€Àô°(€€€€€€€€€€€€€€€€€€€É…Ý=ÕÑÁÕÐ€ôÉ…Ý=ÕÑÁÕÐ(€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€ô(€€€€€€€ô(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸)M=9=‰©•Ðü¹É•ÅÕ¥É•½Õ‰±”¡­•äèMÑÉ¥¹œ°µ½‘”èQ•ÍÑ5½‘”¤è½Õ‰±”ì(€€€€€€€Ù…°Ù…±Õ”€ôÑ¡¥Ìü¹½ÁÑ¥½¹…±½Õ‰±”¡­•ä¤(€€€€€€€É•ÑÕÉ¸Ù…±Õ”€üèÑ¡É½Ü%±±•…±MÑ…Ñ•á•ÁÑ¥½¸ ‰5¥ÍÍ¥¹œ€‘­•ä¥¸€‘íµ½‘”¹±…‰•±ôÉ•ÍÕ±Ðˆ¤(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸)M=9=‰©•Ð¹½ÁÑ¥½¹…±½Õ‰±”¡­•äèMÑÉ¥¹œ¤è½Õ‰±”ü€ô(€€€€€€€¥˜€¡¡…Ì¡­•ä¤€˜˜€…¥Í9Õ±°¡­•ä¤¤½ÁÑ½Õ‰±”¡­•ä¤•±Í”¹Õ±°((€€€ÁÉ¥Ù…Ñ”™Õ¸Í¡½ÝMÕ•ÍÌ¡Ñ¥Ñ±”èMÑÉ¥¹œ°½¹™¥œèQ•ÍÑ½¹™¥œ°É•ÍÕ±ÑÌè1¥ÍÐñQ•ÍÑI•ÍÕ±Ðø¤ì(€€€€€€€ÁÉ½É•ÍÌ¹ÁÉ½É•ÍÌ€ôÁÉ½É•ÍÌ¹µ…à(€€€€€€€Í•ÑMÑ…ÑÕÌ ‰½µÁ±•Ñ”ƒŠrLˆ°€ˆŒØÙ	Ùˆ¤(€€€€€€€±¥Ù”¹Ñ•áÐ€ô€‰±°É•ÅÕ•ÍÑ•Ñ•ÍÑÌ½µÁ±•Ñ•ÍÕ•ÍÍ™Õ±±ä¸ˆ(€€€€€€€É•ÍÕ±Ð¹Ñ•áÐ€ô™½Éµ…ÑI•ÍÕ±ÑÌ¡Ñ¥Ñ±”°½¹™¥œ°É•ÍÕ±ÑÌ¤(€€€€€€€Í¡…É•Q•áÐ€ô‰Õ¥±‘M¡…É•I•Á½ÉÐ¡Ñ¥Ñ±”°½¹™¥œ°É•ÍÕ±ÑÌ°¥¹Ñ•ÉÙ…±1¥¹•Ì¹©½¥¹Q½MÑÉ¥¹œ ‰q¸ˆ¤¤(€€€€€€€‘•Ñ…¥±Ì¹Ñ•áÐ€ôÍ¡…É•Q•áÐ(€€€€€€€½ÁåM¡…É”¹Ñ•áÐ€ô€‰=AdIMU1QLˆ(€€€€€€€½ÁåM¡…É”¹Ù¥Í¥‰¥±¥Ñä€ôY¥•Ü¹Y%M%	1(€€€€€€€Ñ½±••Ñ…¥±Ì¹Ù¥Í¥‰¥±¥Ñä€ôY¥•Ü¹Y%M%	1(€€€€€€€Í•Ñ	ÕÍä¡™…±Í”¤(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸Í¡½Ý…¥±ÕÉ” (€€€€€€€Ñ¥Ñ±”èMÑÉ¥¹œ°(€€€€€€€½¹™¥œèQ•ÍÑ½¹™¥œ°(€€€€€€€µ½‘”èQ•ÍÑ5½‘”°(€€€€€€€½µÁ±•Ñ•è1¥ÍÐñQ•ÍÑI•ÍÕ±Ðø°(€€€€€€€•ÉÉ½Èèá•ÁÑ¥½¸(€€€€¤ì(€€€€€€€Í•ÑMÑ…ÑÕÌ ‰…¥±•ƒ
-Ü€‘íµ½‘”¹±…‰•±ôˆ°€ˆÔÌÔÀˆ¤(€€€€€€€±¥Ù”¹Ñ•áÐ€ô™É¥•¹‘±åÉÉ½È¡•ÉÉ½È¤(€€€€€€€É•ÍÕ±Ð¹Ñ•áÐ€ô‰Õ¥±‘MÑÉ¥¹œì(€€€€€€€€€€€…ÁÁ•¹ ‰QMP%1q¹q¸ˆ¤(€€€€€€€€€€€…ÁÁ•¹¡™É¥•¹‘±åÉÉ½È¡•ÉÉ½È¤¤(€€€€€€€€€€€¥˜€¡½µÁ±•Ñ•¹¥Í9½ÑµÁÑä ¤¤ì(€€€€€€€€€€€€€€€…ÁÁ•¹ ‰q¹q¹½µÁ±•Ñ•‰•™½É”Ñ¡”™…¥±ÕÉ”éq¸ˆ¤(€€€€€€€€€€€€€€€…ÁÁ•¹¡™½Éµ…ÑI•ÍÕ±ÑÌ¡Ñ¥Ñ±”°½¹™¥œ°½µÁ±•Ñ•¤¤(€€€€€€€€€€€ô(€€€€€€€€€€€…ÁÁ•¹ ‰q¹q¹UÍ”=Ad%9=MQ%LÑ¼Í¡…É”Ñ¡”Ñ•¡¹¥…°‘•Ñ…¥±Ì¸ˆ¤(€€€€€€€ô(€€€€€€€Í¡…É•Q•áÐ€ô‰Õ¥±‘¥…¹½ÍÑ¥I•Á½ÉÐ¡Ñ¥Ñ±”°½¹™¥œ°µ½‘”°½µÁ±•Ñ•°•ÉÉ½È¤(€€€€€€€‘•Ñ…¥±Ì¹Ñ•áÐ€ôÍ¡…É•Q•áÐ(€€€€€€€‘•Ñ…¥±Ì¹Ù¥Í¥‰¥±¥Ñä€ôY¥•Ü¹=9(€€€€€€€½ÁåM¡…É”¹Ñ•áÐ€ô€‰=Ad%9=MQ%Lˆ(€€€€€€€½ÁåM¡…É”¹Ù¥Í¥‰¥±¥Ñä€ôY¥•Ü¹Y%M%	1(€€€€€€€Ñ½±••Ñ…¥±Ì¹Ñ•áÐ€ô€‰M!=\Q%1Lˆ(€€€€€€€Ñ½±••Ñ…¥±Ì¹Ù¥Í¥‰¥±¥Ñä€ôY¥•Ü¹Y%M%	1(€€€€€€€Í•Ñ	ÕÍä¡™…±Í”¤(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸™½Éµ…ÑI•ÍÕ±ÑÌ (€€€€€€€Ñ¥Ñ±”èMÑÉ¥¹œ°(€€€€€€€½¹™¥œèQ•ÍÑ½¹™¥œ°(€€€€€€€É•ÍÕ±ÑÌè1¥ÍÐñQ•ÍÑI•ÍÕ±Ðø(€€€€¤èMÑÉ¥¹œ€ô‰Õ¥±‘MÑÉ¥¹œì(€€€€€€€…ÁÁ•¹¡Ñ¥Ñ±”¤¹…ÁÁ•¹ ˆIMU1QMq¸ˆ¤(€€€€€€€É•ÍÕ±ÑÌ¹™½É… ìÑ•ÍÐ€´ø(€€€€€€€€€€€…ÁÁ•¹ ‰q¸ˆ¤¹…ÁÁ•¹¡™½Éµ…ÑI•ÍÕ±Ð¡Ñ•ÍÐ°½¹™¥œ¤¤¹…ÁÁ•¹ ‰q¸ˆ¤(€€€€€€€ô(€€€ô¹ÑÉ¥µ¹ ¤((€€€ÁÉ¥Ù…Ñ”™Õ¸™½Éµ…ÑI•ÍÕ±Ð¡Ñ•ÍÐèQ•ÍÑI•ÍÕ±Ð°½¹™¥œèQ•ÍÑ½¹™¥œ¤èMÑÉ¥¹œ€ôÝ¡•¸€¡Ñ•ÍÐ¹µ½‘”¤ì(€€€€€€€Q•ÍÑ5½‘”¹QP€´ø‰Õ¥±‘MÑÉ¥¹œì(€€€€€€€€€€€…ÁÁ•¹ ‹ŠrL%AIÌMIYHQQˆ¤(€€€€€€€€€€€Ñ•ÍÐ¹½¹¹•Ñ¥½¸ü¹±•Ðì…ÁÁ•¹ ‰q¸€½¹¹•Ñ•Ñ¼€ˆ¤¹…ÁÁ•¹¡¥Ð¤ô(€€€€€€€€€€€…ÁÁ•¹ ‰q¸€½¹ÑÉ½°…¹‘…Ñ„Ñ•ÍÐÍÕ••‘•ˆ¤(€€€€€€€ô(€€€€€€€Q•ÍÑ5½‘”¹QA}=]91=€´ø€‰Q@‘½Ý¹±½…‘q¸€€‘í™½Éµ…Ñ	¥ÑÍA•ÉM•½¹¡Ñ•ÍÐ¹‘½Ý¹±½…‘	¥ÑÍA•ÉM•½¹„„¥ôˆ(€€€€€€€Q•ÍÑ5½‘”¹QA}UA1=€´ø€‰Q@ÕÁ±½…‘q¸€€‘í™½Éµ…Ñ	¥ÑÍA•ÉM•½¹¡Ñ•ÍÐ¹ÕÁ±½…‘	¥ÑÍA•ÉM•½¹„„¥ôˆ(€€€€€€€Q•ÍÑ5½‘”¹QA}	%%IQ%=90€´ø‰Õ¥±‘MÑÉ¥¹œì(€€€€€€€€€€€…ÁÁ•¹ ‰Q@‰¥‘¥É•Ñ¥½¹…°€¡Í¥µÕ±Ñ…¹•½ÕÌ¤ˆ¤(€€€€€€€€€€€…ÁÁ•¹ ‰q¸€½Ý¹±½…è€ˆ¤¹…ÁÁ•¹¡™½Éµ…Ñ	¥ÑÍA•ÉM•½¹¡Ñ•ÍÐ¹‘½Ý¹±½…‘	¥ÑÍA•ÉM•½¹„„¤¤(€€€€€€€€€€€…ÁÁ•¹ ‰q¸€UÁ±½…è€€€ˆ¤¹…ÁÁ•¹¡™½Éµ…Ñ	¥ÑÍA•ÉM•½¹¡Ñ•ÍÐ¹ÕÁ±½…‘	¥ÑÍA•ÉM•½¹„„¤¤(€€€€€€€ô(€€€€€€€Q•ÍÑ5½‘”¹UA}=]91=°Q•ÍÑ5½‘”¹UA}UA1=€´ø™½Éµ…ÑU‘ÁI•ÍÕ±Ð¡Ñ•ÍÐ°½¹™¥œ¤(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸™½Éµ…ÑU‘ÁI•ÍÕ±Ð¡Ñ•ÍÐèQ•ÍÑI•ÍÕ±Ð°½¹™¥œèQ•ÍÑ½¹™¥œ¤èMÑÉ¥¹œì(€€€€€€€Ù…°É…Ñ”€ôÑ•ÍÐ¹‘½Ý¹±½…‘	¥ÑÍA•ÉM•½¹€üèÑ•ÍÐ¹ÕÁ±½…‘	¥ÑÍA•ÉM•½¹€üè€À¸À(€€€€€€€Ù…°€¡Í½É”°É…‘”¤€ôÍ½É•U‘À¡Ñ•ÍÐ°½¹™¥œ¤(€€€€€€€Ù…°‘¥É•Ñ¥½¸€ô¥˜€¡Ñ•ÍÐ¹µ½‘”€ôôQ•ÍÑ5½‘”¹UA}=]91=¤€‰‘½Ý¹±½…ˆ•±Í”€‰ÕÁ±½…ˆ(€€€€€€€É•ÑÕÉ¸‰Õ¥±‘MÑÉ¥¹œì(€€€€€€€€€€€…ÁÁ•¹ ‰U@€ˆ¤¹…ÁÁ•¹¡‘¥É•Ñ¥½¸¤¹…ÁÁ•¹ ˆÅÕ…±¥Ñäˆ¤(€€€€€€€€€€€…ÁÁ•¹ ‰q¸€M½É”è€ˆ¤¹…ÁÁ•¹¡Í½É”¤¹…ÁÁ•¹ ˆ¼ÄÀÀƒ
-Ü€ˆ¤¹…ÁÁ•¹¡É…‘”¤(€€€€€€€€€€€…ÁÁ•¹ ‰q¸€I••¥Ù•è€ˆ¤¹…ÁÁ•¹¡™½Éµ…Ñ	¥ÑÍA•ÉM•½¹¡É…Ñ”¤¤(€€€€€€€€€€€€€€€€¹…ÁÁ•¹ ˆƒ
-ÜQ…É•Ðè€ˆ¤¹…ÁÁ•¹¡½¹™¥œ¹Õ‘ÁQ…É•Ñ5‰ÁÌ¤¹…ÁÁ•¹ ˆ5‰¥Ð½Ìˆ¤(€€€€€€€€€€€…ÁÁ•¹ ‰q¸€1½ÍÌè€ˆ¤¹…ÁÁ•¹¡™½Éµ…ÑA•É•¹Ð¡Ñ•ÍÐ¹±½ÍÍA•É•¹Ð€üè€À¸À¤¤(€€€€€€€€€€€€€€€€¹…ÁÁ•¹ ˆƒ
-Ü)¥ÑÑ•Èè€ˆ¤¹…ÁÁ•¹¡™½Éµ…Ñ5¥±±¥Í•½¹‘Ì¡Ñ•ÍÐ¹©¥ÑÑ•É5Ì€üè€À¸À¤¤(€€€€€€€€€€€Ñ•ÍÐ¹Á…­•ÑÌü¹±•Ðì…ÁÁ•¹ ˆƒ
-ÜA…­•ÑÌè€ˆ¤¹…ÁÁ•¹¡¥Ð¤ô(€€€€€€€ô(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸Í½É•U‘À¡Ñ•ÍÐèQ•ÍÑI•ÍÕ±Ð°½¹™¥œèQ•ÍÑ½¹™¥œ¤èA…¥Èñ%¹Ð°MÑÉ¥¹œøì(€€€€€€€Ù…°É••¥Ù•‘I…Ñ”€ôÑ•ÍÐ¹‘½Ý¹±½…‘	¥ÑÍA•ÉM•½¹€üèÑ•ÍÐ¹ÕÁ±½…‘	¥ÑÍA•ÉM•½¹€üè€À¸À(€€€€€€€Ù…°Ñ…É•ÑI…Ñ”€ô½¹™¥œ¹Õ‘ÁQ…É•Ñ5‰ÁÌ€¨€Å|ÀÀÁ|ÀÀÀ¸À(€€€€€€€Ù…°‘•±¥Ù•ÉåI…Ñ¥¼€ô¥˜€¡Ñ…É•ÑI…Ñ”€ø€À¤É••¥Ù•‘I…Ñ”€¼Ñ…É•ÑI…Ñ”•±Í”€Ä¸À(€€€€€€€Ù…°É…Ñ•A•¹…±Ñä€ô¥˜€¡‘•±¥Ù•ÉåI…Ñ¥¼€øô€À¸äÔ¤€À¸À•±Í”µ¥¸ ÐÀ¸À°€ À¸äÔ€´‘•±¥Ù•ÉåI…Ñ¥¼¤€¨€àÀ¸À¤(€€€€€€€Ù…°±½ÍÍA•¹…±Ñä€ôµ¥¸ àÀ¸À°€¡Ñ•ÍÐ¹±½ÍÍA•É•¹Ð€üè€À¸À¤€¨€ÈÀ¸À¤(€€€€€€€Ù…°©¥ÑÑ•ÉA•¹…±Ñä€ôµ¥¸ ÈÀ¸À°µ…à À¸À°€¡Ñ•ÍÐ¹©¥ÑÑ•É5Ì€üè€À¸À¤€´€Ô¸À¤€¨€À¸à¤(€€€€€€€Ù…°Í½É”€ô€ ÄÀÀ¸À€´É…Ñ•A•¹…±Ñä€´±½ÍÍA•¹…±Ñä€´©¥ÑÑ•ÉA•¹…±Ñä¤(€€€€€€€€€€€€¹É½Õ¹‘Q½%¹Ð ¤¹½•É•%¸ À°€ÄÀÀ¤(€€€€€€€Ù…°É…‘”€ôÝ¡•¸ì(€€€€€€€€€€€Í½É”€øô€äÀ€´ø€‰a119Pˆ(€€€€€€€€€€€Í½É”€øô€ÜÔ€´ø€‰==ˆ(€€€€€€€€€€€Í½É”€øô€ÔÀ€´ø€‰%Hˆ(€€€€€€€€€€€•±Í”€´ø€‰A==Hˆ(€€€€€€€ô(€€€€€€€É•ÑÕÉ¸Í½É”Ñ¼É…‘”(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸‰Õ¥±‘M¡…É•I•Á½ÉÐ (€€€€€€€Ñ¥Ñ±”èMÑÉ¥¹œ°(€€€€€€€½¹™¥œèQ•ÍÑ½¹™¥œ°(€€€€€€€É•ÍÕ±ÑÌè1¥ÍÐñQ•ÍÑI•ÍÕ±Ðø°(€€€€€€€¥¹Ñ•ÉÙ…±=ÕÑÁÕÐèMÑÉ¥¹œ(€€€€¤èMÑÉ¥¹œ€ô‰Õ¥±‘MÑÉ¥¹œì(€€€€€€€…ÁÁ•¹‘1¥¹” ‰É•”¥Á•É˜Ì±¥•¹Ð€‘Ñ¥Ñ±”É•Á½ÉÐˆ¤(€€€€€€€…ÁÁ•¹‘1¥¹” ‰Q¥µ”€¡UQ¤è€‘í%¹ÍÑ…¹Ð¹¹½Ü ¥ôˆ¤(€€€€€€€…ÁÁ•¹‘1¥¹” ‰M•ÉÙ•Èè€‘í½¹™¥œ¹¡½ÍÑ¹…µ•ôè‘í½¹™¥œ¹Á½ÉÑôˆ¤(€€€€€€€…ÁÁ•¹‘1¥¹” ‰U@Ñ…É•Ðè€‘í½¹™¥œ¹Õ‘ÁQ…É•Ñ5‰ÁÍô5‰¥Ð½Ìˆ¤(€€€€€€€…ÁÁ•¹‘1¥¹” ¤(€€€€€€€…ÁÁ•¹¡™½Éµ…ÑI•ÍÕ±ÑÌ¡Ñ¥Ñ±”°½¹™¥œ°É•ÍÕ±ÑÌ¤¤(€€€€€€€…ÁÁ•¹‘1¥¹” ¤(€€€€€€€…ÁÁ•¹‘1¥¹” ¤(€€€€€€€…ÁÁ•¹‘1¥¹” ‰½µµ…¹‘Ìèˆ¤(€€€€€€€É•ÍÕ±ÑÌ¹™½É… ì…ÁÁ•¹‘1¥¹”¡™½Éµ…Ñ¥ÍÁ±…å½µµ…¹¡½¹™¥œ°¥Ð¹µ½‘”¤¤ô(€€€€€€€¥˜€¡¥¹Ñ•ÉÙ…±=ÕÑÁÕÐ¹¥Í9½Ñ	±…¹¬ ¤¤ì(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰A•ÈµÍ•½¹¥¹Ñ•ÉÙ…±Ìèˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹”¡¥¹Ñ•ÉÙ…±=ÕÑÁÕÐ¤(€€€€€€€ô(€€€€€€€…ÁÁ•¹‘1¥¹” ¤(€€€€€€€…ÁÁ•¹ ‰U@Í½É”¥Ì…¸…ÁÀ¡•ÕÉ¥ÍÑ¥Œ‰…Í•½¸É••¥Ù•É…Ñ”°Á…­•Ð±½ÍÌ°…¹©¥ÑÑ•È¸ˆ¤(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸‰Õ¥±‘¥…¹½ÍÑ¥I•Á½ÉÐ (€€€€€€€Ñ¥Ñ±”èMÑÉ¥¹œ°(€€€€€€€½¹™¥œèQ•ÍÑ½¹™¥œ°(€€€€€€€µ½‘”èQ•ÍÑ5½‘”°(€€€€€€€½µÁ±•Ñ•è1¥ÍÐñQ•ÍÑI•ÍÕ±Ðø°(€€€€€€€•ÉÉ½Èèá•ÁÑ¥½¸(€€€€¤èMÑÉ¥¹œì(€€€€€€€Ù…°Á…­…•%¹™¼€ôÁ…­…•5…¹…•È¹•ÑA…­…•%¹™¼¡Á…­…•9…µ”°€À¤(€€€€€€€É•ÑÕÉ¸‰Õ¥±‘MÑÉ¥¹œì(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰É•”¥Á•É˜Ì±¥•¹Ð‘¥…¹½ÍÑ¥ŒÉ•Á½ÉÐˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰AÉ¥Ù…äèÉ•Ù¥•ÜÑ¡”Í•ÉÙ•È…¹‘•Ù¥”™¥•±‘Ì‰•™½É”Í¡…É¥¹œÁÕ‰±¥±äˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰Q¥µ”€¡UQ¤è€‘í%¹ÍÑ…¹Ð¹¹½Ü ¥ôˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰ÁÀè€‘íÁ…­…•%¹™¼¹Ù•ÉÍ¥½¹9…µ•ô€ ‘íÁ…­…•%¹™¼¹±½¹Y•ÉÍ¥½¹½‘•ô¤ˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰¹¥¹”è¥Á•É˜Ì€Ì¸ÈÄˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰¹‘É½¥è€‘í	Õ¥±¹YIM%=8¹I1Mô€¡A$€‘í	Õ¥±¹YIM%=8¹M-}%9Qô¤ˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰•Ù¥”è€‘í	Õ¥±¹59UQUIIô€‘í	Õ¥±¹5=1ôˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰	%Ìè€‘í	Õ¥±¹MUAA=IQ}	%L¹©½¥¹Q½MÑÉ¥¹œ ¥ôˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰M•ÅÕ•¹”è€‘Ñ¥Ñ±”ˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰…¥±•ÍÑ…”è€‘íµ½‘”¹±…‰•±ôˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰M•ÉÙ•Èè€‘í½¹™¥œ¹¡½ÍÑ¹…µ•ôè‘í½¹™¥œ¹Á½ÉÑôˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰U@Ñ…É•Ðè€‘í½¹™¥œ¹Õ‘ÁQ…É•Ñ5‰ÁÍô5‰¥Ð½Ìˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰ÉÉ½ÈÑåÁ”è€‘í•ÉÉ½È¹©…Ù…±…ÍÌ¹¹…µ•ôˆ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰ÉÉ½Èè€‘í•ÉÉ½È¹µ•ÍÍ…”€üè€ˆ¡¹¼µ•ÍÍ…”¤‰ôˆ¤(€€€€€€€€€€€¥˜€¡½µÁ±•Ñ•¹¥Í9½ÑµÁÑä ¤¤ì(€€€€€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ¤(€€€€€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰½µÁ±•Ñ•É•ÍÕ±ÑÌèˆ¤(€€€€€€€€€€€€€€€…ÁÁ•¹‘1¥¹”¡™½Éµ…ÑI•ÍÕ±ÑÌ¡Ñ¥Ñ±”°½¹™¥œ°½µÁ±•Ñ•¤¤(€€€€€€€€€€€ô(€€€€€€€€€€€¥˜€¡•ÉÉ½È¥Ì%Á•É™…¥±ÕÉ”€˜˜•ÉÉ½È¹É…Ý=ÕÑÁÕÐ¹¥Í9½Ñ	±…¹¬ ¤¤ì(€€€€€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ¤(€€€€€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰I…Ü¥Á•É˜Ì½ÕÑÁÕÐèˆ¤(€€€€€€€€€€€€€€€…ÁÁ•¹‘1¥¹”¡•ÉÉ½È¹É…Ý=ÕÑÁÕÐ¹ÑÉ¥´ ¤¤(€€€€€€€€€€€ô(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ¤(€€€€€€€€€€€…ÁÁ•¹‘1¥¹” ‰MÑ…¬ÑÉ…”èˆ¤(€€€€€€€€€€€…ÁÁ•¹¡•ÉÉ½È¹ÍÑ…­QÉ…•Q½MÑÉ¥¹œ ¤¤(€€€€€€€ô(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸™É¥•¹‘±åÉÉ½È¡•ÉÉ½Èèá•ÁÑ¥½¸¤èMÑÉ¥¹œ€ô(€€€€€€€•ÉÉ½È¹µ•ÍÍ…”ü¹±¥¹•M•ÅÕ•¹” ¤ü¹™¥ÉÍÑ=É9Õ±°ì¥Ð¹¥Í9½Ñ	±…¹¬ ¤ô(€€€€€€€€€€€€üè•ÉÉ½È¹©…Ù…±…ÍÌ¹Í¥µÁ±•9…µ”((€€€ÁÉ¥Ù…Ñ”™Õ¸™½Éµ…Ñ	¥ÑÍA•ÉM•½¹¡‰¥ÑÍA•ÉM•½¹è½Õ‰±”¤èMÑÉ¥¹œ€ôÝ¡•¸ì(€€€€€€€‰¥ÑÍA•ÉM•½¹€øô€Å|ÀÀÁ|ÀÀÁ|ÀÀÀ€´ø™½Éµ…Ñ9Õµ‰•È¡‰¥ÑÍA•ÉM•½¹€¼€Å|ÀÀÁ|ÀÀÁ|ÀÀÀ°€È¤€¬€ˆ‰¥Ð½Ìˆ(€€€€€€€‰¥ÑÍA•ÉM•½¹€øô€Å|ÀÀÁ|ÀÀÀ€´ø™½Éµ…Ñ9Õµ‰•È¡‰¥ÑÍA•ÉM•½¹€¼€Å|ÀÀÁ|ÀÀÀ°€Ä¤€¬€ˆ5‰¥Ð½Ìˆ(€€€€€€€‰¥ÑÍA•ÉM•½¹€øô€Å|ÀÀÀ€´ø™½Éµ…Ñ9Õµ‰•È¡‰¥ÑÍA•ÉM•½¹€¼€Å|ÀÀÀ°€Ä¤€¬€ˆ-‰¥Ð½Ìˆ(€€€€€€€•±Í”€´ø™½Éµ…Ñ9Õµ‰•È¡‰¥ÑÍA•ÉM•½¹°€À¤€¬€ˆ‰¥Ð½Ìˆ(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸™½Éµ…Ñ	åÑ•Ì¡‰åÑ•Ìè½Õ‰±”¤èMÑÉ¥¹œ€ôÝ¡•¸ì(€€€€€€€‰åÑ•Ì€øô€Å|ÀÀÁ|ÀÀÁ|ÀÀÀ€´ø™½Éµ…Ñ9Õµ‰•È¡‰åÑ•Ì€¼€Å|ÀÀÁ|ÀÀÁ|ÀÀÀ°€È¤€¬€ˆˆ(€€€€€€€‰åÑ•Ì€øô€Å|ÀÀÁ|ÀÀÀ€´ø™½Éµ…Ñ9Õµ‰•È¡‰åÑ•Ì€¼€Å|ÀÀÁ|ÀÀÀ°€Ä¤€¬€ˆ5ˆ(€€€€€€€‰åÑ•Ì€øô€Å|ÀÀÀ€´ø™½Éµ…Ñ9Õµ‰•È¡‰åÑ•Ì€¼€Å|ÀÀÀ°€Ä¤€¬€ˆ-ˆ(€€€€€€€•±Í”€´ø™½Éµ…Ñ9Õµ‰•È¡‰åÑ•Ì°€À¤€¬€ˆˆ(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸™½Éµ…Ñ5¥±±¥Í•½¹‘Ì¡Ù…±Õ”è½Õ‰±”¤èMÑÉ¥¹œ€ô™½Éµ…Ñ9Õµ‰•È¡Ù…±Õ”°€È¤€¬€ˆµÌˆ((€€€ÁÉ¥Ù…Ñ”™Õ¸™½Éµ…ÑA•É•¹Ð¡Ù…±Õ”è½Õ‰±”¤èMÑÉ¥¹œ€ô™½Éµ…Ñ9Õµ‰•È¡Ù…±Õ”°€È¤€¬€ˆ”ˆ((€€€ÁÉ¥Ù…Ñ”™Õ¸™½Éµ…Ñ9Õµ‰•È¡Ù…±Õ”è½Õ‰±”°‘•¥µ…±Ìè%¹Ð¤èMÑÉ¥¹œ€ô(€€€€€€€MÑÉ¥¹œ¹™½Éµ…Ð¡1½…±”¹UL°€ˆ”¸‘í‘•¥µ…±Íõ˜ˆ°Ù…±Õ”¤((€€€ÁÉ¥Ù…Ñ”™Õ¸½ÁåM¡…É•Q•áÐ ¤ì(€€€€€€€Ù…°±¥Á‰½…É€ô•ÑMåÍÑ•µM•ÉÙ¥”¡1%A	=I}MIY%¤…Ì±¥Á‰½…É‘5…¹…•È(€€€€€€€±¥Á‰½…É¹Í•ÑAÉ¥µ…Éå±¥À¡±¥Á…Ñ„¹¹•ÝA±…¥¹Q•áÐ ‰¥Á•É˜ÌÉ•Á½ÉÐˆ°Í¡…É•Q•áÐ¤¤(€€€€€€€Q½…ÍÐ¹µ…­•Q•áÐ¡Ñ¡¥Ì°€‰I•Á½ÉÐ½Á¥•ˆ°Q½…ÍÐ¹19Q!}M!=IP¤¹Í¡½Ü ¤(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸Ñ½±•Q•¡¹¥…±•Ñ…¥±Ì ¤ì(€€€€€€€Ù…°Í¡½Ü€ô‘•Ñ…¥±Ì¹Ù¥Í¥‰¥±¥Ñä€„ôY¥•Ü¹Y%M%	1(€€€€€€€‘•Ñ…¥±Ì¹Ù¥Í¥‰¥±¥Ñä€ô¥˜€¡Í¡½Ü¤Y¥•Ü¹Y%M%	1•±Í”Y¥•Ü¹=9(€€€€€€€Ñ½±••Ñ…¥±Ì¹Ñ•áÐ€ô¥˜€¡Í¡½Ü¤€‰!%Q%1Lˆ•±Í”€‰M!=\Q%1Lˆ(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸±•…ÉM¡…É•É•„ ¤ì(€€€€€€€Í¡…É•Q•áÐ€ô€ˆˆ(€€€€€€€‘•Ñ…¥±Ì¹Ñ•áÐ€ô€ˆˆ(€€€€€€€‘•Ñ…¥±Ì¹Ù¥Í¥‰¥±¥Ñä€ôY¥•Ü¹=9(€€€€€€€½ÁåM¡…É”¹Ù¥Í¥‰¥±¥Ñä€ôY¥•Ü¹=9(€€€€€€€Ñ½±••Ñ…¥±Ì¹Ù¥Í¥‰¥±¥Ñä€ôY¥•Ü¹=9(€€€€€€€Ñ½±••Ñ…¥±Ì¹Ñ•áÐ€ô€‰M!=\Q%1Lˆ(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸Í•ÑMÑ…ÑÕÌ¡µ•ÍÍ…”èMÑÉ¥¹œ°½±½ÈèMÑÉ¥¹œ¤ì(€€€€€€€ÍÑ…ÑÕÌ¹Ñ•áÐ€ôµ•ÍÍ…”(€€€€€€€ÍÑ…ÑÕÌ¹Í•ÑQ•áÑ½±½È¡½±½È¹Á…ÉÍ•½±½È¡½±½È¤¤(€€€ô((€€€ÁÉ¥Ù…Ñ”™Õ¸Í•Ñ	ÕÍä¡‰ÕÍäè	½½±•…¸¤ì(€€€€€€€…Ñ¥½¹	ÕÑÑ½¹Ì¹™½É… ì¥Ð¹¥Í¹…‰±•€ô€…‰ÕÍäô(€€€€€€€¡½ÍÐ¹¥Í¹…‰±•€ô€…‰ÕÍä(€€€€€€€Á½ÉÐ¹¥Í¹…‰±•€ô€…‰ÕÍä(€€€€€€€Õ‘ÁQ…É•Ð¹¥Í¹…‰±•€ô€…‰ÕÍä(€€€ô((€€€½Ù•ÉÉ¥‘”™Õ¸½¹•ÍÑÉ½ä ¤ì(€€€€€€€…Ñ¥Ù•AÉ½•ÍÌü¹‘•ÍÑÉ½å½É¥‰±ä ¤(€€€€€€€…Ñ¥Ù•AÉ½•ÍÌ€ô¹Õ±°(€€€€€€€ÍÕÁ•È¹½¹•ÍÑÉ½ä ¤(€€€ô)ô(
+        val plannedModes = if (modes.firstOrNull() == TestMode.DETECT) {
+            modes
+        } else {
+            listOf(TestMode.DETECT) + modes
+        }
+        val config = readConfig(plannedModes.any { it == TestMode.UDP_DOWNLOAD || it == TestMode.UDP_UPLOAD })
+            ?: return
+        hideKeyboard()
+        setBusy(true)
+        clearShareArea()
+        progress.visibility = View.VISIBLE
+        progress.progress = 0
+        command.visibility = View.VISIBLE
+        live.visibility = View.VISIBLE
+        live.text = "Preparingâ€¦"
+        intervalLines.clear()
+        intervals.text = ""
+        intervals.visibility = View.VISIBLE
+        result.text = "No completed results yet."
+
+        Thread {
+            val completed = mutableListOf<TestResult>()
+            val totalSeconds = plannedModes.sumOf { it.durationSeconds }.coerceAtLeast(1)
+            var completedSeconds = 0
+            var activeMode = plannedModes.first()
+            try {
+                plannedModes.forEachIndexed { index, mode ->
+                    activeMode = mode
+                    showStageWaiting(config, mode, index, plannedModes.size, completedSeconds, totalSeconds)
+                    val testResult = executeIperf(config, mode) { update ->
+                        showLiveUpdate(
+                            mode, update, index, plannedModes.size,
+                            completedSeconds, totalSeconds
+                        )
+                    }
+                    completed += testResult
+                    completedSeconds += mode.durationSeconds
+                    runOnUiThread {
+                        result.text = formatResults(title, config, completed)
+                        progress.progress = ((completedSeconds.toDouble() / totalSeconds) * progress.max)
+                            .roundToInt()
+                    }
+                }
+                runOnUiThread { showSuccess(title, config, completed) }
+            } catch (error: Exception) {
+                runOnUiThread { showFailure(title, config, activeMode, completed, error) }
+            }
+        }.start()
+    }
+
+    private fun showStageWaiting(
+        config: TestConfig,
+        mode: TestMode,
+        index: Int,
+        count: Int,
+        completedSeconds: Int,
+        totalSeconds: Int
+    ) {
+        runOnUiThread {
+            setStatus("Connectingâ€¦ Â· ${mode.label} Â· ${index + 1}/$count", "#FFB74D")
+            live.text = "Opening the iperf3 control connectionâ€¦"
+            command.text = "Command\n${formatDisplayCommand(config, mode)}"
+            intervalLines += if (intervalLines.isEmpty()) mode.label else "\n${mode.label}"
+            intervals.text = intervalLines.joinToString("\n")
+            progress.progress = ((completedSeconds.toDouble() / totalSeconds) * progress.max)
+                .roundToInt()
+        }
+    }
+
+    private fun showLiveUpdate(
+        mode: TestMode,
+        update: LiveUpdate,
+        index: Int,
+        count: Int,
+        completedSeconds: Int,
+        totalSeconds: Int
+    ) {
+        runOnUiThread {
+            if (update.connected) {
+                setStatus("Connected âœ“ Â· ${mode.label} Â· ${index + 1}/$count", "#66BB6A")
+            }
+            val elapsed = update.elapsedSeconds.coerceIn(0.0, mode.durationSeconds.toDouble())
+            val overall = (completedSeconds + elapsed) / totalSeconds
+            progress.progress = (overall * progress.max).roundToInt()
+            live.text = formatLiveUpdate(mode, update)
+            update.intervalText?.let {
+                intervalLines += it
+                intervals.text = intervalLines.joinToString("\n")
+            }
+        }
+    }
+
+    private fun formatLiveUpdate(mode: TestMode, update: LiveUpdate): String = buildString {
+        if (update.connection != null && update.elapsedSeconds == 0.0) {
+            append("iperf3 connection established: ").append(update.connection)
+            return@buildString
+        }
+        append("Running: ")
+            .append(min(mode.durationSeconds.toDouble(), update.elapsedSeconds).roundToInt())
+            .append(" / ").append(mode.durationSeconds).append(" seconds")
+        update.downloadBitsPerSecond?.let {
+            append("\nDownload now: ").append(formatBitsPerSecond(it))
+        }
+        update.uploadBitsPerSecond?.let {
+            append("\nUpload now: ").append(formatBitsPerSecond(it))
+        }
+        if (update.jitterMs != null || update.lossPercent != null) {
+            append("\n")
+            update.jitterMs?.let { append("Jitter: ").append(formatMilliseconds(it)).append("  ") }
+            update.lossPercent?.let { append("Loss: ").append(formatPercent(it)) }
+        }
+    }
+
+    private fun executeIperf(
+        config: TestConfig,
+        mode: TestMode,
+        onUpdate: (LiveUpdate) -> Unit
+    ): TestResult {
+        val executable = File(applicationInfo.nativeLibraryDir, "libiperf3.so")
+        if (!executable.canExecute()) {
+            throw IllegalStateException("The bundled iperf3 engine is unavailable on this device")
+        }
+
+        val processCommand = buildCommand(config, mode, executable.absolutePath)
+
+        val process = ProcessBuilder(processCommand)
+            .redirectErrorStream(true)
+            .start()
+        activeProcess = process
+        val timedOut = AtomicBoolean(false)
+        val watchdog = Executors.newSingleThreadScheduledExecutor()
+        val timeoutTask = watchdog.schedule({
+            timedOut.set(true)
+            process.destroyForcibly()
+        }, mode.durationSeconds + 12L, TimeUnit.SECONDS)
+
+        val raw = StringBuilder()
+        var endData: JSONObject? = null
+        var connection: String? = null
+        var errorMessage: String? = null
+        try {
+            process.inputStream.bufferedReader().useLines { lines ->
+                lines.forEach { line ->
+                    if (line.isBlank()) return@forEach
+                    raw.appendLine(line)
+                    val event = runCatching { JSONObject(line) }.getOrNull() ?: return@forEach
+                    when (event.optString("event")) {
+                        "start" -> {
+                            val data = event.optJSONObject("data") ?: JSONObject()
+                            val connected = data.optJSONArray("connected")?.optJSONObject(0)
+                            connection = connected?.let {
+                                "${it.optString("remote_host")}:${it.optInt("remote_port")}"
+                            }
+                            onUpdate(LiveUpdate(connected = true, connection = connection))
+                        }
+                        "interval" -> {
+                            val data = event.optJSONObject("data") ?: JSONObject()
+                            onUpdate(parseLiveUpdate(mode, data))
+                        }
+                        "end" -> endData = event.optJSONObject("data") ?: JSONObject()
+                        "error" -> errorMessage = event.optString("data", "iperf3 reported an error")
+                    }
+                }
+            }
+            process.waitFor()
+        } finally {
+            timeoutTask.cancel(true)
+            watchdog.shutdownNow()
+            if (activeProcess === process) activeProcess = null
+        }
+
+        if (timedOut.get()) {
+            throw IperfFailure("The ${mode.label.lowercase()} timed out", raw.toString())
+        }
+        if (!errorMessage.isNullOrBlank()) {
+            throw IperfFailure(errorMessage!!, raw.toString())
+        }
+        if (process.exitValue() != 0) {
+            throw IperfFailure(
+                "iperf3 exited with code ${process.exitValue()}",
+                raw.toString()
+            )
+        }
+        val finalData = endData
+            ?: throw IperfFailure("iperf3 finished without a final result", raw.toString())
+        return parseFinalResult(mode, finalData, connection, raw.toString())
+    }
+
+    private fun buildCommand(config: TestConfig, mode: TestMode, executable: String): List<String> {
+        val command = mutableListOf(
+            executable,
+            "-c", config.hostname,
+            "-p", config.port.toString(),
+        )
+        command += if (mode == TestMode.DETECT) {
+            listOf("-n", "1")
+        } else {
+            listOf("-t", mode.durationSeconds.toString())
+        }
+        command += listOf(
+            "-i", "1", "--connect-timeout", "3000", "--json-stream", "--forceflush"
+        )
+        when (mode) {
+            TestMode.DETECT -> Unit
+            TestMode.TCP_DOWNLOAD -> command += "-R"
+            TestMode.TCP_UPLOAD -> Unit
+            TestMode.TCP_BIDIRECTIONAL -> command += "--bidir"
+            TestMode.UDP_DOWNLOAD -> command += listOf("-u", "-b", "${config.udpTargetMbps}M", "-R")
+            TestMode.UDP_UPLOAD -> command += listOf("-u", "-b", "${config.udpTargetMbps}M")
+        }
+        return command
+    }
+
+    private fun formatDisplayCommand(config: TestConfig, mode: TestMode): String =
+        buildCommand(config, mode, "iperf3").joinToString(" ") { argument ->
+            if (argument.any(Char::isWhitespace)) "\"${argument.replace("\"", "\\\"")}\"" else argument
+        }
+
+    private fun parseLiveUpdate(mode: TestMode, data: JSONObject): LiveUpdate {
+        val sum = data.optJSONObject("sum")
+        val reverse = data.optJSONObject("sum_bidir_reverse")
+        val elapsed = max(
+            sum?.optDouble("end", 0.0) ?: 0.0,
+            reverse?.optDouble("end", 0.0) ?: 0.0
+        )
+        val primaryRate = sum?.optionalDouble("bits_per_second")
+        val reverseRate = reverse?.optionalDouble("bits_per_second")
+        val intervalText = listOfNotNull(
+            sum?.let { formatInterval(it, if (mode == TestMode.TCP_DOWNLOAD || mode == TestMode.UDP_DOWNLOAD) "â†“" else "â†‘") },
+            reverse?.let { formatInterval(it, "â†“") }
+        ).joinToString("\n").ifBlank { null }
+        return when (mode) {
+            TestMode.TCP_DOWNLOAD, TestMode.UDP_DOWNLOAD -> LiveUpdate(
+                elapsedSeconds = elapsed,
+                downloadBitsPerSecond = primaryRate,
+                jitterMs = sum?.optionalDouble("jitter_ms"),
+                lossPercent = sum?.optionalDouble("lost_percent"),
+                intervalText = intervalText
+            )
+            TestMode.TCP_BIDIRECTIONAL -> LiveUpdate(
+                elapsedSeconds = elapsed,
+                uploadBitsPerSecond = primaryRate,
+                downloadBitsPerSecond = reverseRate,
+                intervalText = intervalText
+            )
+            else -> LiveUpdate(
+                elapsedSeconds = elapsed,
+                uploadBitsPerSecond = primaryRate,
+                jitterMs = sum?.optionalDouble("jitter_ms"),
+                lossPercent = sum?.optionalDouble("lost_percent"),
+                intervalText = intervalText
+            )
+        }
+    }
+
+    private fun formatInterval(sum: JSONObject, direction: String): String {
+        val start = sum.optDouble("start", 0.0)
+        val end = sum.optDouble("end", 0.0)
+        val rate = sum.optDouble("bits_per_second", 0.0)
+        val bytes = sum.optDouble("bytes", 0.0)
+        return buildString {
+            append(formatNumber(start, 2)).append("â€“").append(formatNumber(end, 2)).append(" s  ")
+            append(direction).append(" ").append(formatBitsPerSecond(rate))
+            if (bytes > 0) append("  ").append(formatBytes(bytes))
+            sum.optionalDouble("jitter_ms")?.let { append("  jitter ").append(formatMilliseconds(it)) }
+            sum.optionalDouble("lost_percent")?.let { append("  loss ").append(formatPercent(it)) }
+        }
+    }
+
+    private fun parseFinalResult(
+        mode: TestMode,
+        end: JSONObject,
+        connection: String?,
+        rawOutput: String
+    ): TestResult {
+        val sent = end.optJSONObject("sum_sent")
+        val received = end.optJSONObject("sum_received")
+        return when (mode) {
+            TestMode.DETECT -> TestResult(mode, connection, rawOutput = rawOutput)
+            TestMode.TCP_DOWNLOAD -> TestResult(
+                mode, connection,
+                downloadBitsPerSecond = received.requireDouble("bits_per_second", mode),
+                rawOutput = rawOutput
+            )
+            TestMode.TCP_UPLOAD -> TestResult(
+                mode, connection,
+                uploadBitsPerSecond = sent.requireDouble("bits_per_second", mode),
+                rawOutput = rawOutput
+            )
+            TestMode.TCP_BIDIRECTIONAL -> {
+                val reverseReceived = end.optJSONObject("sum_received_bidir_reverse")
+                    ?: throw IperfFailure(
+                        "The server did not return bidirectional results; update its iperf3 version",
+                        rawOutput
+                    )
+                TestResult(
+                    mode, connection,
+                    uploadBitsPerSecond = sent.requireDouble("bits_per_second", mode),
+                    downloadBitsPerSecond = reverseReceived.requireDouble("bits_per_second", mode),
+                    rawOutput = rawOutput
+                )
+            }
+            TestMode.UDP_DOWNLOAD, TestMode.UDP_UPLOAD -> {
+                val summary = received
+                    ?: throw IperfFailure("iperf3 did not return UDP receiver statistics", rawOutput)
+                val rate = summary.requireDouble("bits_per_second", mode)
+                TestResult(
+                    mode, connection,
+                    uploadBitsPerSecond = rate.takeIf { mode == TestMode.UDP_UPLOAD },
+                    downloadBitsPerSecond = rate.takeIf { mode == TestMode.UDP_DOWNLOAD },
+                    jitterMs = summary.optionalDouble("jitter_ms") ?: 0.0,
+                    lossPercent = summary.optionalDouble("lost_percent") ?: 0.0,
+                    packets = summary.optLong("packets", 0).takeIf { it > 0 },
+                    rawOutput = rawOutput
+                )
+            }
+        }
+    }
+
+    private fun JSONObject?.requireDouble(key: String, mode: TestMode): Double {
+        val value = this?.optionalDouble(key)
+        return value ?: throw IllegalStateException("Missing $key in ${mode.label} result")
+    }
+
+    private fun JSONObject.optionalDouble(key: String): Double? =
+        if (has(key) && !isNull(key)) optDouble(key) else null
+
+    private fun showSuccess(title: String, config: TestConfig, results: List<TestResult>) {
+        progress.progress = progress.max
+        setStatus("Complete âœ“", "#66BB6A")
+        live.text = "All requested tests completed successfully."
+        result.text = formatResults(title, config, results)
+        shareText = buildShareReport(title, config, results, intervalLines.joinToString("\n"))
+        details.text = shareText
+        copyShare.text = "COPY RESULTS"
+        copyShare.visibility = View.VISIBLE
+        toggleDetails.visibility = View.VISIBLE
+        setBusy(false)
+    }
+
+    private fun showFailure(
+        title: String,
+        config: TestConfig,
+        mode: TestMode,
+        completed: List<TestResult>,
+        error: Exception
+    ) {
+        setStatus("Failed Â· ${mode.label}", "#EF5350")
+        live.text = friendlyError(error)
+        result.text = buildString {
+            append("TEST FAILED\n\n")
+            append(friendlyError(error))
+            if (completed.isNotEmpty()) {
+                append("\n\nCompleted before the failure:\n")
+                append(formatResults(title, config, completed))
+            }
+            append("\n\nUse COPY DIAGNOSTICS to share the technical details.")
+        }
+        shareText = buildDiagnosticReport(title, config, mode, completed, error)
+        details.text = shareText
+        details.visibility = View.GONE
+        copyShare.text = "COPY DIAGNOSTICS"
+        copyShare.visibility = View.VISIBLE
+        toggleDetails.text = "SHOW DETAILS"
+        toggleDetails.visibility = View.VISIBLE
+        setBusy(false)
+    }
+
+    private fun formatResults(
+        title: String,
+        config: TestConfig,
+        results: List<TestResult>
+    ): String = buildString {
+        append(title).append(" RESULTS\n")
+        results.forEach { test ->
+            append("\n").append(formatResult(test, config)).append("\n")
+        }
+    }.trimEnd()
+
+    private fun formatResult(test: TestResult, config: TestConfig): String = when (test.mode) {
+        TestMode.DETECT -> buildString {
+            append("âœ“ IPERF3 SERVER DETECTED")
+            test.connection?.let { append("\n  Connected to ").append(it) }
+            append("\n  Control and data test succeeded")
+        }
+        TestMode.TCP_DOWNLOAD -> "TCP download\n  ${formatBitsPerSecond(test.downloadBitsPerSecond!!)}"
+        TestMode.TCP_UPLOAD -> "TCP upload\n  ${formatBitsPerSecond(test.uploadBitsPerSecond!!)}"
+        TestMode.TCP_BIDIRECTIONAL -> buildString {
+            append("TCP bidirectional (simultaneous)")
+            append("\n  Download: ").append(formatBitsPerSecond(test.downloadBitsPerSecond!!))
+            append("\n  Upload:   ").append(formatBitsPerSecond(test.uploadBitsPerSecond!!))
+        }
+        TestMode.UDP_DOWNLOAD, TestMode.UDP_UPLOAD -> formatUdpResult(test, config)
+    }
+
+    private fun formatUdpResult(test: TestResult, config: TestConfig): String {
+        val rate = test.downloadBitsPerSecond ?: test.uploadBitsPerSecond ?: 0.0
+        val (score, grade) = scoreUdp(test, config)
+        val direction = if (test.mode == TestMode.UDP_DOWNLOAD) "download" else "upload"
+        return buildString {
+            append("UDP ").append(direction).append(" quality")
+            append("\n  Score: ").append(score).append("/100 Â· ").append(grade)
+            append("\n  Received: ").append(formatBitsPerSecond(rate))
+                .append(" Â· Target: ").append(config.udpTargetMbps).append(" Mbit/s")
+            append("\n  Loss: ").append(formatPercent(test.lossPercent ?: 0.0))
+                .append(" Â· Jitter: ").append(formatMilliseconds(test.jitterMs ?: 0.0))
+            test.packets?.let { append(" Â· Packets: ").append(it) }
+        }
+    }
+
+    private fun scoreUdp(test: TestResult, config: TestConfig): Pair<Int, String> {
+        val receivedRate = test.downloadBitsPerSecond ?: test.uploadBitsPerSecond ?: 0.0
+        val targetRate = config.udpTargetMbps * 1_000_000.0
+        val deliveryRatio = if (targetRate > 0) receivedRate / targetRate else 1.0
+        val ratePenalty = if (deliveryRatio >= 0.95) 0.0 else min(40.0, (0.95 - deliveryRatio) * 80.0)
+        val lossPenalty = min(80.0, (test.lossPercent ?: 0.0) * 20.0)
+        val jitterPenalty = min(20.0, max(0.0, (test.jitterMs ?: 0.0) - 5.0) * 0.8)
+        val score = (100.0 - ratePenalty - lossPenalty - jitterPenalty)
+            .roundToInt().coerceIn(0, 100)
+        val grade = when {
+            score >= 90 -> "EXCELLENT"
+            score >= 75 -> "GOOD"
+            score >= 50 -> "FAIR"
+            else -> "POOR"
+        }
+        return score to grade
+    }
+
+    private fun buildShareReport(
+        title: String,
+        config: TestConfig,
+        results: List<TestResult>,
+        intervalOutput: String
+    ): String = buildString {
+        appendLine("Free iperf3 Client $title report")
+        appendLine("Time (UTC): ${Instant.now()}")
+        appendLine("Server: ${config.hostname}:${config.port}")
+        appendLine("UDP target: ${config.udpTargetMbps} Mbit/s")
+        appendLine()
+        append(formatResults(title, config, results))
+        appendLine()
+        appendLine()
+        appendLine("Commands:")
+        results.forEach { appendLine(formatDisplayCommand(config, it.mode)) }
+        if (intervalOutput.isNotBlank()) {
+            appendLine()
+            appendLine("Per-second intervals:")
+            appendLine(intervalOutput)
+        }
+        appendLine()
+        append("UDP score is an app heuristic based on received rate, packet loss, and jitter.")
+    }
+
+    private fun buildDiagnosticReport(
+        title: String,
+        config: TestConfig,
+        mode: TestMode,
+        completed: List<TestResult>,
+        error: Exception
+    ): String {
+        val packageInfo = packageManager.getPackageInfo(packageName, 0)
+        return buildString {
+            appendLine("Free iperf3 Client diagnostic report")
+            appendLine("Privacy: review the server and device fields before sharing publicly")
+            appendLine("Time (UTC): ${Instant.now()}")
+            appendLine("App: ${packageInfo.versionName} (${packageInfo.longVersionCode})")
+            appendLine("Engine: iperf3 3.21")
+            appendLine("Android: ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
+            appendLine("Device: ${Build.MANUFACTURER} ${Build.MODEL}")
+            appendLine("ABIs: ${Build.SUPPORTED_ABIS.joinToString()}")
+            appendLine("Sequence: $title")
+            appendLine("Failed stage: ${mode.label}")
+            appendLine("Server: ${config.hostname}:${config.port}")
+            appendLine("UDP target: ${config.udpTargetMbps} Mbit/s")
+            appendLine("Error type: ${error.javaClass.name}")
+            appendLine("Error: ${error.message ?: "(no message)"}")
+            if (completed.isNotEmpty()) {
+                appendLine()
+                appendLine("Completed results:")
+                appendLine(formatResults(title, config, completed))
+            }
+            if (error is IperfFailure && error.rawOutput.isNotBlank()) {
+                appendLine()
+                appendLine("Raw iperf3 output:")
+                appendLine(error.rawOutput.trim())
+            }
+            appendLine()
+            appendLine("Stack trace:")
+            append(error.stackTraceToString())
+        }
+    }
+
+    private fun friendlyError(error: Exception): String =
+        error.message?.lineSequence()?.firstOrNull { it.isNotBlank() }
+            ?: error.javaClass.simpleName
+
+    private fun formatBitsPerSecond(bitsPerSecond: Double): String = when {
+        bitsPerSecond >= 1_000_000_000 -> formatNumber(bitsPerSecond / 1_000_000_000, 2) + " Gbit/s"
+        bitsPerSecond >= 1_000_000 -> formatNumber(bitsPerSecond / 1_000_000, 1) + " Mbit/s"
+        bitsPerSecond >= 1_000 -> formatNumber(bitsPerSecond / 1_000, 1) + " Kbit/s"
+        else -> formatNumber(bitsPerSecond, 0) + " bit/s"
+    }
+
+    private fun formatBytes(bytes: Double): String = when {
+        bytes >= 1_000_000_000 -> formatNumber(bytes / 1_000_000_000, 2) + " GB"
+        bytes >= 1_000_000 -> formatNumber(bytes / 1_000_000, 1) + " MB"
+        bytes >= 1_000 -> formatNumber(bytes / 1_000, 1) + " KB"
+        else -> formatNumber(bytes, 0) + " B"
+    }
+
+    private fun formatMilliseconds(value: Double): String = formatNumber(value, 2) + " ms"
+
+    private fun formatPercent(value: Double): String = formatNumber(value, 2) + "%"
+
+    private fun formatNumber(value: Double, decimals: Int): String =
+        String.format(Locale.US, "%.${decimals}f", value)
+
+    private fun copyShareText() {
+        val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        clipboard.setPrimaryClip(ClipData.newPlainText("iperf3 report", shareText))
+        Toast.makeText(this, "Report copied", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun toggleTechnicalDetails() {
+        val show = details.visibility != View.VISIBLE
+        details.visibility = if (show) View.VISIBLE else View.GONE
+        toggleDetails.text = if (show) "HIDE DETAILS" else "SHOW DETAILS"
+    }
+
+    private fun clearShareArea() {
+        shareText = ""
+        details.text = ""
+        details.visibility = View.GONE
+        copyShare.visibility = View.GONE
+        toggleDetails.visibility = View.GONE
+        toggleDetails.text = "SHOW DETAILS"
+    }
+
+    private fun setStatus(message: String, color: String) {
+        status.text = message
+        status.setTextColor(Color.parseColor(color))
+    }
+
+    private fun setBusy(busy: Boolean) {
+        actionButtons.forEach { it.isEnabled = !busy }
+        host.isEnabled = !busy
+        port.isEnabled = !busy
+        udpTarget.isEnabled = !busy
+    }
+
+    override fun onDestroy() {
+        activeProcess?.destroyForcibly()
+        activeProcess = null
+        super.onDestroy()
+    }
+}
