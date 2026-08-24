@@ -27,7 +27,7 @@ docker compose ps
 docker compose logs iperf3
 ```
 
-The Android app only needs TCP `5201`. UDP is exposed so ordinary iperf3 clients can also run UDP tests.
+Free iperf3 Client v0.2 uses TCP `5201` for control/TCP tests and UDP `5201` for UDP quality tests, so publish both mappings.
 
 ## Check from another computer
 
@@ -42,6 +42,7 @@ Replace the example address with the Docker host's LAN, DNS, or Tailscale addres
 
 - The port mapping binds port `5201` on all host interfaces by default. Host firewall rules still apply.
 - Do not expose port `5201` to the public internet. Keep it on a trusted LAN or private network such as Tailscale.
+- Keep the image current: iperf3's server parses data from network peers, and server-side security fixes matter even when clients are simple.
 - `restart: unless-stopped` keeps the server available after a NAS or Docker restart while allowing it to remain stopped when deliberately stopped.
 - `latest` matches the tested NAS configuration. For reproducible long-term deployment, pin a reviewed image digest.
 

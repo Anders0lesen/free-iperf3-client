@@ -2,6 +2,24 @@
 
 This file records the important implementation decisions behind Free iperf3 Client. User-facing guidance lives in the project wiki.
 
+## 2026-08-25 — v0.2.0
+
+- Kept one activity and one APK while adding server detection, TCP bidirectional, two-way UDP quality, and full-sequence orchestration.
+- Every measurement is prefixed with a small `iperf3 -n 1` exchange. This verifies the iperf protocol rather than only checking whether a TCP port is open.
+- Switched execution output to `--json-stream --forceflush`. Start events drive the connected state; interval events drive the live rate/progress/table; end events drive final summaries.
+- UDP uses final receiver statistics. The app score is intentionally documented as a heuristic so loss/jitter/rate remain the authoritative measurements.
+- Added immediate syntactic validation for IPv4, IPv6, DNS hostnames, port, and UDP target. ProcessBuilder receives an argument list; no shell is involved.
+- The native process has a watchdog and is forcibly terminated when the activity is destroyed.
+- Added successful-result copying and included exact commands/per-second intervals in the report.
+- Added explicit privacy/security/no-ads policies and a versioned audit record.
+
+## Test evidence for v0.2.0
+
+- Phone API 35: server preflight; TCP bidirectional; UDP download/upload with score; full sequence; invalid-input and connection-failure paths.
+- Google TV API 36: Leanback launcher resolution and D-pad navigation through the enlarged control set.
+- Clean `assembleDebug` and `lintDebug` passed. The public release artifact was downloaded, inspected, installed, and smoke-tested.
+- Private endpoint names, addresses, screenshots, and raw diagnostic output are intentionally omitted.
+
 ## 2026-08-24 — v0.1.0
 
 - Started with a minimal Kotlin/AppCompat application for Android phones and Android/Google TV.

@@ -1,5 +1,27 @@
 # Development log
 
+## 2026-08-25 — v0.2.0
+
+- Added immediate server/port/UDP-target validation and an automatic real-iperf3 preflight before every measurement.
+- Added TCP simultaneous bidirectional testing.
+- Added two-way UDP streaming-quality testing with configurable target rate, loss, jitter, packet count, and a documented 0–100 heuristic score.
+- Added **Run all tests**.
+- Added live connection state, exact command, overall progress, current rates, and a growing per-second interval table.
+- Added copyable successful results while retaining detailed failure diagnostics.
+- Added the top-right GitHub link.
+- Added explicit no-ads, privacy, security, and audit documentation.
+- Kept the permission surface to `INTERNET` only; disabled backup and debugger attachment.
+
+### Acceptance and audit
+
+- Real server check, TCP upload/download/bidirectional, UDP both directions, and full sequence completed on the phone test target.
+- Google TV launch and D-pad navigation rechecked.
+- Malformed address and unreachable/wrong-service failure paths rechecked.
+- Clean build/lint passed and the exact public release APK was downloaded and re-tested.
+- Runtime dependency, native-engine CVE applicability, manifest/APK, secret, and personal-information audits completed. Details are versioned in `docs/AUDITS.md`.
+
+Private endpoints, throughput figures, and user screenshots are deliberately not published.
+
 ## 2026-08-24 — v0.1.0
 
 - Created the minimal phone and Android/Google TV client UI.

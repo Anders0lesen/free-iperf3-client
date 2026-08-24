@@ -2,30 +2,32 @@
 
 The app is designed to produce more useful reports than “app bad”.
 
-## When a test fails
+## What the status means
 
-1. Read the short reason shown under **TEST FAILED**.
+- **Field error:** malformed address, port, or UDP target; fixed immediately before connecting.
+- **Connecting:** valid input; opening the iperf3 control connection.
+- **Connected:** a valid iperf3 exchange started. Progress, live rate, and intervals follow.
+- **Complete:** every requested stage returned a valid final result.
+- **Failed:** the sequence stopped at the named stage; completed earlier results are retained.
+
+Every throughput/quality button automatically performs the server-detection preflight first. A reachable non-iperf service does not count as a successful check.
+
+## Sharing a failure
+
+1. Read the short reason.
 2. Press **Copy diagnostics**.
-3. Paste the report into a [GitHub issue](https://github.com/Anders0lesen/free-iperf3-client/issues/new) or the chat where you are getting help.
-4. Use **Show details** if you want to inspect and select the report inside the app.
+3. Review the server and device fields.
+4. Paste it into a [GitHub issue](https://github.com/Anders0lesen/free-iperf3-client/issues/new) or support chat.
 
-The report includes:
-
-- UTC time
-- app and bundled iperf3 versions
-- Android version and API level
-- device manufacturer/model and CPU architectures
-- test direction, duration, server, and port
-- error type, message, and stack trace
-
-Nothing is uploaded automatically. The report is created locally and only copied to Android's clipboard when you press the button. It contains the server address and device model, so review it before posting publicly. The report itself includes this privacy reminder.
+The report contains UTC time, app/engine/Android versions, device and CPU architecture, failed stage, server, UDP target, completed results, raw iperf3 output, error, and stack trace. It is generated locally and never uploaded automatically.
 
 ## Common failures
 
-- **Connection refused:** the address is reachable, but no iperf3 server is listening on that port.
-- **Timed out:** check the address, firewall, Wi-Fi/VLAN isolation, Tailscale connection, and Docker port mapping.
-- **Different result directions:** download and upload use opposite network directions and may legitimately differ.
+- **Invalid address:** correct the highlighted server field.
+- **Connection refused:** the host answered, but iperf3 is not listening on that port.
+- **Timeout/unreachable:** check Wi-Fi/VLAN isolation, firewall, Tailscale, Docker state, and port mapping.
+- **Not an iperf3 response:** another service may be using the port.
+- **No bidirectional result:** update the server's iperf3 version.
+- **UDP Poor/Fair while TCP is fast:** packet loss, jitter, or inability to sustain the selected UDP target can still hurt real-time streaming.
 
-## Quick server checks
-
-Confirm the container is running, its logs say it is listening, and TCP port `5201` is published on the Docker host. Then try an ordinary desktop client before comparing Android results.
+Confirm the Docker container is running and publishes both `5201/tcp` and `5201/udp`. Keep it on a trusted private network.
