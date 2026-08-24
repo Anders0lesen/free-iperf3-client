@@ -67,9 +67,8 @@ jobs:
           wiki_repo="$RUNNER_TEMP/free-iperf3-client-wiki"
           wiki_url="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git"
           if ! git clone "$wiki_url" "$wiki_repo"; then
-            mkdir -p "$wiki_repo"
-            git -C "$wiki_repo" init -b master
-            git -C "$wiki_repo" remote add origin "$wiki_url"
+            echo "::warning::The native GitHub Wiki is not enabled. Versioned pages remain available in the repository's wiki folder."
+            exit 0
           fi
           cp wiki/*.md "$wiki_repo"/
           git -C "$wiki_repo" config user.name "github-actions[bot]"

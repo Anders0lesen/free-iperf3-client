@@ -6,12 +6,12 @@ Free iperf3 Client is a small, free, ad-free Android client for testing TCP netw
 
 ## Start here
 
-- [Installation](Installation)
-- [Using the app](Using-the-app)
-- [Run an iperf3 server with Docker](Docker-iperf3-server)
-- [Troubleshooting and diagnostics](Troubleshooting-and-diagnostics)
-- [Architecture](Architecture)
-- [Development log](Development-log)
+- [Installation](Installation.md)
+- [Using the app](Using-the-app.md)
+- [Run an iperf3 server with Docker](Docker-iperf3-server.md)
+- [Troubleshooting and diagnostics](Troubleshooting-and-diagnostics.md)
+- [Architecture](Architecture.md)
+- [Development log](Development-log.md)
 
 Development tests used a private LAN server on port `5201`. Its address is intentionally not published.
 

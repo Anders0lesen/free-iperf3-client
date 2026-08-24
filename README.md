@@ -4,7 +4,7 @@
 
 A deliberately simple, free, ad-free iperf3 client for Android phones, tablets, and Android/Google TV.
 
-[Download the latest APK](https://github.com/Anders0lesen/free-iperf3-client/releases/latest) · [Wiki](https://github.com/Anders0lesen/free-iperf3-client/wiki) · [Report a problem](https://github.com/Anders0lesen/free-iperf3-client/issues)
+[Download the latest APK](https://github.com/Anders0lesen/free-iperf3-client/releases/latest) · [Wiki](wiki/Home.md) · [Report a problem](https://github.com/Anders0lesen/free-iperf3-client/issues)
 
 ## What it does
 
@@ -51,7 +51,7 @@ services:
     restart: unless-stopped
 ```
 
-Start it with `docker compose up -d`, then enter the Docker host's LAN or Tailscale IP in the app. TCP port `5201` is all this app needs; UDP is exposed for other iperf3 clients. See the [Docker server wiki page](https://github.com/Anders0lesen/free-iperf3-client/wiki/Docker-iperf3-server) for verification and security notes.
+Start it with `docker compose up -d`, then enter the Docker host's LAN or Tailscale IP in the app. TCP port `5201` is all this app needs; UDP is exposed for other iperf3 clients. See the [Docker server wiki page](wiki/Docker-iperf3-server.md) for verification and security notes.
 
 ## Build
 
@@ -61,7 +61,7 @@ Start it with `docker compose up -d`, then enter the Docker host's LAN or Tailsc
 
 The APK is written to `app/build/outputs/apk/debug/app-debug.apk`. Pushes to `main` also produce a downloadable GitHub Actions artifact, while `v*` tags publish a GitHub release asset.
 
-Implementation notes, test evidence, and the development history are kept in the [project wiki](https://github.com/Anders0lesen/free-iperf3-client/wiki).
+Implementation notes, test evidence, and the development history are kept in the [project wiki](wiki/Home.md). The pages are versioned in this repository and the build workflow also publishes them to GitHub's native Wiki whenever that repository feature is enabled.
 
 ## Licensing
 
