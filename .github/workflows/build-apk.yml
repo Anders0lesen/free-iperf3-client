@@ -29,22 +29,55 @@ jobs:
           if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
             suffix="$GITHUB_REF_NAME"
           else
-            suffix="debug-${GITHUB_SHA::7}"
+            version="$(sed -n 's/.*versionName = "\([^"]*\)".*/\1/p' app/build.gradle.kts)"
+            test -n "$version"
+            suffix="v$version"
           fi
           apk="free-iperf3-client-${suffix}.apk"
           cp app/build/outputs/apk/debug/app-debug.apk "$apk"
           echo "apk=$apk" >> "$GITHUB_OUTPUT"
+          echo "version=$suffix" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with:
           name: free-iperf3-client-debug
           path: ${{ steps.stage.outputs.apk }}
           if-no-files-found: error
       - name: Publish release asset
-        if: github.ref_type == 'tag'
+        if: github.ref_type == 'tag' || github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: >-
-          gh release create "$GITHUB_REF_NAME"
-          "${{ steps.stage.outputs.apk }}"
-          --title "Free iperf3 Client $GITHUB_REF_NAME"
-          --generate-notes
+        shell: bash
+        run: |
+          version="${{ steps.stage.outputs.version }}"
+          if gh release view "$version" >/dev/null 2>&1; then
+            echo "Release $version already exists; leaving its signed APK unchanged."
+          else
+            gh release create "$version" \
+              "${{ steps.stage.outputs.apk }}" \
+              --target "$GITHUB_SHA" \
+              --title "Free iperf3 Client $version" \
+              --generate-notes
+          fi
+      - name: Publish project wiki
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          wiki_repo="$RUNNER_TEMP/free-iperf3-client-wiki"
+          wiki_url="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git"
+          if ! git clone "$wiki_url" "$wiki_repo"; then
+            mkdir -p "$wiki_repo"
+            git -C "$wiki_repo" init -b master
+            git -C "$wiki_repo" remote add origin "$wiki_url"
+          fi
+          cp wiki/*.md "$wiki_repo"/
+          git -C "$wiki_repo" config user.name "github-actions[bot]"
+          git -C "$wiki_repo" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C "$wiki_repo" add '*.md'
+          if git -C "$wiki_repo" diff --cached --quiet; then
+            echo "Wiki is already current."
+          else
+            git -C "$wiki_repo" commit -m "Update project documentation"
+            git -C "$wiki_repo" push origin HEAD:master
+          fi
