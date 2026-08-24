@@ -3,10 +3,11 @@ name: Build APK
 on:
   push:
     branches: [ main ]
+    tags: [ 'v*' ]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -17,13 +18,33 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.11.1'
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
       - name: Build debug APK
-        run: gradle assembleDebug
+        run: ./gradlew assembleDebug
+      - name: Stage APK
+        id: stage
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
+            suffix="$GITHUB_REF_NAME"
+          else
+            suffix="debug-${GITHUB_SHA::7}"
+          fi
+          apk="free-iperf3-client-${suffix}.apk"
+          cp app/build/outputs/apk/debug/app-debug.apk "$apk"
+          echo "apk=$apk" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with:
           name: free-iperf3-client-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: ${{ steps.stage.outputs.apk }}
           if-no-files-found: error
+      - name: Publish release asset
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "$GITHUB_REF_NAME"
+          "${{ steps.stage.outputs.apk }}"
+          --title "Free iperf3 Client $GITHUB_REF_NAME"
+          --generate-notes
