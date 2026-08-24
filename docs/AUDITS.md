@@ -16,6 +16,7 @@ Private endpoints and emulator throughput figures are intentionally omitted.
 
 - Manifest/APK review: `android.permission.INTERNET` is the only platform capability; no storage, location, advertising, notification, camera, microphone, account, or background-service access. AndroidX startup/profile hooks were removed, leaving only the launcher activity.
 - Application backup and debugger attachment disabled.
+- Published APK signature verified. The current GitHub Actions development certificate is suitable for sideload testing but is not a durable production update-signing identity; this limitation is documented for installers.
 - No advertising, analytics, telemetry, WebView, dynamic code loading, or remote configuration dependency.
 - User input is validated and passed as a `ProcessBuilder` argument list, never through a shell.
 - Every measurement is gated by an actual iperf3 preflight; processes have bounded timeouts and are destroyed with the activity.

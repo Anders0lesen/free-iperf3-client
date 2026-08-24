@@ -17,4 +17,4 @@ The app supports Android 9 (API 28) and newer. It has no account, analytics, ads
 
 ## Upgrading
 
-Install the newer APK over the existing app. The original v0.1 development build may have a different generated signature; if Android reports a signing conflict during the v0.2 upgrade, uninstall v0.1 once and install v0.2 fresh.
+Early releases use development signing. If Android says the new APK conflicts with the installed package, uninstall the old **Free iperf3 Client** first and then install the new APK. The app does not store test history.

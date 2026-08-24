@@ -29,7 +29,7 @@ The app requests only Android's `INTERNET` permission. It does not request stora
 
 Download the APK from the [latest GitHub release](https://github.com/Anders0lesen/free-iperf3-client/releases/latest). The same APK supports Android 9 and newer on phones, tablets, Android TV, and Google TV.
 
-Android will ask you to allow installation from the browser or file manager used to open the APK. An early v0.1 development build may need to be uninstalled once before installing v0.2 because the original builds did not yet have durable release signing.
+Android will ask you to allow installation from the browser or file manager used to open the APK. These early GitHub releases use development signing. If Android reports that an update is incompatible, uninstall the older copy and install the new APK; the app has no saved test history to lose.
 
 ## Use
 
