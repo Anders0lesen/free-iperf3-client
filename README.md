@@ -2,7 +2,16 @@
 
 <img src="docs/assets/app-icon.png" width="160" alt="Free iperf3 Client icon">
 
-A deliberately simple iperf3 client for Android phones, tablets, Android TV, and Google TV.
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Q5Q523WFO)
+
+A deliberately free non-ad supported local only simple iperf3 client for Android phones, tablets, Android TV, and Google TV.
+ - Basically I hate paying for free software, so here!
+
+ Fair warning I did not program this, it is entirely vibecoded, if you do not like that, then do not use this free tested software that works and does what it is supposed to 😊
+
+ I looked at available apps on Google Play Store and I got annoyed that free and open software was being packaged as GUI around a command and then they add ads/paid stuff.
+
+ Free and open software is not there for exploitation, if you ask me.
 
 [Download the latest APK](https://github.com/Anders0lesen/free-iperf3-client/releases/latest) · [Documentation](wiki/Home.md) · [Report a problem](https://github.com/Anders0lesen/free-iperf3-client/issues)
 
