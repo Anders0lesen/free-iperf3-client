@@ -43,6 +43,7 @@ internal enum class TablerGlyph {
     SHIELD,
     STOP,
     INFO,
+    QR_CODE,
 }
 
 @Composable
@@ -236,7 +237,20 @@ internal fun TablerIcon(
                 line(12f, 11f, 12f, 16f)
                 circle(12f, 8f, .35f)
             }
+            TablerGlyph.QR_CODE -> {
+                roundedRect(3f, 3f, 7f, 7f, 1f)
+                roundedRect(14f, 3f, 7f, 7f, 1f)
+                roundedRect(3f, 14f, 7f, 7f, 1f)
+                roundedRect(5f, 5f, 3f, 3f, .5f)
+                roundedRect(16f, 5f, 3f, 3f, .5f)
+                roundedRect(5f, 16f, 3f, 3f, .5f)
+                line(14f, 14f, 14f, 18f)
+                line(14f, 18f, 17f, 18f)
+                line(17f, 14f, 21f, 14f)
+                line(19f, 14f, 19f, 17f)
+                line(17f, 21f, 21f, 21f)
+                line(21f, 17f, 21f, 21f)
+            }
         }
     }
 }
-

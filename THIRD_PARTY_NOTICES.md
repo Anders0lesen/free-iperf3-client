@@ -16,3 +16,7 @@ Bundled binary SHA-256 checksums:
 ## Tabler Icons
 
 The app's native Canvas line graphics use geometry adapted from the [Tabler Icons](https://tabler.io/icons) visual language. Tabler Icons are designed on a 24×24 grid with a 2-pixel stroke and are distributed under the MIT License. Source and license: <https://github.com/tabler/tabler-icons>.
+
+## ZXing Core 3.5.4
+
+The on-device QR export uses [ZXing Core](https://github.com/zxing/zxing), distributed under the Apache License 2.0. QR creation is completely local; the app does not contact a QR service or start a web server.

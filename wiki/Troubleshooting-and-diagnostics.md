@@ -12,6 +12,12 @@ The app is designed to produce more useful reports than “app bad”.
 
 Every throughput/quality button automatically performs the server-detection preflight first. A reachable non-iperf service does not count as a successful check.
 
+## Server discovery
+
+**Find iperf3 servers** scans the current Wi-Fi/Ethernet IPv4 subnet on the selected port. It can also recheck saved recent servers, including routed or VPN endpoints. It may not discover a new server across VLANs, guest-Wi-Fi isolation, a VPN-only route, or a subnet larger than the local `/24`; enter that address manually once and it will join the recent list after a successful verification.
+
+If the scan finds nothing, confirm that Android is on the expected LAN, the container publishes TCP port `5201`, and local client isolation is disabled. UDP-only availability is insufficient because iperf3 control begins over TCP.
+
 ## Sharing a failure
 
 1. Read the short reason.

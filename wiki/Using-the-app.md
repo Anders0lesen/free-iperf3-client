@@ -2,8 +2,8 @@
 
 You need a reachable [iperf3](https://github.com/esnet/iperf) server.
 
-1. Enter the server IP address or hostname.
-2. Leave port `5201` unless the server uses another port.
+1. Leave port `5201` unless the server uses another port.
+2. Press **Find iperf3 servers** to scan the current LAN, choose a recent server, or enter an address manually.
 3. Choose the duration in seconds.
 4. Enter the UDP target rate in Mbit/s. For game streaming, use the bitrate the stream needs to sustain; `50` is a useful starting point.
 5. Choose a single test or **Run all tests**.
@@ -12,7 +12,7 @@ Malformed input is rejected immediately. Before any measurement, the app perform
 
 ## Tests
 
-- **Check / detect:** confirms that iperf3 is responding, without running a full throughput test.
+- **Find iperf3 servers:** scans the current local IPv4 network and verifies open candidates with iperf3. It does not require a server address first.
 - **TCP download:** server to Android device for the selected duration.
 - **TCP upload:** Android device to server for the selected duration.
 - **TCP bidirectional:** simultaneous upload and download for the selected duration.
@@ -32,6 +32,10 @@ During a run the app shows:
 
 Successful results and intervals can be copied. Failures produce a separate copyable diagnostic report.
 
+Successfully verified endpoints appear under **Recent servers**. Tap one to reuse it, use the remove button for one entry, or press **Clear all**. Up to eight endpoints are kept locally; result history is not saved.
+
+Rotating a phone or tablet reflows the interface without cancelling or resetting an active test.
+
 The default copy/share actions are privacy-safe: they redact the server and device identity. Full technical copies remain available through a clearly labelled action for private troubleshooting.
 
 ## UDP score
@@ -45,6 +49,10 @@ Each direction receives a 0–100 app heuristic and an **Excellent**, **Good**, 
 This is a practical comparison aid, not an industry certification. Always keep the received rate, loss, jitter, and per-second intervals when diagnosing Steam Link or another real-time stream.
 
 ## TV remote navigation
+
+Wide TV screens use side-by-side configuration/test panels while running, then place the result summary and statistics beside the large chart and interval table. The screen remains vertically scrollable for the command and export actions.
+
+On a successful result, choose **Show result QR for phone**. The QR is generated entirely inside the app and carries the selected test's summary and command, including the entered server address but excluding raw iperf output. The app does not upload the report, contact a QR website, or start a temporary web server.
 
 Use the D-pad to highlight a configuration row and press Select to open its editor. Press **Done**, then continue through the test and report cards. Focused controls have a teal outline and the page scrolls with focus.
 

@@ -2,7 +2,7 @@
 
 ![Free iperf3 Client icon](https://raw.githubusercontent.com/Anders0lesen/free-iperf3-client/main/docs/assets/app-icon.png)
 
-Free iperf3 Client v0.3.0 is a free, permanently ad-free Android client for TCP throughput and UDP streaming-quality tests. One APK supports phones, tablets, Android TV, and Google TV with a dark responsive interface, live charts, and D-pad navigation.
+Free iperf3 Client v0.3.1 is a free, permanently ad-free Android client for TCP throughput and UDP streaming-quality tests. One APK supports phones, tablets, Android TV, and Google TV with a dark responsive interface, live charts, LAN server discovery, recent servers, D-pad navigation, wide-screen TV panels, and local result QR export.
 
 ## Start here
 
@@ -13,6 +13,6 @@ Free iperf3 Client v0.3.0 is a free, permanently ad-free Android client for TCP 
 - [Architecture](Architecture.md)
 - [Development log](Development-log.md)
 
-The app has no account, ads, analytics, telemetry, storage access, or background service. Private test endpoints and personal screenshots are intentionally not published.
+The app has no account, ads, analytics, telemetry, file access, or background service. It keeps only a removable app-private list of successful servers; private test endpoints and personal screenshots are intentionally not published.
 
 Source and releases: <https://github.com/Anders0lesen/free-iperf3-client>

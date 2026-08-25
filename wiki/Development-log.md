@@ -1,5 +1,16 @@
 # Development log
 
+## 2026-08-25 — v0.3.1
+
+- Kept active tests and entered/selected server state intact through device rotation.
+- Added real LAN iperf3 discovery without requiring an address first, plus an eight-entry recent-server picker.
+- Added wide two-column TV layouts for setup, live testing, charts, statistics, and interval details.
+- Added a local, D-pad-accessible result QR for moving the selected command and summary to a phone without copying TV text.
+- Fixed bidirectional result-unit and interval-text clipping and the Android 12+ system title-bar regression.
+- Repeated clean build, unit, lint, real phone/TV, dependency, packaged-manifest, native-hash, security, and personal-information checks.
+
+No private endpoint, throughput figure, QR payload, diagnostic output, emulator dump, or test screenshot is published.
+
 ## 2026-08-25 — v0.3.0
 
 - Rebuilt the app as a polished dark-only Jetpack Compose interface for phone and TV.

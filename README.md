@@ -6,7 +6,17 @@ A deliberately simple iperf3 client for Android phones, tablets, Android TV, and
 
 [Download the latest APK](https://github.com/Anders0lesen/free-iperf3-client/releases/latest) · [Documentation](wiki/Home.md) · [Report a problem](https://github.com/Anders0lesen/free-iperf3-client/issues)
 
-## Version 0.3.0
+## Version 0.3.1
+
+- Keeps an active test, progress, selected server, and results intact when the device rotates.
+- **Find iperf3 servers** scans the current local IPv4 network without requiring an address first, then accepts a result only after a real iperf3 exchange.
+- Remembers up to eight successfully verified servers locally and lets you select, forget, or clear them.
+- Fixes clipped bidirectional rates, units, interval text, and an unwanted Android 12+ system title bar.
+- Uses purpose-built two-column TV layouts for configuration, live testing, charts, statistics, and interval details instead of stretching the phone layout.
+- Shows a locally generated result QR on TV so the selected command and summary can be moved to a phone without copying text with a remote. No web server or QR service is used.
+- Continues to support all v0.3.0 TCP, UDP, live-feedback, diagnostics, phone, and TV features.
+
+### Added in 0.3.0
 
 - Rebuilt as a dark-only, responsive interface for phones, tablets, Android TV, and Google TV.
 - Uses crisp native line graphics based on the MIT-licensed Tabler icon style—no emoji controls.
@@ -27,24 +37,24 @@ The default UDP target is `50 Mbit/s`, which is a useful starting point for loca
 
 Official builds of this project will not contain ads. There is no advertising SDK, analytics, telemetry, account, login, or automatic crash upload.
 
-The app requests only Android's `INTERNET` permission. It does not request storage, file, media, location, notification, microphone, camera, or background-service access. It stores no test history and sends data only to the server entered by the user. See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md).
+The app requests only Android's network permissions: `INTERNET` and `ACCESS_NETWORK_STATE`. Neither produces a runtime permission prompt. It does not request storage, file, media, location, notification, microphone, camera, or background-service access. It stores no result history; up to eight successful server addresses and ports are kept in app-private preferences for the recent-server picker. See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md).
 
 ## Install
 
 Download the APK from the [latest GitHub release](https://github.com/Anders0lesen/free-iperf3-client/releases/latest). The same APK supports Android 9 and newer on phones, tablets, Android TV, and Google TV.
 
-Android will ask you to allow installation from the browser or file manager used to open the APK. These early GitHub releases use development signing. If Android reports that an update is incompatible, uninstall the older copy and install the new APK; the app has no saved test history to lose.
+Android will ask you to allow installation from the browser or file manager used to open the APK. These early GitHub releases use development signing. If Android reports that an update is incompatible, uninstall the older copy and install the new APK; this clears the local recent-server list, but there is no saved result history.
 
 ## Use
 
 1. Start a reachable iperf3 server, for example `iperf3 -s`.
-2. Enter its IP address or hostname; leave port `5201` unless you changed it.
+2. Press **Find iperf3 servers** to scan the current LAN, select a recent server, or enter an IP address/hostname manually. Leave port `5201` unless you changed it.
 3. For UDP, enter the target rate you want to test in Mbit/s.
 4. Choose one test or **Run all tests**.
 
 Input errors are shown immediately. For valid input, the app first performs a small real iperf3 exchange. A throughput test starts only after that preflight succeeds.
 
-Android/Google TV is remote-control navigable. Configuration rows use D-pad-friendly editor dialogs and every interactive control has a visible focus state.
+Android/Google TV is remote-control navigable. Configuration rows use D-pad-friendly editor dialogs, every interactive control has a visible focus state, and wide screens arrange configuration/results into useful side-by-side panels. On a result, choose **Show result QR for phone** to scan the selected command and summary; the QR contains the entered server address but omits raw iperf output and is generated only on the device.
 
 ## Failure reports
 
@@ -84,4 +94,4 @@ Implementation decisions, acceptance evidence, and the development history are k
 
 ## Licensing
 
-The application source is released under The Unlicense. It bundles iperf3 3.21 Android binaries built by [android-iperf3](https://github.com/davidBar-On/android-iperf3) from the BSD-3-Clause [ESnet iperf3 source](https://github.com/esnet/iperf). The line graphics are adapted from the MIT-licensed [Tabler Icons](https://tabler.io/icons) visual language. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+The application source is released under The Unlicense. It bundles iperf3 3.21 Android binaries built by [android-iperf3](https://github.com/davidBar-On/android-iperf3) from the BSD-3-Clause [ESnet iperf3 source](https://github.com/esnet/iperf). The line graphics are adapted from the MIT-licensed [Tabler Icons](https://tabler.io/icons) visual language. Local QR export uses Apache-2.0-licensed [ZXing Core](https://github.com/zxing/zxing). See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

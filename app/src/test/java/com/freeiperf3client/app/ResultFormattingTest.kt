@@ -9,7 +9,7 @@ import org.junit.Test
 class ResultFormattingTest {
     @Test
     fun malformedIpv4IsRejectedImmediately() {
-        val result = validateConfig("192.168.999.1", "5201", "10", "50")
+        val result = validateConfig("192.0.2.999", "5201", "10", "50")
 
         assertFalse(result.valid)
         assertEquals("That is not a valid IP address or hostname", result.hostError)
@@ -58,5 +58,25 @@ class ResultFormattingTest {
 
         assertFalse(redacted.contains("private.example"))
         assertEquals(2, "<redacted-server>".toRegex().findAll(redacted).count())
+    }
+
+    @Test
+    fun discoveryScansTheLocalSlash24WithoutNetworkOrBroadcast() {
+        val candidates = subnetCandidates("192.0.2.44", 24)
+
+        assertEquals(253, candidates.size)
+        assertTrue("192.0.2.1" in candidates)
+        assertTrue("192.0.2.254" in candidates)
+        assertFalse("192.0.2.0" in candidates)
+        assertFalse("192.0.2.44" in candidates)
+        assertFalse("192.0.2.255" in candidates)
+    }
+
+    @Test
+    fun discoveryBoundsBroadNetworksToTheDevicesLocalSlash24() {
+        val candidates = subnetCandidates("198.51.100.67", 16)
+
+        assertTrue(candidates.all { it.startsWith("198.51.100.") })
+        assertEquals(253, candidates.size)
     }
 }

@@ -2,6 +2,22 @@
 
 This file records the important implementation decisions behind Free iperf3 Client. User-facing guidance lives in the project wiki.
 
+## 2026-08-25 — v0.3.1
+
+- Preserved the activity and its native iperf process across orientation/screen-size changes so an active run, selected endpoint, live samples, and final result survive rotation.
+- Added user-triggered local IPv4 discovery: recent servers are checked first, the current Wi-Fi/Ethernet `/24` is probed with short bounded connections, at most eight open candidates receive a real iperf3 verification, and only verified servers are shown.
+- Added an app-private recent-server picker capped at eight successful endpoints, with individual removal and **Clear all**. Backup and device transfer explicitly exclude all app data.
+- Added purpose-built wide layouts for TV home, running, and result screens, while retaining the compact phone flow. Corrected bidirectional-unit and interval-table clipping.
+- Added a D-pad-accessible QR result handoff. ZXing encodes the selected command and summary directly in memory; there is no QR service, file, local HTTP server, or added Android permission.
+- Retained immediate input validation, mandatory real-iperf preflight, live progress, clear errors, privacy-safe copy/share defaults, and the permanent no-ads rule.
+
+## Test evidence for v0.3.1
+
+- Phone API 35: successful TCP test; process ID and live stage remained unchanged across a real portrait-to-landscape rotation; test completed on the result screen.
+- Google TV API 35: Leanback launch, wide two-column home/running/result layouts, visible D-pad focus, editor dialog, focus-driven scrolling, real TCP bidirectional result, and fully visible QR dialog.
+- Discovery candidate generation has unit coverage for a `/24` and for bounding a broader network to the device's local `/24`.
+- Fresh `clean testDebugUnitTest lintDebug assembleDebug` passed. Private endpoints, measured rates, screenshots, QR payloads, and raw output are intentionally omitted.
+
 ## 2026-08-25 — v0.3.0
 
 - Replaced the programmatic AppCompat view tree with a single dark Jetpack Compose UI that adapts from portrait phones to landscape TV.

@@ -1,5 +1,35 @@
 # Audit record
 
+## v0.3.1 — 2026-08-25
+
+### Functional sanity check
+
+- Fresh `clean testDebugUnitTest lintDebug assembleDebug` passed with seven unit tests and no lint failure.
+- Phone API 35 completed a real TCP test. During the run, the emulator rotated from portrait to landscape: the app process ID remained unchanged, the same test/stage stayed live, and the run completed successfully.
+- Google TV API 35 completed a real simultaneous TCP bidirectional test. Leanback launch, two-column home/running/result layouts, D-pad focus and scrolling, editor dialog, chart/statistics/details, and the local QR dialog were visually checked at 1920×1080.
+- The QR dialog was corrected after the first TV pass exposed vertical overflow; the final title, QR, disclosure, and focused close action all fit on screen.
+- LAN discovery progress/no-result handling was exercised without an entered address; candidate generation, `/24` boundaries, network/broadcast exclusion, and broader-network capping have unit coverage.
+
+Private endpoints, measured throughput, QR payloads, raw reports, emulator dumps, and screenshots are intentionally omitted.
+
+### Security audit
+
+- Packaged manifest declares only `INTERNET`, prompt-free `ACCESS_NETWORK_STATE`, and Android's app-scoped non-exported dynamic-receiver permission. The APK contains one activity and no service, receiver, or provider; debugger attachment and app backup/device transfer are disabled.
+- There is no ad, analytics, telemetry, account, WebView, dynamic-code, automatic upload, storage, camera, location, microphone, notification, or background-service feature.
+- Manual input is validated and passed to `ProcessBuilder` without a shell. Every measurement is gated by a real iperf3 preflight and all native processes have cancellation/watchdog handling.
+- Discovery is explicit, limited to the local `/24`, uses 32 short bounded probes, and performs sequential real-iperf verification for at most eight open candidates. Known recent endpoints are prioritized.
+- QR export uses ZXing Core in memory, starts no listener, writes no file, calls no QR service, and adds no permission. Its disclosure states that the selected server address is included while raw output is excluded.
+- All 85 resolved Maven runtime coordinates were queried against the official OSV batch API on 2026-08-25: zero findings.
+- All four bundled iperf3 3.21 SHA-256 hashes match `THIRD_PARTY_NOTICES.md`.
+- Final local APK SHA-256 before CI release: `DD1B8C86F8C3A419FD47FF019D1CF6F42930D83195A75578A803D428530FB5D5` (GitHub Actions independently rebuilds and signs the release asset).
+
+### Personal-information audit
+
+- Removed all local emulator XML dumps and screenshots before staging; none is tracked or included in the release.
+- Scanned text, filenames, diff, resources, workflow inputs, and image inventory for private endpoints, Tailscale addresses, local Windows paths, clipboard filenames, personal names/details, emails, credentials, tokens, and diagnostic output.
+- Repository addresses are limited to RFC 5737 documentation ranges, one deliberately malformed RFC 5737 test value, and loopback in a historical failure test. The existing public GitHub repository identity is the only personal-style identifier.
+- The only tracked images are the supplied non-personal launcher artwork and its Android density variants. Runtime safe-copy tests continue to verify complete endpoint redaction.
+
 ## v0.3.0 — 2026-08-25
 
 ### Functional sanity check
