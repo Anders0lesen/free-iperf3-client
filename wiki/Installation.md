@@ -7,6 +7,8 @@
 3. Open it and allow installation from that browser or file manager when Android asks.
 4. Start **Free iperf3 Client** from the app list.
 
+Direct v0.3.0 asset: [free-iperf3-client-v0.3.0.apk](https://github.com/Anders0lesen/free-iperf3-client/releases/download/v0.3.0/free-iperf3-client-v0.3.0.apk)
+
 ## Android TV or Google TV
 
 1. Download the same APK on a computer or phone.

@@ -1,5 +1,35 @@
 # Audit record
 
+## v0.3.0 — 2026-08-25
+
+### Functional sanity check
+
+- Fresh Android clean build, five unit tests, and lint pass.
+- Phone API 35: malformed IPv4 rejected during entry; successful iperf3 server detection; TCP download; simultaneous bidirectional TCP; UDP download/upload with live rate, loss, jitter, packet count and score; complete Run All sequence.
+- Unreachable valid endpoint stopped at the server-check stage and produced a short reason, retry action, technical details, privacy-safe copy, and full-copy option.
+- Google TV API 35: Leanback launch, landscape scaling, D-pad traversal, focus-driven scrolling, and configuration editor dialog verified.
+- Hardware Back returns from results and cancels active native work cleanly.
+
+Private endpoints, measured throughput, raw reports, and emulator screenshots are intentionally omitted.
+
+### Security audit
+
+- Packaged-manifest review: `android.permission.INTERNET` is the only platform capability. Android's app-scoped non-exported dynamic-receiver permission is also generated; it grants no system capability.
+- Only `MainActivity` is packaged. There are no services, providers, app receivers, ads, analytics, telemetry, WebView, dynamic code loading, remote configuration, or automatic crash upload.
+- Backup and debugger attachment are disabled; input is validated and passed as a `ProcessBuilder` argument list without a shell.
+- Every measurement is gated by an actual iperf3 exchange. Watchdogs, Cancel, and activity teardown terminate native processes.
+- All 84 resolved Maven runtime packages queried against OSV on 2026-08-25: zero findings.
+- All four bundled iperf3 3.21 SHA-256 hashes match `THIRD_PARTY_NOTICES.md`.
+- Clean APK SHA-256 before CI release: `7169497DE9A8DACCE4FBDBA2A2A42B4592EB9CA45F96BB70920AB358B3B3BDCE` (the GitHub Actions build is independently produced and will have its own hash).
+
+### Personal-information audit
+
+- Scanned tracked text, filenames, diff, resources, documentation, workflow inputs, and image inventory.
+- No private LAN/Tailscale endpoint, local Windows path, personal name/detail beyond the public GitHub repository identity, email, screenshot, clipboard dump, device report, token, credential, or diagnostic output is included.
+- Documentation contains only RFC 5737 example addresses and loopback used in historical test notes.
+- The user-supplied launcher artwork contains no personal information. No test screenshot is tracked or released.
+- Runtime safe-copy actions redact every occurrence of the entered server and omit the device model; unit coverage verifies endpoint redaction.
+
 ## v0.2.0 — 2026-08-25
 
 ### Functional sanity check

@@ -6,15 +6,19 @@ A deliberately simple iperf3 client for Android phones, tablets, Android TV, and
 
 [Download the latest APK](https://github.com/Anders0lesen/free-iperf3-client/releases/latest) · [Documentation](wiki/Home.md) · [Report a problem](https://github.com/Anders0lesen/free-iperf3-client/issues)
 
-## Version 0.2.0
+## Version 0.3.0
 
+- Rebuilt as a dark-only, responsive interface for phones, tablets, Android TV, and Google TV.
+- Uses crisp native line graphics based on the MIT-licensed Tabler icon style—no emoji controls.
+- Adds live throughput charts, prominent results, min/average/max cards, expandable intervals, and clearer test-stage feedback.
+- Makes server address, port, duration, and UDP target directly configurable.
 - Checks that the endpoint is a responding iperf3 server before every test.
 - Measures TCP download, upload, and simultaneous bidirectional throughput.
 - Tests UDP streaming quality in both directions at a configurable target rate.
 - Gives each UDP direction a clearly labelled 0–100 heuristic score based on delivered rate, packet loss, and jitter.
 - **Run all tests** performs the complete sequence.
 - Shows connection state, the exact command, overall progress, live rates, and per-second intervals while testing.
-- Copies complete results on success or detailed diagnostics on failure.
+- Copies privacy-safe results or diagnostics by default; private endpoint and device details remain available only through the clearly labelled full-copy action.
 - Opens this repository from the GitHub logo in the top-right corner.
 
 The default UDP target is `50 Mbit/s`, which is a useful starting point for local game-streaming checks. Set it to the bitrate you actually want the network to sustain.
@@ -40,13 +44,13 @@ Android will ask you to allow installation from the browser or file manager used
 
 Input errors are shown immediately. For valid input, the app first performs a small real iperf3 exchange. A throughput test starts only after that preflight succeeds.
 
-Android/Google TV is remote-control navigable. Use the on-screen keyboard for the fields, dismiss it, then move through the buttons with the D-pad.
+Android/Google TV is remote-control navigable. Configuration rows use D-pad-friendly editor dialogs and every interactive control has a visible focus state.
 
 ## Failure reports
 
-Failures show **Copy diagnostics** and **Show details**. The report includes versions, device architecture, test settings, the command, raw iperf3 output, error, and stack trace. Nothing is uploaded automatically.
+Failures show a short reason, the failed stage, a retry action, technical details, and two explicit copy choices. The privacy-safe report redacts the endpoint and device model; the full local report includes versions, device architecture, test settings, raw iperf3 output, error, and stack trace. Nothing is uploaded automatically.
 
-The report contains the server address and device model, so review it before posting publicly. Repository documentation and release assets never include private test addresses or personal screenshots.
+Repository documentation and release assets never include private test addresses or personal screenshots.
 
 ## Run an iperf3 server with Docker
 
@@ -71,7 +75,7 @@ Start it with `docker compose up -d`, then enter the Docker host's LAN, DNS, or 
 ## Build
 
 ```powershell
-.\gradlew.bat clean assembleDebug lintDebug
+.\gradlew.bat clean testDebugUnitTest lintDebug assembleDebug
 ```
 
 The local APK is written to `app/build/outputs/apk/debug/app-debug.apk`. Pushes to `main` run the same build and publish the versioned GitHub release asset.
@@ -80,4 +84,4 @@ Implementation decisions, acceptance evidence, and the development history are k
 
 ## Licensing
 
-The application source is released under The Unlicense. It bundles iperf3 3.21 Android binaries built by [android-iperf3](https://github.com/davidBar-On/android-iperf3) from the BSD-3-Clause [ESnet iperf3 source](https://github.com/esnet/iperf). See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+The application source is released under The Unlicense. It bundles iperf3 3.21 Android binaries built by [android-iperf3](https://github.com/davidBar-On/android-iperf3) from the BSD-3-Clause [ESnet iperf3 source](https://github.com/esnet/iperf). The line graphics are adapted from the MIT-licensed [Tabler Icons](https://tabler.io/icons) visual language. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

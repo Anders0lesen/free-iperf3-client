@@ -1,5 +1,16 @@
 # Development log
 
+## 2026-08-25 — v0.3.0
+
+- Rebuilt the app as a polished dark-only Jetpack Compose interface for phone and TV.
+- Added native Tabler-style line graphics, live charts, large result summaries, min/average/max cards, expandable intervals, and clearer stage feedback.
+- Added configurable duration and D-pad-friendly TV editor dialogs with visible focus.
+- Added privacy-safe copy/share actions that redact endpoint and device identity by default.
+- Added hardware Back behavior for clean run cancellation and result navigation.
+- Added validation/scoring/redaction unit tests and repeated the phone, TV, failure, security, dependency, and personal-information checks.
+
+Private endpoints, throughput figures, raw reports, and test screenshots are deliberately not published.
+
 ## 2026-08-25 — v0.2.0
 
 - Added immediate server/port/UDP-target validation and an automatic real-iperf3 preflight before every measurement.

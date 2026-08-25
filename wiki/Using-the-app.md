@@ -4,19 +4,20 @@ You need a reachable [iperf3](https://github.com/esnet/iperf) server.
 
 1. Enter the server IP address or hostname.
 2. Leave port `5201` unless the server uses another port.
-3. Enter the UDP target rate in Mbit/s. For game streaming, use the bitrate the stream needs to sustain; `50` is a useful starting point.
-4. Choose a single test or **Run all tests**.
+3. Choose the duration in seconds.
+4. Enter the UDP target rate in Mbit/s. For game streaming, use the bitrate the stream needs to sustain; `50` is a useful starting point.
+5. Choose a single test or **Run all tests**.
 
 Malformed input is rejected immediately. Before any measurement, the app performs a small real iperf3 control-and-data exchange. It proceeds only if the endpoint answers as iperf3.
 
 ## Tests
 
 - **Check / detect:** confirms that iperf3 is responding, without running a full throughput test.
-- **TCP download:** server to Android device for 10 seconds.
-- **TCP upload:** Android device to server for 10 seconds.
-- **TCP bidirectional:** simultaneous upload and download for 10 seconds.
-- **UDP quality:** five seconds in each direction at the selected target rate.
-- **Run all:** detection plus all TCP and UDP stages, about 41 seconds.
+- **TCP download:** server to Android device for the selected duration.
+- **TCP upload:** Android device to server for the selected duration.
+- **TCP bidirectional:** simultaneous upload and download for the selected duration.
+- **UDP quality:** the selected duration in each direction at the target rate.
+- **Run all:** detection plus all three TCP and both UDP stages. At the 10-second default, allow about 51 seconds plus connection setup.
 
 ## Live feedback
 
@@ -31,6 +32,8 @@ During a run the app shows:
 
 Successful results and intervals can be copied. Failures produce a separate copyable diagnostic report.
 
+The default copy/share actions are privacy-safe: they redact the server and device identity. Full technical copies remain available through a clearly labelled action for private troubleshooting.
+
 ## UDP score
 
 Each direction receives a 0–100 app heuristic and an **Excellent**, **Good**, **Fair**, or **Poor** grade. The score penalizes:
@@ -43,6 +46,6 @@ This is a practical comparison aid, not an industry certification. Always keep t
 
 ## TV remote navigation
 
-Select the server field and type with the on-screen keyboard. Dismiss the keyboard, then use the D-pad through port, UDP target, test buttons, and report actions.
+Use the D-pad to highlight a configuration row and press Select to open its editor. Press **Done**, then continue through the test and report cards. Focused controls have a teal outline and the page scrolls with focus.
 
 Example server: `192.0.2.10` (documentation-only address; replace it with a reachable LAN, DNS, or Tailscale endpoint).

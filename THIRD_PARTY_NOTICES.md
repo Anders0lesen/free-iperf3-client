@@ -12,3 +12,7 @@ Bundled binary SHA-256 checksums:
 - `armeabi-v7a`: `4DBC073FA059105E18D61B033DC3C3A7E191553409A4586E4DC47E1DFB9ACDCE`
 - `x86`: `0624B6E46DAB7934196F6B77B8708972578C316123C5B9C0A15271074B82F19B`
 - `x86_64`: `3999E812AE20B3DCCDED5CF1CEC5D62476BCF1B1D7CD1F3133848635309EDCEE`
+
+## Tabler Icons
+
+The app's native Canvas line graphics use geometry adapted from the [Tabler Icons](https://tabler.io/icons) visual language. Tabler Icons are designed on a 24×24 grid with a 2-pixel stroke and are distributed under the MIT License. Source and license: <https://github.com/tabler/tabler-icons>.

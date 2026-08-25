@@ -20,8 +20,8 @@ jobs:
           java-version: '17'
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
-      - name: Build debug APK
-        run: ./gradlew assembleDebug
+      - name: Test, lint, and build APK
+        run: ./gradlew testDebugUnitTest lintDebug assembleDebug
       - name: Stage APK
         id: stage
         shell: bash

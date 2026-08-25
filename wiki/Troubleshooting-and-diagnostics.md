@@ -15,11 +15,11 @@ Every throughput/quality button automatically performs the server-detection pref
 ## Sharing a failure
 
 1. Read the short reason.
-2. Press **Copy diagnostics**.
-3. Review the server and device fields.
+2. Press **Copy privacy-safe diagnostics**.
+3. Use the full diagnostic copy only for a trusted private conversation.
 4. Paste it into a [GitHub issue](https://github.com/Anders0lesen/free-iperf3-client/issues/new) or support chat.
 
-The report contains UTC time, app/engine/Android versions, device and CPU architecture, failed stage, server, UDP target, completed results, raw iperf3 output, error, and stack trace. It is generated locally and never uploaded automatically.
+The safe report contains UTC time, app/engine/Android versions, CPU architecture, failed stage, UDP target, completed results, redacted raw iperf3 output, error, and stack trace. The full local copy additionally retains the server and device model. Neither is uploaded automatically.
 
 ## Common failures
 

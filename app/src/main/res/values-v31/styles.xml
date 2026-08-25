@@ -1,0 +1,7 @@
+<resources>
+    <style name="AppTheme">
+        <item name="android:windowSplashScreenBackground">#05090D</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">#05090D</item>
+    </style>
+</resources>

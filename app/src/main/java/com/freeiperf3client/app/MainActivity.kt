@@ -1,342 +1,194 @@
 package com.freeiperf3client.app
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Typeface
+import android.content.res.Configuration
+import android.graphics.Paint
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.text.InputType
-import android.view.Gravity
-import android.view.KeyEvent
-import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.ScrollView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import java.io.File
-import java.net.IDN
-import java.net.Inet6Address
-import java.net.InetAddress
-import java.time.Instant
-import java.util.Locale
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BasicTooltipBox
+import androidx.compose.foundation.BasicTooltipState
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.roundToInt
-import org.json.JSONObject
 
 private const val REPOSITORY_URL = "https://github.com/Anders0lesen/free-iperf3-client"
 
-private enum class TestMode(val label: String, val durationSeconds: Int) {
-    DETECT("Server detection", 1),
-    TCP_DOWNLOAD("TCP download", 10),
-    TCP_UPLOAD("TCP upload", 10),
-    TCP_BIDIRECTIONAL("TCP bidirectional", 10),
-    UDP_DOWNLOAD("UDP download quality", 5),
-    UDP_UPLOAD("UDP upload quality", 5)
-}
+private val AppBackground = Color(0xFF05090D)
+private val AppSurface = Color(0xFF0B1218)
+private val AppSurfaceRaised = Color(0xFF101920)
+private val AppBorder = Color(0xFF24313A)
+private val AppText = Color(0xFFF4F7FA)
+private val AppMuted = Color(0xFFAEB9C2)
+private val Teal = Color(0xFF14D8C4)
+private val Blue = Color(0xFF2F80FF)
+private val Green = Color(0xFF35D05B)
+private val Purple = Color(0xFFC05EF5)
+private val Orange = Color(0xFFFF9800)
+private val Red = Color(0xFFFF6070)
 
-private data class TestConfig(
-    val hostname: String,
-    val port: Int,
-    val udpTargetMbps: Int
-)
+private enum class AppScreen { HOME, RUNNING, RESULTS }
 
-private data class LiveUpdate(
-    val connected: Boolean = false,
-    val connection: String? = null,
-    val elapsedSeconds: Double = 0.0,
-    val uploadBitsPerSecond: Double? = null,
-    val downloadBitsPerSecond: Double? = null,
-    val jitterMs: Double? = null,
-    val lossPercent: Double? = null,
-    val intervalText: String? = null
-)
+private enum class DetectionStatus { NOT_CHECKED, CHECKING, DETECTED, FAILED }
 
-private data class TestResult(
+private data class SessionFailure(
     val mode: TestMode,
-    val connection: String?,
-    val uploadBitsPerSecond: Double? = null,
-    val downloadBitsPerSecond: Double? = null,
-    val jitterMs: Double? = null,
-    val lossPercent: Double? = null,
-    val packets: Long? = null,
-    val rawOutput: String
+    val error: Throwable,
 )
 
-private class IperfFailure(
-    message: String,
-    val rawOutput: String
-) : IllegalStateException(message)
+private data class RunState(
+    val title: String,
+    val config: TestConfig,
+    val modes: List<TestMode>,
+    val currentMode: TestMode,
+    val currentIndex: Int,
+    val stage: String,
+    val progress: Float,
+    val live: LiveUpdate = LiveUpdate(),
+    val samples: List<IntervalSample> = emptyList(),
+    val command: String = "",
+    val completed: List<TestResult> = emptyList(),
+)
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var host: EditText
-    private lateinit var port: EditText
-    private lateinit var udpTarget: EditText
-    private lateinit var github: ImageButton
-    private lateinit var status: TextView
-    private lateinit var progress: ProgressBar
-    private lateinit var command: TextView
-    private lateinit var live: TextView
-    private lateinit var intervals: TextView
-    private lateinit var result: TextView
-    private lateinit var detect: Button
-    private lateinit var download: Button
-    private lateinit var upload: Button
-    private lateinit var bidirectional: Button
-    private lateinit var udpQuality: Button
-    private lateinit var runAll: Button
-    private lateinit var copyShare: Button
-    private lateinit var toggleDetails: Button
-    private lateinit var details: TextView
-    private val actionButtons = mutableListOf<Button>()
-    private val intervalLines = mutableListOf<String>()
-    private var shareText = ""
-    @Volatile private var activeProcess: Process? = null
+private data class CompletedSession(
+    val title: String,
+    val config: TestConfig,
+    val results: List<TestResult>,
+    val failure: SessionFailure? = null,
+)
+
+class MainActivity : ComponentActivity() {
+    private lateinit var engine: IperfEngine
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val pad = (24 * resources.displayMetrics.density).toInt()
-        val smallPad = (12 * resources.displayMetrics.density).toInt()
-        val box = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(pad, pad, pad, pad)
-        }
-
-        val header = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-        }
-        header.addView(TextView(this).apply {
-            text = "Free iperf3 Client"
-            textSize = 28f
-            gravity = Gravity.START or Gravity.CENTER_VERTICAL
-        }, LinearLayout.LayoutParams(0, -2, 1f))
-
-        github = ImageButton(this).apply {
-            id = View.generateViewId()
-            setImageResource(R.drawable.ic_github)
-            contentDescription = "Open project on GitHub"
-            setBackgroundColor(Color.TRANSPARENT)
-            setPadding(smallPad, smallPad, smallPad, smallPad)
-            isFocusable = true
-            tooltipText = "Open GitHub repository"
-            setOnClickListener { openRepository() }
-        }
-        header.addView(github, LinearLayout.LayoutParams(
-            (52 * resources.displayMetrics.density).toInt(),
-            (52 * resources.displayMetrics.density).toInt()
-        ))
-        box.addView(header, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = smallPad })
-
-        host = EditText(this).apply {
-            id = View.generateViewId()
-            hint = "Server IP or hostname"
-            setSingleLine(true)
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
-            imeOptions = EditorInfo.IME_ACTION_NEXT
-        }
-        box.addView(host, LinearLayout.LayoutParams(-1, -2))
-
-        port = EditText(this).apply {
-            id = View.generateViewId()
-            setText("5201")
-            hint = "Port"
-            setSingleLine(true)
-            inputType = InputType.TYPE_CLASS_NUMBER
-            imeOptions = EditorInfo.IME_ACTION_NEXT
-        }
-        box.addView(port, LinearLayout.LayoutParams(-1, -2))
-
-        udpTarget = EditText(this).apply {
-            id = View.generateViewId()
-            setText("50")
-            hint = "UDP target Mbit/s"
-            setSingleLine(true)
-            inputType = InputType.TYPE_CLASS_NUMBER
-            imeOptions = EditorInfo.IME_ACTION_DONE
-        }
-        box.addView(udpTarget, LinearLayout.LayoutParams(-1, -2))
-
-        detect = addActionButton(box, "CHECK / DETECT IPERF3 SERVER", pad) {
-            startSequence("SERVER CHECK", listOf(TestMode.DETECT))
-        }
-        download = addActionButton(box, "TCP DOWNLOAD  (SERVER → THIS DEVICE)") {
-            startSequence("TCP DOWNLOAD", listOf(TestMode.TCP_DOWNLOAD))
-        }
-        upload = addActionButton(box, "TCP UPLOAD  (THIS DEVICE → SERVER)") {
-            startSequence("TCP UPLOAD", listOf(TestMode.TCP_UPLOAD))
-        }
-        bidirectional = addActionButton(box, "TCP BIDIRECTIONAL  (SIMULTANEOUS)") {
-            startSequence("TCP BIDIRECTIONAL", listOf(TestMode.TCP_BIDIRECTIONAL))
-        }
-        udpQuality = addActionButton(box, "UDP QUALITY  (BOTH DIRECTIONS)") {
-            startSequence("UDP QUALITY", listOf(TestMode.UDP_DOWNLOAD, TestMode.UDP_UPLOAD))
-        }
-        runAll = addActionButton(box, "RUN ALL TESTS") {
-            startSequence("FULL TEST", TestMode.entries.toList())
-        }
-
-        status = TextView(this).apply {
-            text = "Ready to test"
-            textSize = 17f
-            setTypeface(typeface, Typeface.BOLD)
-            setPadding(0, pad, 0, smallPad)
-        }
-        box.addView(status, LinearLayout.LayoutParams(-1, -2))
-
-        progress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
-            max = 1000
-            progress = 0
-            visibility = View.GONE
-        }
-        box.addView(progress, LinearLayout.LayoutParams(-1, -2))
-
-        command = TextView(this).apply {
-            textSize = 14f
-            typeface = Typeface.MONOSPACE
-            setTextIsSelectable(true)
-            setPadding(smallPad, smallPad, smallPad, smallPad)
-            setBackgroundColor(Color.argb(24, 128, 128, 128))
-            visibility = View.GONE
-        }
-        box.addView(command, LinearLayout.LayoutParams(-1, -2).apply { topMargin = smallPad })
-
-        live = TextView(this).apply {
-            textSize = 16f
-            visibility = View.GONE
-            setPadding(0, smallPad, 0, 0)
-        }
-        box.addView(live, LinearLayout.LayoutParams(-1, -2))
-
-        intervals = TextView(this).apply {
-            textSize = 13f
-            typeface = Typeface.MONOSPACE
-            setTextIsSelectable(true)
-            setPadding(0, smallPad, 0, 0)
-            visibility = View.GONE
-        }
-        box.addView(intervals, LinearLayout.LayoutParams(-1, -2))
-
-        result = TextView(this).apply {
-            text = "Enter an iperf3 server, choose a test, or run them all."
-            textSize = 18f
-            setPadding(0, pad, 0, 0)
-            isFocusable = false
-            setTextIsSelectable(true)
-        }
-        box.addView(result, LinearLayout.LayoutParams(-1, -2))
-
-        copyShare = Button(this).apply {
-            id = View.generateViewId()
-            text = "COPY RESULTS"
-            isFocusable = true
-            visibility = View.GONE
-            setOnClickListener { copyShareText() }
-        }
-        box.addView(copyShare, LinearLayout.LayoutParams(-1, -2).apply { topMargin = pad })
-
-        toggleDetails = Button(this).apply {
-            id = View.generateViewId()
-            text = "SHOW DETAILS"
-            isFocusable = true
-            visibility = View.GONE
-            setOnClickListener { toggleTechnicalDetails() }
-        }
-        box.addView(toggleDetails, LinearLayout.LayoutParams(-1, -2))
-
-        details = TextView(this).apply {
-            textSize = 14f
-            typeface = Typeface.MONOSPACE
-            setTextIsSelectable(true)
-            visibility = View.GONE
-            setPadding(0, pad, 0, pad)
-        }
-        box.addView(details, LinearLayout.LayoutParams(-1, -2))
-
-        configureFocusOrder()
-        configureInputNavigation()
-
-        setContentView(ScrollView(this).apply {
-            isFillViewport = true
-            addView(box)
-        })
-    }
-
-    private fun addActionButton(
-        parent: LinearLayout,
-        label: String,
-        topMargin: Int = 0,
-        action: () -> Unit
-    ): Button = Button(this).apply {
-        id = View.generateViewId()
-        text = label
-        isFocusable = true
-        setOnClickListener { action() }
-        parent.addView(this, LinearLayout.LayoutParams(-1, -2).apply {
-            this.topMargin = topMargin
-        })
-        actionButtons += this
-    }
-
-    private fun configureFocusOrder() {
-        val focusViews = listOf<View>(
-            github, host, port, udpTarget, detect, download, upload,
-            bidirectional, udpQuality, runAll, copyShare, toggleDetails
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(AppBackground.toArgb()),
+            navigationBarStyle = SystemBarStyle.dark(AppBackground.toArgb()),
         )
-        focusViews.forEachIndexed { index, view ->
-            if (index > 0) view.nextFocusUpId = focusViews[index - 1].id
-            if (index < focusViews.lastIndex) view.nextFocusDownId = focusViews[index + 1].id
-        }
-    }
-
-    private fun configureInputNavigation() {
-        host.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                port.requestFocus()
-                true
-            } else false
-        }
-        port.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                udpTarget.requestFocus()
-                true
-            } else false
-        }
-        udpTarget.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                hideKeyboard()
-                detect.requestFocus()
-                true
-            } else false
-        }
-        host.setDpadFocus(github, port)
-        port.setDpadFocus(host, udpTarget)
-        udpTarget.setDpadFocus(port, detect)
-    }
-
-    private fun EditText.setDpadFocus(up: View, down: View) {
-        setOnKeyListener { _, keyCode, event ->
-            when {
-                event.action != KeyEvent.ACTION_DOWN -> false
-                keyCode == KeyEvent.KEYCODE_DPAD_UP -> up.requestFocus().let { true }
-                keyCode == KeyEvent.KEYCODE_DPAD_DOWN -> down.requestFocus().let { true }
-                else -> false
+        engine = IperfEngine(this)
+        setContent {
+            IperfTheme {
+                IperfApp(
+                    engine = engine,
+                    openRepository = ::openRepository,
+                    copyText = ::copyText,
+                    shareText = ::shareText,
+                )
             }
         }
     }
@@ -349,615 +201,1574 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun hideKeyboard() {
-        val keyboard = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        keyboard.hideSoftInputFromWindow(udpTarget.windowToken, 0)
-    }
-
-    private fun readConfig(needsUdp: Boolean): TestConfig? {
-        val hostname = host.text.toString().trim().removeSurrounding("[", "]")
-        val portNumber = port.text.toString().toIntOrNull()
-        val udpMbps = udpTarget.text.toString().toIntOrNull()
-        if (hostname.isBlank()) {
-            showInputError(host, "Enter a server IP or hostname")
-            return null
-        }
-        if (!isValidServerName(hostname)) {
-            showInputError(host, "That is not a valid IP address or hostname")
-            return null
-        }
-        if (portNumber == null || portNumber !in 1..65535) {
-            showInputError(port, "Enter a port between 1 and 65535")
-            return null
-        }
-        if (needsUdp && (udpMbps == null || udpMbps !in 1..10_000)) {
-            showInputError(udpTarget, "Enter a UDP target between 1 and 10000 Mbit/s")
-            return null
-        }
-        return TestConfig(hostname, portNumber, udpMbps ?: 50)
-    }
-
-    private fun showInputError(field: EditText, message: String) {
-        field.error = message
-        field.requestFocus()
-        setStatus("Input needs attention", "#EF5350")
-        result.text = message
-    }
-
-    private fun isValidServerName(value: String): Boolean {
-        if (value.length > 253 || value.any(Char::isWhitespace)) return false
-        val ipv4Parts = value.split('.')
-        if (ipv4Parts.size == 4 && ipv4Parts.all { part ->
-                part.isNotEmpty() && part.all(Char::isDigit) && part.toIntOrNull() in 0..255
-            }) return true
-        if (value.contains(':') && runCatching {
-                InetAddress.getByName(value) is Inet6Address
-            }.getOrDefault(false)) return true
-        if (value.all { it.isDigit() || it == '.' }) return false
-        val ascii = runCatching { IDN.toASCII(value.removeSuffix(".")) }.getOrNull() ?: return false
-        if (ascii.isBlank() || ascii.length > 253) return false
-        return ascii.split('.').all { label ->
-            label.length in 1..63 &&
-                label.first().isLetterOrDigit() &&
-                label.last().isLetterOrDigit() &&
-                label.all { it.isLetterOrDigit() || it == '-' }
-        }
-    }
-
-    private fun startSequence(title: String, modes: List<TestMode>) {
-        val plannedModes = if (modes.firstOrNull() == TestMode.DETECT) {
-            modes
-        } else {
-            listOf(TestMode.DETECT) + modes
-        }
-        val config = readConfig(plannedModes.any { it == TestMode.UDP_DOWNLOAD || it == TestMode.UDP_UPLOAD })
-            ?: return
-        hideKeyboard()
-        setBusy(true)
-        clearShareArea()
-        progress.visibility = View.VISIBLE
-        progress.progress = 0
-        command.visibility = View.VISIBLE
-        live.visibility = View.VISIBLE
-        live.text = "Preparing…"
-        intervalLines.clear()
-        intervals.text = ""
-        intervals.visibility = View.VISIBLE
-        result.text = "No completed results yet."
-
-        Thread {
-            val completed = mutableListOf<TestResult>()
-            val totalSeconds = plannedModes.sumOf { it.durationSeconds }.coerceAtLeast(1)
-            var completedSeconds = 0
-            var activeMode = plannedModes.first()
-            try {
-                plannedModes.forEachIndexed { index, mode ->
-                    activeMode = mode
-                    showStageWaiting(config, mode, index, plannedModes.size, completedSeconds, totalSeconds)
-                    val testResult = executeIperf(config, mode) { update ->
-                        showLiveUpdate(
-                            mode, update, index, plannedModes.size,
-                            completedSeconds, totalSeconds
-                        )
-                    }
-                    completed += testResult
-                    completedSeconds += mode.durationSeconds
-                    runOnUiThread {
-                        result.text = formatResults(title, config, completed)
-                        progress.progress = ((completedSeconds.toDouble() / totalSeconds) * progress.max)
-                            .roundToInt()
-                    }
-                }
-                runOnUiThread { showSuccess(title, config, completed) }
-            } catch (error: Exception) {
-                runOnUiThread { showFailure(title, config, activeMode, completed, error) }
-            }
-        }.start()
-    }
-
-    private fun showStageWaiting(
-        config: TestConfig,
-        mode: TestMode,
-        index: Int,
-        count: Int,
-        completedSeconds: Int,
-        totalSeconds: Int
-    ) {
-        runOnUiThread {
-            setStatus("Connecting… · ${mode.label} · ${index + 1}/$count", "#FFB74D")
-            live.text = "Opening the iperf3 control connection…"
-            command.text = "Command\n${formatDisplayCommand(config, mode)}"
-            intervalLines += if (intervalLines.isEmpty()) mode.label else "\n${mode.label}"
-            intervals.text = intervalLines.joinToString("\n")
-            progress.progress = ((completedSeconds.toDouble() / totalSeconds) * progress.max)
-                .roundToInt()
-        }
-    }
-
-    private fun showLiveUpdate(
-        mode: TestMode,
-        update: LiveUpdate,
-        index: Int,
-        count: Int,
-        completedSeconds: Int,
-        totalSeconds: Int
-    ) {
-        runOnUiThread {
-            if (update.connected) {
-                setStatus("Connected ✓ · ${mode.label} · ${index + 1}/$count", "#66BB6A")
-            }
-            val elapsed = update.elapsedSeconds.coerceIn(0.0, mode.durationSeconds.toDouble())
-            val overall = (completedSeconds + elapsed) / totalSeconds
-            progress.progress = (overall * progress.max).roundToInt()
-            live.text = formatLiveUpdate(mode, update)
-            update.intervalText?.let {
-                intervalLines += it
-                intervals.text = intervalLines.joinToString("\n")
-            }
-        }
-    }
-
-    private fun formatLiveUpdate(mode: TestMode, update: LiveUpdate): String = buildString {
-        if (update.connection != null && update.elapsedSeconds == 0.0) {
-            append("iperf3 connection established: ").append(update.connection)
-            return@buildString
-        }
-        append("Running: ")
-            .append(min(mode.durationSeconds.toDouble(), update.elapsedSeconds).roundToInt())
-            .append(" / ").append(mode.durationSeconds).append(" seconds")
-        update.downloadBitsPerSecond?.let {
-            append("\nDownload now: ").append(formatBitsPerSecond(it))
-        }
-        update.uploadBitsPerSecond?.let {
-            append("\nUpload now: ").append(formatBitsPerSecond(it))
-        }
-        if (update.jitterMs != null || update.lossPercent != null) {
-            append("\n")
-            update.jitterMs?.let { append("Jitter: ").append(formatMilliseconds(it)).append("  ") }
-            update.lossPercent?.let { append("Loss: ").append(formatPercent(it)) }
-        }
-    }
-
-    private fun executeIperf(
-        config: TestConfig,
-        mode: TestMode,
-        onUpdate: (LiveUpdate) -> Unit
-    ): TestResult {
-        val executable = File(applicationInfo.nativeLibraryDir, "libiperf3.so")
-        if (!executable.canExecute()) {
-            throw IllegalStateException("The bundled iperf3 engine is unavailable on this device")
-        }
-
-        val processCommand = buildCommand(config, mode, executable.absolutePath)
-
-        val process = ProcessBuilder(processCommand)
-            .redirectErrorStream(true)
-            .start()
-        activeProcess = process
-        val timedOut = AtomicBoolean(false)
-        val watchdog = Executors.newSingleThreadScheduledExecutor()
-        val timeoutTask = watchdog.schedule({
-            timedOut.set(true)
-            process.destroyForcibly()
-        }, mode.durationSeconds + 12L, TimeUnit.SECONDS)
-
-        val raw = StringBuilder()
-        var endData: JSONObject? = null
-        var connection: String? = null
-        var errorMessage: String? = null
-        try {
-            process.inputStream.bufferedReader().useLines { lines ->
-                lines.forEach { line ->
-                    if (line.isBlank()) return@forEach
-                    raw.appendLine(line)
-                    val event = runCatching { JSONObject(line) }.getOrNull() ?: return@forEach
-                    when (event.optString("event")) {
-                        "start" -> {
-                            val data = event.optJSONObject("data") ?: JSONObject()
-                            val connected = data.optJSONArray("connected")?.optJSONObject(0)
-                            connection = connected?.let {
-                                "${it.optString("remote_host")}:${it.optInt("remote_port")}"
-                            }
-                            onUpdate(LiveUpdate(connected = true, connection = connection))
-                        }
-                        "interval" -> {
-                            val data = event.optJSONObject("data") ?: JSONObject()
-                            onUpdate(parseLiveUpdate(mode, data))
-                        }
-                        "end" -> endData = event.optJSONObject("data") ?: JSONObject()
-                        "error" -> errorMessage = event.optString("data", "iperf3 reported an error")
-                    }
-                }
-            }
-            process.waitFor()
-        } finally {
-            timeoutTask.cancel(true)
-            watchdog.shutdownNow()
-            if (activeProcess === process) activeProcess = null
-        }
-
-        if (timedOut.get()) {
-            throw IperfFailure("The ${mode.label.lowercase()} timed out", raw.toString())
-        }
-        if (!errorMessage.isNullOrBlank()) {
-            throw IperfFailure(errorMessage!!, raw.toString())
-        }
-        if (process.exitValue() != 0) {
-            throw IperfFailure(
-                "iperf3 exited with code ${process.exitValue()}",
-                raw.toString()
-            )
-        }
-        val finalData = endData
-            ?: throw IperfFailure("iperf3 finished without a final result", raw.toString())
-        return parseFinalResult(mode, finalData, connection, raw.toString())
-    }
-
-    private fun buildCommand(config: TestConfig, mode: TestMode, executable: String): List<String> {
-        val command = mutableListOf(
-            executable,
-            "-c", config.hostname,
-            "-p", config.port.toString(),
-        )
-        command += if (mode == TestMode.DETECT) {
-            listOf("-n", "1")
-        } else {
-            listOf("-t", mode.durationSeconds.toString())
-        }
-        command += listOf(
-            "-i", "1", "--connect-timeout", "3000", "--json-stream", "--forceflush"
-        )
-        when (mode) {
-            TestMode.DETECT -> Unit
-            TestMode.TCP_DOWNLOAD -> command += "-R"
-            TestMode.TCP_UPLOAD -> Unit
-            TestMode.TCP_BIDIRECTIONAL -> command += "--bidir"
-            TestMode.UDP_DOWNLOAD -> command += listOf("-u", "-b", "${config.udpTargetMbps}M", "-R")
-            TestMode.UDP_UPLOAD -> command += listOf("-u", "-b", "${config.udpTargetMbps}M")
-        }
-        return command
-    }
-
-    private fun formatDisplayCommand(config: TestConfig, mode: TestMode): String =
-        buildCommand(config, mode, "iperf3").joinToString(" ") { argument ->
-            if (argument.any(Char::isWhitespace)) "\"${argument.replace("\"", "\\\"")}\"" else argument
-        }
-
-    private fun parseLiveUpdate(mode: TestMode, data: JSONObject): LiveUpdate {
-        val sum = data.optJSONObject("sum")
-        val reverse = data.optJSONObject("sum_bidir_reverse")
-        val elapsed = max(
-            sum?.optDouble("end", 0.0) ?: 0.0,
-            reverse?.optDouble("end", 0.0) ?: 0.0
-        )
-        val primaryRate = sum?.optionalDouble("bits_per_second")
-        val reverseRate = reverse?.optionalDouble("bits_per_second")
-        val intervalText = listOfNotNull(
-            sum?.let { formatInterval(it, if (mode == TestMode.TCP_DOWNLOAD || mode == TestMode.UDP_DOWNLOAD) "↓" else "↑") },
-            reverse?.let { formatInterval(it, "↓") }
-        ).joinToString("\n").ifBlank { null }
-        return when (mode) {
-            TestMode.TCP_DOWNLOAD, TestMode.UDP_DOWNLOAD -> LiveUpdate(
-                elapsedSeconds = elapsed,
-                downloadBitsPerSecond = primaryRate,
-                jitterMs = sum?.optionalDouble("jitter_ms"),
-                lossPercent = sum?.optionalDouble("lost_percent"),
-                intervalText = intervalText
-            )
-            TestMode.TCP_BIDIRECTIONAL -> LiveUpdate(
-                elapsedSeconds = elapsed,
-                uploadBitsPerSecond = primaryRate,
-                downloadBitsPerSecond = reverseRate,
-                intervalText = intervalText
-            )
-            else -> LiveUpdate(
-                elapsedSeconds = elapsed,
-                uploadBitsPerSecond = primaryRate,
-                jitterMs = sum?.optionalDouble("jitter_ms"),
-                lossPercent = sum?.optionalDouble("lost_percent"),
-                intervalText = intervalText
-            )
-        }
-    }
-
-    private fun formatInterval(sum: JSONObject, direction: String): String {
-        val start = sum.optDouble("start", 0.0)
-        val end = sum.optDouble("end", 0.0)
-        val rate = sum.optDouble("bits_per_second", 0.0)
-        val bytes = sum.optDouble("bytes", 0.0)
-        return buildString {
-            append(formatNumber(start, 2)).append("–").append(formatNumber(end, 2)).append(" s  ")
-            append(direction).append(" ").append(formatBitsPerSecond(rate))
-            if (bytes > 0) append("  ").append(formatBytes(bytes))
-            sum.optionalDouble("jitter_ms")?.let { append("  jitter ").append(formatMilliseconds(it)) }
-            sum.optionalDouble("lost_percent")?.let { append("  loss ").append(formatPercent(it)) }
-        }
-    }
-
-    private fun parseFinalResult(
-        mode: TestMode,
-        end: JSONObject,
-        connection: String?,
-        rawOutput: String
-    ): TestResult {
-        val sent = end.optJSONObject("sum_sent")
-        val received = end.optJSONObject("sum_received")
-        return when (mode) {
-            TestMode.DETECT -> TestResult(mode, connection, rawOutput = rawOutput)
-            TestMode.TCP_DOWNLOAD -> TestResult(
-                mode, connection,
-                downloadBitsPerSecond = received.requireDouble("bits_per_second", mode),
-                rawOutput = rawOutput
-            )
-            TestMode.TCP_UPLOAD -> TestResult(
-                mode, connection,
-                uploadBitsPerSecond = sent.requireDouble("bits_per_second", mode),
-                rawOutput = rawOutput
-            )
-            TestMode.TCP_BIDIRECTIONAL -> {
-                val reverseReceived = end.optJSONObject("sum_received_bidir_reverse")
-                    ?: throw IperfFailure(
-                        "The server did not return bidirectional results; update its iperf3 version",
-                        rawOutput
-                    )
-                TestResult(
-                    mode, connection,
-                    uploadBitsPerSecond = sent.requireDouble("bits_per_second", mode),
-                    downloadBitsPerSecond = reverseReceived.requireDouble("bits_per_second", mode),
-                    rawOutput = rawOutput
-                )
-            }
-            TestMode.UDP_DOWNLOAD, TestMode.UDP_UPLOAD -> {
-                val summary = received
-                    ?: throw IperfFailure("iperf3 did not return UDP receiver statistics", rawOutput)
-                val rate = summary.requireDouble("bits_per_second", mode)
-                TestResult(
-                    mode, connection,
-                    uploadBitsPerSecond = rate.takeIf { mode == TestMode.UDP_UPLOAD },
-                    downloadBitsPerSecond = rate.takeIf { mode == TestMode.UDP_DOWNLOAD },
-                    jitterMs = summary.optionalDouble("jitter_ms") ?: 0.0,
-                    lossPercent = summary.optionalDouble("lost_percent") ?: 0.0,
-                    packets = summary.optLong("packets", 0).takeIf { it > 0 },
-                    rawOutput = rawOutput
-                )
-            }
-        }
-    }
-
-    private fun JSONObject?.requireDouble(key: String, mode: TestMode): Double {
-        val value = this?.optionalDouble(key)
-        return value ?: throw IllegalStateException("Missing $key in ${mode.label} result")
-    }
-
-    private fun JSONObject.optionalDouble(key: String): Double? =
-        if (has(key) && !isNull(key)) optDouble(key) else null
-
-    private fun showSuccess(title: String, config: TestConfig, results: List<TestResult>) {
-        progress.progress = progress.max
-        setStatus("Complete ✓", "#66BB6A")
-        live.text = "All requested tests completed successfully."
-        result.text = formatResults(title, config, results)
-        shareText = buildShareReport(title, config, results, intervalLines.joinToString("\n"))
-        details.text = shareText
-        copyShare.text = "COPY RESULTS"
-        copyShare.visibility = View.VISIBLE
-        toggleDetails.visibility = View.VISIBLE
-        setBusy(false)
-    }
-
-    private fun showFailure(
-        title: String,
-        config: TestConfig,
-        mode: TestMode,
-        completed: List<TestResult>,
-        error: Exception
-    ) {
-        setStatus("Failed · ${mode.label}", "#EF5350")
-        live.text = friendlyError(error)
-        result.text = buildString {
-            append("TEST FAILED\n\n")
-            append(friendlyError(error))
-            if (completed.isNotEmpty()) {
-                append("\n\nCompleted before the failure:\n")
-                append(formatResults(title, config, completed))
-            }
-            append("\n\nUse COPY DIAGNOSTICS to share the technical details.")
-        }
-        shareText = buildDiagnosticReport(title, config, mode, completed, error)
-        details.text = shareText
-        details.visibility = View.GONE
-        copyShare.text = "COPY DIAGNOSTICS"
-        copyShare.visibility = View.VISIBLE
-        toggleDetails.text = "SHOW DETAILS"
-        toggleDetails.visibility = View.VISIBLE
-        setBusy(false)
-    }
-
-    private fun formatResults(
-        title: String,
-        config: TestConfig,
-        results: List<TestResult>
-    ): String = buildString {
-        append(title).append(" RESULTS\n")
-        results.forEach { test ->
-            append("\n").append(formatResult(test, config)).append("\n")
-        }
-    }.trimEnd()
-
-    private fun formatResult(test: TestResult, config: TestConfig): String = when (test.mode) {
-        TestMode.DETECT -> buildString {
-            append("✓ IPERF3 SERVER DETECTED")
-            test.connection?.let { append("\n  Connected to ").append(it) }
-            append("\n  Control and data test succeeded")
-        }
-        TestMode.TCP_DOWNLOAD -> "TCP download\n  ${formatBitsPerSecond(test.downloadBitsPerSecond!!)}"
-        TestMode.TCP_UPLOAD -> "TCP upload\n  ${formatBitsPerSecond(test.uploadBitsPerSecond!!)}"
-        TestMode.TCP_BIDIRECTIONAL -> buildString {
-            append("TCP bidirectional (simultaneous)")
-            append("\n  Download: ").append(formatBitsPerSecond(test.downloadBitsPerSecond!!))
-            append("\n  Upload:   ").append(formatBitsPerSecond(test.uploadBitsPerSecond!!))
-        }
-        TestMode.UDP_DOWNLOAD, TestMode.UDP_UPLOAD -> formatUdpResult(test, config)
-    }
-
-    private fun formatUdpResult(test: TestResult, config: TestConfig): String {
-        val rate = test.downloadBitsPerSecond ?: test.uploadBitsPerSecond ?: 0.0
-        val (score, grade) = scoreUdp(test, config)
-        val direction = if (test.mode == TestMode.UDP_DOWNLOAD) "download" else "upload"
-        return buildString {
-            append("UDP ").append(direction).append(" quality")
-            append("\n  Score: ").append(score).append("/100 · ").append(grade)
-            append("\n  Received: ").append(formatBitsPerSecond(rate))
-                .append(" · Target: ").append(config.udpTargetMbps).append(" Mbit/s")
-            append("\n  Loss: ").append(formatPercent(test.lossPercent ?: 0.0))
-                .append(" · Jitter: ").append(formatMilliseconds(test.jitterMs ?: 0.0))
-            test.packets?.let { append(" · Packets: ").append(it) }
-        }
-    }
-
-    private fun scoreUdp(test: TestResult, config: TestConfig): Pair<Int, String> {
-        val receivedRate = test.downloadBitsPerSecond ?: test.uploadBitsPerSecond ?: 0.0
-        val targetRate = config.udpTargetMbps * 1_000_000.0
-        val deliveryRatio = if (targetRate > 0) receivedRate / targetRate else 1.0
-        val ratePenalty = if (deliveryRatio >= 0.95) 0.0 else min(40.0, (0.95 - deliveryRatio) * 80.0)
-        val lossPenalty = min(80.0, (test.lossPercent ?: 0.0) * 20.0)
-        val jitterPenalty = min(20.0, max(0.0, (test.jitterMs ?: 0.0) - 5.0) * 0.8)
-        val score = (100.0 - ratePenalty - lossPenalty - jitterPenalty)
-            .roundToInt().coerceIn(0, 100)
-        val grade = when {
-            score >= 90 -> "EXCELLENT"
-            score >= 75 -> "GOOD"
-            score >= 50 -> "FAIR"
-            else -> "POOR"
-        }
-        return score to grade
-    }
-
-    private fun buildShareReport(
-        title: String,
-        config: TestConfig,
-        results: List<TestResult>,
-        intervalOutput: String
-    ): String = buildString {
-        appendLine("Free iperf3 Client $title report")
-        appendLine("Time (UTC): ${Instant.now()}")
-        appendLine("Server: ${config.hostname}:${config.port}")
-        appendLine("UDP target: ${config.udpTargetMbps} Mbit/s")
-        appendLine()
-        append(formatResults(title, config, results))
-        appendLine()
-        appendLine()
-        appendLine("Commands:")
-        results.forEach { appendLine(formatDisplayCommand(config, it.mode)) }
-        if (intervalOutput.isNotBlank()) {
-            appendLine()
-            appendLine("Per-second intervals:")
-            appendLine(intervalOutput)
-        }
-        appendLine()
-        append("UDP score is an app heuristic based on received rate, packet loss, and jitter.")
-    }
-
-    private fun buildDiagnosticReport(
-        title: String,
-        config: TestConfig,
-        mode: TestMode,
-        completed: List<TestResult>,
-        error: Exception
-    ): String {
-        val packageInfo = packageManager.getPackageInfo(packageName, 0)
-        return buildString {
-            appendLine("Free iperf3 Client diagnostic report")
-            appendLine("Privacy: review the server and device fields before sharing publicly")
-            appendLine("Time (UTC): ${Instant.now()}")
-            appendLine("App: ${packageInfo.versionName} (${packageInfo.longVersionCode})")
-            appendLine("Engine: iperf3 3.21")
-            appendLine("Android: ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
-            appendLine("Device: ${Build.MANUFACTURER} ${Build.MODEL}")
-            appendLine("ABIs: ${Build.SUPPORTED_ABIS.joinToString()}")
-            appendLine("Sequence: $title")
-            appendLine("Failed stage: ${mode.label}")
-            appendLine("Server: ${config.hostname}:${config.port}")
-            appendLine("UDP target: ${config.udpTargetMbps} Mbit/s")
-            appendLine("Error type: ${error.javaClass.name}")
-            appendLine("Error: ${error.message ?: "(no message)"}")
-            if (completed.isNotEmpty()) {
-                appendLine()
-                appendLine("Completed results:")
-                appendLine(formatResults(title, config, completed))
-            }
-            if (error is IperfFailure && error.rawOutput.isNotBlank()) {
-                appendLine()
-                appendLine("Raw iperf3 output:")
-                appendLine(error.rawOutput.trim())
-            }
-            appendLine()
-            appendLine("Stack trace:")
-            append(error.stackTraceToString())
-        }
-    }
-
-    private fun friendlyError(error: Exception): String =
-        error.message?.lineSequence()?.firstOrNull { it.isNotBlank() }
-            ?: error.javaClass.simpleName
-
-    private fun formatBitsPerSecond(bitsPerSecond: Double): String = when {
-        bitsPerSecond >= 1_000_000_000 -> formatNumber(bitsPerSecond / 1_000_000_000, 2) + " Gbit/s"
-        bitsPerSecond >= 1_000_000 -> formatNumber(bitsPerSecond / 1_000_000, 1) + " Mbit/s"
-        bitsPerSecond >= 1_000 -> formatNumber(bitsPerSecond / 1_000, 1) + " Kbit/s"
-        else -> formatNumber(bitsPerSecond, 0) + " bit/s"
-    }
-
-    private fun formatBytes(bytes: Double): String = when {
-        bytes >= 1_000_000_000 -> formatNumber(bytes / 1_000_000_000, 2) + " GB"
-        bytes >= 1_000_000 -> formatNumber(bytes / 1_000_000, 1) + " MB"
-        bytes >= 1_000 -> formatNumber(bytes / 1_000, 1) + " KB"
-        else -> formatNumber(bytes, 0) + " B"
-    }
-
-    private fun formatMilliseconds(value: Double): String = formatNumber(value, 2) + " ms"
-
-    private fun formatPercent(value: Double): String = formatNumber(value, 2) + "%"
-
-    private fun formatNumber(value: Double, decimals: Int): String =
-        String.format(Locale.US, "%.${decimals}f", value)
-
-    private fun copyShareText() {
+    private fun copyText(label: String, value: String) {
         val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        clipboard.setPrimaryClip(ClipData.newPlainText("iperf3 report", shareText))
-        Toast.makeText(this, "Report copied", Toast.LENGTH_SHORT).show()
+        clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
+        Toast.makeText(this, "$label copied", Toast.LENGTH_SHORT).show()
     }
 
-    private fun toggleTechnicalDetails() {
-        val show = details.visibility != View.VISIBLE
-        details.visibility = if (show) View.VISIBLE else View.GONE
-        toggleDetails.text = if (show) "HIDE DETAILS" else "SHOW DETAILS"
-    }
-
-    private fun clearShareArea() {
-        shareText = ""
-        details.text = ""
-        details.visibility = View.GONE
-        copyShare.visibility = View.GONE
-        toggleDetails.visibility = View.GONE
-        toggleDetails.text = "SHOW DETAILS"
-    }
-
-    private fun setStatus(message: String, color: String) {
-        status.text = message
-        status.setTextColor(Color.parseColor(color))
-    }
-
-    private fun setBusy(busy: Boolean) {
-        actionButtons.forEach { it.isEnabled = !busy }
-        host.isEnabled = !busy
-        port.isEnabled = !busy
-        udpTarget.isEnabled = !busy
+    private fun shareText(subject: String, value: String) {
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, subject)
+            putExtra(Intent.EXTRA_TEXT, value)
+        }
+        startActivity(Intent.createChooser(intent, "Share iperf3 results"))
     }
 
     override fun onDestroy() {
-        activeProcess?.destroyForcibly()
-        activeProcess = null
+        engine.cancel()
         super.onDestroy()
     }
+}
+
+@Composable
+private fun IperfTheme(content: @Composable () -> Unit) {
+    MaterialTheme(
+        colorScheme = darkColorScheme(
+            primary = Teal,
+            secondary = Blue,
+            tertiary = Purple,
+            background = AppBackground,
+            surface = AppSurface,
+            error = Red,
+            onPrimary = Color(0xFF001713),
+            onBackground = AppText,
+            onSurface = AppText,
+        ),
+        content = content,
+    )
+}
+
+@Composable
+private fun IperfApp(
+    engine: IperfEngine,
+    openRepository: () -> Unit,
+    copyText: (String, String) -> Unit,
+    shareText: (String, String) -> Unit,
+) {
+    val context = LocalContext.current
+    val activity = context as Activity
+    val scope = rememberCoroutineScope()
+    var screen by remember { mutableStateOf(AppScreen.HOME) }
+    var host by remember { mutableStateOf("") }
+    var port by remember { mutableStateOf("5201") }
+    var duration by remember { mutableStateOf("10") }
+    var udpTarget by remember { mutableStateOf("50") }
+    var selectedChoice by remember { mutableStateOf(TestChoice.TCP_DOWNLOAD) }
+    var attemptedStart by remember { mutableStateOf(false) }
+    var detectionStatus by remember { mutableStateOf(DetectionStatus.NOT_CHECKED) }
+    var detectionMessage by remember { mutableStateOf("Check whether the iperf3 server is ready") }
+    var runState by remember { mutableStateOf<RunState?>(null) }
+    var completedSession by remember { mutableStateOf<CompletedSession?>(null) }
+    var activeJob by remember { mutableStateOf<Job?>(null) }
+
+    val validation = validateConfig(host, port, duration, udpTarget)
+    val endpointValidation = validateEndpoint(host, port)
+    fun invalidateDetection() {
+        if (detectionStatus != DetectionStatus.CHECKING) {
+            detectionStatus = DetectionStatus.NOT_CHECKED
+            detectionMessage = "Check whether the iperf3 server is ready"
+        }
+    }
+
+    fun cancelRun() {
+        engine.cancel()
+        activeJob?.cancel()
+        activeJob = null
+        runState = null
+        screen = AppScreen.HOME
+    }
+
+    fun runManualDetection() {
+        val config = endpointValidation.config
+        if (config == null) {
+            detectionStatus = DetectionStatus.FAILED
+            detectionMessage = endpointValidation.firstError ?: "Check the server address and port"
+            return
+        }
+        if (detectionStatus == DetectionStatus.CHECKING) return
+        detectionStatus = DetectionStatus.CHECKING
+        detectionMessage = "Connecting and performing a small iperf3 exchange"
+        activeJob = scope.launch {
+            try {
+                val result = withContext(Dispatchers.IO) {
+                    engine.execute(config, TestMode.DETECT) { }
+                }
+                detectionStatus = DetectionStatus.DETECTED
+                detectionMessage = result.connection?.let { "iperf3 responded at $it" }
+                    ?: "iperf3 control and data exchange succeeded"
+            } catch (error: Throwable) {
+                if (error is CancellationException) return@launch
+                detectionStatus = DetectionStatus.FAILED
+                detectionMessage = friendlyError(error)
+            } finally {
+                activeJob = null
+            }
+        }
+    }
+
+    fun startTests(choice: TestChoice = selectedChoice) {
+        attemptedStart = true
+        val config = validation.config ?: return
+        val modes = modesFor(choice)
+        val title = choice.title
+        val totalDuration = modes.sumOf { engine.durationFor(config, it) }.coerceAtLeast(1)
+        var completedDuration = 0
+        val completed = mutableListOf<TestResult>()
+        detectionStatus = DetectionStatus.CHECKING
+        completedSession = null
+        screen = AppScreen.RUNNING
+        activeJob = scope.launch {
+            var activeMode = modes.first()
+            try {
+                modes.forEachIndexed { index, mode ->
+                    activeMode = mode
+                    val modeDuration = engine.durationFor(config, mode)
+                    runState = RunState(
+                        title = title,
+                        config = config,
+                        modes = modes,
+                        currentMode = mode,
+                        currentIndex = index,
+                        stage = if (mode == TestMode.DETECT) "Checking the iperf3 server" else "Opening the iperf3 connection",
+                        progress = completedDuration.toFloat() / totalDuration,
+                        command = engine.displayCommand(config, mode),
+                        completed = completed.toList(),
+                    )
+                    val currentSamples = mutableListOf<IntervalSample>()
+                    val result = withContext(Dispatchers.IO) {
+                        engine.execute(config, mode) { update ->
+                            activity.runOnUiThread {
+                                update.sample?.let(currentSamples::add)
+                                val elapsed = update.elapsedSeconds.coerceIn(0.0, modeDuration.toDouble())
+                                val overall = (completedDuration + elapsed) / totalDuration
+                                runState = runState?.copy(
+                                    stage = when {
+                                        update.connection != null -> "Connected to iperf3"
+                                        elapsed > 0 -> "Test running"
+                                        else -> runState?.stage ?: "Connecting"
+                                    },
+                                    progress = overall.toFloat().coerceIn(0f, 1f),
+                                    live = update,
+                                    samples = currentSamples.toList(),
+                                )
+                            }
+                        }
+                    }
+                    completed += result
+                    completedDuration += modeDuration
+                    if (mode == TestMode.DETECT) {
+                        detectionStatus = DetectionStatus.DETECTED
+                        detectionMessage = result.connection?.let { "iperf3 responded at $it" }
+                            ?: "iperf3 server detected"
+                    }
+                    runState = runState?.copy(
+                        progress = completedDuration.toFloat() / totalDuration,
+                        completed = completed.toList(),
+                    )
+                }
+                completedSession = CompletedSession(title, config, completed.toList())
+                screen = AppScreen.RESULTS
+            } catch (error: Throwable) {
+                if (error is CancellationException) return@launch
+                if (activeMode == TestMode.DETECT) {
+                    detectionStatus = DetectionStatus.FAILED
+                    detectionMessage = friendlyError(error)
+                }
+                completedSession = CompletedSession(
+                    title = title,
+                    config = config,
+                    results = completed.toList(),
+                    failure = SessionFailure(activeMode, error),
+                )
+                screen = AppScreen.RESULTS
+            } finally {
+                activeJob = null
+            }
+        }
+    }
+
+    BackHandler(enabled = screen != AppScreen.HOME) {
+        when (screen) {
+            AppScreen.RUNNING -> cancelRun()
+            AppScreen.RESULTS -> {
+                runState = null
+                completedSession = null
+                screen = AppScreen.HOME
+            }
+            AppScreen.HOME -> Unit
+        }
+    }
+
+    AppBackdrop {
+        when (screen) {
+            AppScreen.HOME -> HomeScreen(
+                host = host,
+                port = port,
+                duration = duration,
+                udpTarget = udpTarget,
+                selectedChoice = selectedChoice,
+                attemptedStart = attemptedStart,
+                validation = validation,
+                detectionStatus = detectionStatus,
+                detectionMessage = detectionMessage,
+                onHostChange = { host = it; attemptedStart = false; invalidateDetection() },
+                onPortChange = { port = it.filter(Char::isDigit); attemptedStart = false; invalidateDetection() },
+                onDurationChange = { duration = it.filter(Char::isDigit); attemptedStart = false },
+                onUdpChange = { udpTarget = it.filter(Char::isDigit); attemptedStart = false },
+                onChoice = { selectedChoice = it },
+                onDetect = ::runManualDetection,
+                onStart = { startTests() },
+                openRepository = openRepository,
+            )
+            AppScreen.RUNNING -> RunningScreen(
+                state = runState,
+                onCancel = ::cancelRun,
+            )
+            AppScreen.RESULTS -> completedSession?.let { session ->
+                ResultsScreen(
+                    session = session,
+                    engine = engine,
+                    onBack = {
+                        runState = null
+                        completedSession = null
+                        screen = AppScreen.HOME
+                    },
+                    onRetry = {
+                        screen = AppScreen.HOME
+                        completedSession = null
+                        startTests(selectedChoice)
+                    },
+                    copyText = copyText,
+                    shareText = shareText,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AppBackdrop(content: @Composable () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AppBackground)
+            .drawBehind {
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(Teal.copy(alpha = .09f), Color.Transparent),
+                        center = Offset(size.width * .12f, size.height * .18f),
+                        radius = size.width * .8f,
+                    ),
+                    radius = size.width * .8f,
+                    center = Offset(size.width * .12f, size.height * .18f),
+                )
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(Blue.copy(alpha = .055f), Color.Transparent),
+                        center = Offset(size.width, size.height * .7f),
+                        radius = size.width * .7f,
+                    ),
+                    radius = size.width * .7f,
+                    center = Offset(size.width, size.height * .7f),
+                )
+            },
+    ) { content() }
+}
+
+@Composable
+private fun HomeScreen(
+    host: String,
+    port: String,
+    duration: String,
+    udpTarget: String,
+    selectedChoice: TestChoice,
+    attemptedStart: Boolean,
+    validation: ConfigValidation,
+    detectionStatus: DetectionStatus,
+    detectionMessage: String,
+    onHostChange: (String) -> Unit,
+    onPortChange: (String) -> Unit,
+    onDurationChange: (String) -> Unit,
+    onUdpChange: (String) -> Unit,
+    onChoice: (TestChoice) -> Unit,
+    onDetect: () -> Unit,
+    onStart: () -> Unit,
+    openRepository: () -> Unit,
+) {
+    val focusManager = LocalFocusManager.current
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .imePadding(),
+    ) {
+        val contentWidth = if (maxWidth > 1040.dp) 1000.dp else maxWidth
+        Column(
+            modifier = Modifier
+                .width(contentWidth)
+                .align(Alignment.TopCenter)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = if (maxWidth > 600.dp) 28.dp else 18.dp)
+                .padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(22.dp),
+        ) {
+            HomeHeader(openRepository)
+            ConfigCard(
+                host = host,
+                port = port,
+                duration = duration,
+                udpTarget = udpTarget,
+                attemptedStart = attemptedStart,
+                validation = validation,
+                onHostChange = onHostChange,
+                onPortChange = onPortChange,
+                onDurationChange = onDurationChange,
+                onUdpChange = onUdpChange,
+                onDone = { focusManager.clearFocus() },
+            )
+            TestChoiceGrid(selectedChoice, onChoice)
+            WideChoiceCard(
+                choice = TestChoice.RUN_ALL,
+                glyph = TablerGlyph.LAYERS,
+                accent = Teal,
+                selected = selectedChoice == TestChoice.RUN_ALL,
+                onClick = { onChoice(TestChoice.RUN_ALL) },
+            )
+            DetectionCard(detectionStatus, detectionMessage, onDetect)
+            StartCard(
+                choice = selectedChoice,
+                enabled = validation.valid && detectionStatus != DetectionStatus.CHECKING,
+                helper = validation.firstError ?: "Ready to test",
+                onClick = onStart,
+            )
+        }
+    }
+}
+
+@Composable
+private fun HomeHeader(openRepository: () -> Unit) {
+    Box(Modifier.fillMaxWidth().height(142.dp)) {
+        Column(
+            modifier = Modifier.align(Alignment.BottomStart).padding(bottom = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
+            Text(
+                "Free iperf3 Client",
+                color = AppText,
+                fontSize = 34.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = (-1).sp,
+            )
+            Text("Simply free.", color = Teal, fontSize = 20.sp, fontWeight = FontWeight.Medium)
+        }
+        GitHubFold(Modifier.align(Alignment.TopEnd), openRepository)
+    }
+}
+
+@Composable
+private fun GitHubFold(modifier: Modifier, onClick: () -> Unit) {
+    Box(
+        modifier = modifier
+            .size(96.dp)
+            .clip(RoundedCornerShape(bottomStart = 34.dp))
+            .background(
+                Brush.linearGradient(
+                    listOf(Color(0xFF1C252D), Color(0xFF0A1015)),
+                    start = Offset.Zero,
+                    end = Offset.Infinite,
+                ),
+            )
+            .clickable(onClick = onClick)
+            .focusable()
+            .semantics { contentDescription = "Open project on GitHub" },
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_github),
+            contentDescription = null,
+            tint = AppMuted,
+            modifier = Modifier.size(34.dp),
+        )
+    }
+}
+
+@Composable
+private fun ConfigCard(
+    host: String,
+    port: String,
+    duration: String,
+    udpTarget: String,
+    attemptedStart: Boolean,
+    validation: ConfigValidation,
+    onHostChange: (String) -> Unit,
+    onPortChange: (String) -> Unit,
+    onDurationChange: (String) -> Unit,
+    onUdpChange: (String) -> Unit,
+    onDone: () -> Unit,
+) {
+    val fieldFocus = remember { List(4) { FocusRequester() } }
+    val focusManager = LocalFocusManager.current
+    GlassCard {
+        Column(
+            Modifier.onPreviewKeyEvent { event ->
+                if (event.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
+                when (event.key) {
+                    Key.DirectionDown -> focusManager.moveFocus(FocusDirection.Next)
+                    Key.DirectionUp -> focusManager.moveFocus(FocusDirection.Previous)
+                    else -> false
+                }
+            },
+        ) {
+            ConfigRow(
+                glyph = TablerGlyph.MONITOR,
+                label = "Server address",
+                value = host,
+                placeholder = "IP address or hostname",
+                error = validation.hostError.takeIf { attemptedStart || host.isNotBlank() },
+                keyboardType = KeyboardType.Uri,
+                imeAction = ImeAction.Next,
+                onValueChange = onHostChange,
+                focusRequester = fieldFocus[0],
+                previousFocus = FocusRequester.Default,
+                nextFocus = fieldFocus[1],
+            )
+            ConfigDivider()
+            ConfigRow(
+                glyph = TablerGlyph.PORT,
+                label = "Port",
+                value = port,
+                placeholder = "5201",
+                error = validation.portError.takeIf { attemptedStart || port.isNotBlank() },
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next,
+                onValueChange = onPortChange,
+                focusRequester = fieldFocus[1],
+                previousFocus = fieldFocus[0],
+                nextFocus = fieldFocus[2],
+            )
+            ConfigDivider()
+            ConfigRow(
+                glyph = TablerGlyph.CLOCK,
+                label = "Duration",
+                value = duration,
+                suffix = " seconds",
+                placeholder = "10",
+                error = validation.durationError.takeIf { attemptedStart || duration.isNotBlank() },
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next,
+                onValueChange = onDurationChange,
+                focusRequester = fieldFocus[2],
+                previousFocus = fieldFocus[1],
+                nextFocus = fieldFocus[3],
+            )
+            ConfigDivider()
+            ConfigRow(
+                glyph = TablerGlyph.ACTIVITY,
+                label = "UDP target",
+                value = udpTarget,
+                suffix = " Mbit/s",
+                placeholder = "50",
+                error = validation.udpError.takeIf { attemptedStart || udpTarget.isNotBlank() },
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done,
+                onValueChange = onUdpChange,
+                onDone = onDone,
+                focusRequester = fieldFocus[3],
+                previousFocus = fieldFocus[2],
+                nextFocus = FocusRequester.Default,
+            )
+        }
+    }
+}
+
+@Composable
+private fun ConfigRow(
+    glyph: TablerGlyph,
+    label: String,
+    value: String,
+    placeholder: String,
+    error: String?,
+    keyboardType: KeyboardType,
+    imeAction: ImeAction,
+    onValueChange: (String) -> Unit,
+    suffix: String = "",
+    onDone: () -> Unit = {},
+    focusRequester: FocusRequester,
+    previousFocus: FocusRequester,
+    nextFocus: FocusRequester,
+) {
+    val focusManager = LocalFocusManager.current
+    val isTelevision = LocalConfiguration.current.uiMode and Configuration.UI_MODE_TYPE_MASK ==
+        Configuration.UI_MODE_TYPE_TELEVISION
+    var focused by remember { mutableStateOf(false) }
+    var editorOpen by remember { mutableStateOf(false) }
+    val rowModifier = Modifier
+        .fillMaxWidth()
+        .then(
+            if (isTelevision) {
+                Modifier
+                    .focusRequester(focusRequester)
+                    .focusProperties {
+                        up = previousFocus
+                        down = nextFocus
+                        previous = previousFocus
+                        next = nextFocus
+                    }
+                    .onFocusChanged { focused = it.isFocused }
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(if (focused) Teal.copy(alpha = .10f) else Color.Transparent)
+                    .border(
+                        width = if (focused) 1.dp else 0.dp,
+                        color = if (focused) Teal.copy(alpha = .75f) else Color.Transparent,
+                        shape = RoundedCornerShape(10.dp),
+                    )
+                    .clickable { editorOpen = true }
+                    .focusable()
+            } else Modifier
+        )
+        .padding(horizontal = 20.dp, vertical = 17.dp)
+    Row(
+        modifier = rowModifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        IconOrb(glyph, Teal, 52.dp)
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+            Text(label, color = AppMuted, fontSize = 14.sp)
+            if (isTelevision) {
+                Text(
+                    text = value.ifBlank { placeholder } + if (value.isNotBlank()) suffix else "",
+                    color = if (value.isBlank()) AppMuted.copy(alpha = .55f) else AppText,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium,
+                )
+            } else {
+                BasicTextField(
+                    value = value,
+                    onValueChange = onValueChange,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester)
+                        .focusProperties {
+                            previous = previousFocus
+                            next = nextFocus
+                        }
+                        .onFocusChanged { focused = it.isFocused }
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(if (focused) Teal.copy(alpha = .10f) else Color.Transparent)
+                        .border(
+                            width = if (focused) 1.dp else 0.dp,
+                            color = if (focused) Teal.copy(alpha = .75f) else Color.Transparent,
+                            shape = RoundedCornerShape(8.dp),
+                        )
+                        .padding(horizontal = 8.dp, vertical = 5.dp),
+                    singleLine = true,
+                    textStyle = TextStyle(color = AppText, fontSize = 20.sp, fontWeight = FontWeight.Medium),
+                    keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Next) },
+                        onDone = { onDone() },
+                    ),
+                    cursorBrush = Brush.verticalGradient(listOf(Teal, Teal)),
+                    decorationBox = { inner ->
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(Modifier.weight(1f)) {
+                                if (value.isBlank()) Text(placeholder, color = AppMuted.copy(alpha = .55f), fontSize = 19.sp)
+                                inner()
+                            }
+                            if (value.isNotBlank() && suffix.isNotBlank()) {
+                                Text(suffix, color = AppMuted, fontSize = 17.sp)
+                            }
+                        }
+                    },
+                )
+            }
+            AnimatedVisibility(error != null) {
+                Text(error.orEmpty(), color = Red, fontSize = 12.sp, modifier = Modifier.padding(top = 2.dp))
+            }
+        }
+        TablerIcon(TablerGlyph.EDIT, null, AppMuted, Modifier.size(25.dp))
+    }
+    if (editorOpen) {
+        AlertDialog(
+            onDismissRequest = { editorOpen = false },
+            containerColor = Color(0xFF0D171E),
+            titleContentColor = AppText,
+            textContentColor = AppMuted,
+            title = { Text("Edit $label") },
+            text = {
+                OutlinedTextField(
+                    value = value,
+                    onValueChange = onValueChange,
+                    singleLine = true,
+                    label = { Text(label) },
+                    placeholder = { Text(placeholder) },
+                    keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { editorOpen = false; onDone() }),
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { editorOpen = false; onDone() }) { Text("Done", color = Teal) }
+            },
+            dismissButton = {
+                TextButton(onClick = { editorOpen = false }) { Text("Cancel", color = AppMuted) }
+            },
+        )
+    }
+}
+
+@Composable
+private fun ConfigDivider() {
+    HorizontalDivider(color = AppBorder.copy(alpha = .65f), modifier = Modifier.padding(horizontal = 20.dp))
+}
+
+@Composable
+private fun TestChoiceGrid(selected: TestChoice, onChoice: (TestChoice) -> Unit) {
+    val choices = listOf(
+        Triple(TestChoice.TCP_DOWNLOAD, TablerGlyph.DOWNLOAD, Blue),
+        Triple(TestChoice.TCP_UPLOAD, TablerGlyph.UPLOAD, Green),
+        Triple(TestChoice.TCP_BIDIRECTIONAL, TablerGlyph.ARROWS_EXCHANGE, Purple),
+        Triple(TestChoice.UDP_QUALITY, TablerGlyph.ACTIVITY, Orange),
+    )
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        choices.chunked(2).forEach { rowChoices ->
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                rowChoices.forEach { (choice, glyph, accent) ->
+                    ChoiceCard(
+                        choice = choice,
+                        glyph = glyph,
+                        accent = accent,
+                        selected = selected == choice,
+                        onClick = { onChoice(choice) },
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ChoiceCard(
+    choice: TestChoice,
+    glyph: TablerGlyph,
+    accent: Color,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    FocusableGlassCard(
+        selected = selected,
+        accent = accent,
+        onClick = onClick,
+        modifier = modifier.height(190.dp),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(18.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            IconOrb(glyph, accent, 82.dp)
+            Spacer(Modifier.height(13.dp))
+            Text(choice.title, color = AppText, fontSize = 18.sp, textAlign = TextAlign.Center, fontWeight = FontWeight.Medium)
+            Spacer(Modifier.height(3.dp))
+            Text(choice.subtitle, color = AppMuted, fontSize = 14.sp, textAlign = TextAlign.Center)
+        }
+    }
+}
+
+@Composable
+private fun WideChoiceCard(
+    choice: TestChoice,
+    glyph: TablerGlyph,
+    accent: Color,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    FocusableGlassCard(
+        selected = selected,
+        accent = accent,
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth().height(116.dp),
+    ) {
+        Row(
+            Modifier.fillMaxSize().padding(horizontal = 22.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(18.dp),
+        ) {
+            IconOrb(glyph, accent, 68.dp)
+            Column(Modifier.weight(1f)) {
+                Text(choice.title, color = AppText, fontSize = 21.sp, fontWeight = FontWeight.SemiBold)
+                Text(choice.subtitle, color = AppMuted, fontSize = 15.sp)
+            }
+            TablerIcon(TablerGlyph.CHEVRON_RIGHT, null, AppMuted, Modifier.size(28.dp))
+        }
+    }
+}
+
+@Composable
+private fun DetectionCard(status: DetectionStatus, message: String, onClick: () -> Unit) {
+    val accent = when (status) {
+        DetectionStatus.NOT_CHECKED -> AppMuted
+        DetectionStatus.CHECKING -> Orange
+        DetectionStatus.DETECTED -> Green
+        DetectionStatus.FAILED -> Red
+    }
+    val glyph = when (status) {
+        DetectionStatus.NOT_CHECKED -> TablerGlyph.SERVER
+        DetectionStatus.CHECKING -> TablerGlyph.REFRESH
+        DetectionStatus.DETECTED -> TablerGlyph.CHECK
+        DetectionStatus.FAILED -> TablerGlyph.ALERT
+    }
+    val title = when (status) {
+        DetectionStatus.NOT_CHECKED -> "Check iperf3 server"
+        DetectionStatus.CHECKING -> "Checking iperf3 server"
+        DetectionStatus.DETECTED -> "iperf3 server detected"
+        DetectionStatus.FAILED -> "Server check failed"
+    }
+    FocusableGlassCard(
+        selected = status == DetectionStatus.DETECTED,
+        accent = accent,
+        onClick = onClick,
+        enabled = status != DetectionStatus.CHECKING,
+        modifier = Modifier.fillMaxWidth().heightIn(min = 116.dp),
+    ) {
+        Row(
+            Modifier.fillMaxWidth().padding(22.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(18.dp),
+        ) {
+            IconOrb(glyph, accent, 68.dp)
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                Text(title, color = AppText, fontSize = 19.sp, fontWeight = FontWeight.Medium)
+                Text(message, color = if (status == DetectionStatus.FAILED) Red else AppMuted, fontSize = 14.sp)
+            }
+            if (status != DetectionStatus.CHECKING) {
+                TablerIcon(TablerGlyph.CHEVRON_RIGHT, null, AppMuted, Modifier.size(28.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun StartCard(choice: TestChoice, enabled: Boolean, helper: String, onClick: () -> Unit) {
+    var focused by remember { mutableStateOf(false) }
+    val scale by animateFloatAsState(if (focused) 1.015f else 1f, label = "startFocus")
+    val shape = RoundedCornerShape(28.dp)
+    val interaction = remember { MutableInteractionSource() }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(136.dp)
+            .graphicsLayer(scaleX = scale, scaleY = scale)
+            .onFocusChanged { focused = it.isFocused }
+            .clip(shape)
+            .background(
+                if (enabled) Brush.horizontalGradient(listOf(Color(0xFF0A2625), Color(0xFF0B4441)))
+                else Brush.horizontalGradient(listOf(AppSurface, AppSurfaceRaised)),
+            )
+            .border(1.dp, if (focused) Teal else AppBorder, shape)
+            .clickable(enabled = enabled, interactionSource = interaction, indication = null, onClick = onClick)
+            .focusable(enabled)
+            .padding(horizontal = 26.dp),
+        contentAlignment = Alignment.CenterStart,
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+            Box(
+                Modifier.size(78.dp).clip(CircleShape).background(if (enabled) Teal else AppBorder),
+                contentAlignment = Alignment.Center,
+            ) {
+                TablerIcon(TablerGlyph.PLAY, null, if (enabled) Color.White else AppMuted, Modifier.size(38.dp))
+            }
+            Column(Modifier.weight(1f)) {
+                Text("Start Test", color = if (enabled) Teal else AppMuted, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                Text(if (enabled) choice.title else helper, color = AppMuted, fontSize = 15.sp, maxLines = 2)
+            }
+        }
+    }
+}
+
+@Composable
+private fun RunningScreen(state: RunState?, onCancel: () -> Unit) {
+    BoxWithConstraints(
+        Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding(),
+    ) {
+        val contentWidth = if (maxWidth > 1040.dp) 1000.dp else maxWidth
+        Column(
+            Modifier
+                .width(contentWidth)
+                .align(Alignment.TopCenter)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = if (maxWidth > 600.dp) 28.dp else 18.dp, vertical = 14.dp)
+                .padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+        ) {
+            ScreenTopBar("Testing", onCancel, TablerGlyph.CLOSE, "Cancel test")
+            if (state == null) {
+                GlassCard { Text("Preparing test…", modifier = Modifier.padding(24.dp), color = AppText) }
+                return@Column
+            }
+            GlassCard {
+                Row(
+                    Modifier.fillMaxWidth().padding(22.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(17.dp),
+                ) {
+                    IconOrb(glyphForMode(state.currentMode), colorForMode(state.currentMode), 64.dp)
+                    Column(Modifier.weight(1f)) {
+                        Text(state.currentMode.title, color = colorForMode(state.currentMode), fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+                        Text(state.stage, color = AppText, fontSize = 16.sp)
+                        Text("Stage ${state.currentIndex + 1} of ${state.modes.size}", color = AppMuted, fontSize = 13.sp)
+                    }
+                }
+            }
+            LinearProgressIndicator(
+                progress = { state.progress },
+                modifier = Modifier.fillMaxWidth().height(8.dp).clip(CircleShape),
+                color = colorForMode(state.currentMode),
+                trackColor = AppBorder,
+            )
+            LiveHero(state)
+            ThroughputChart(
+                samples = state.samples,
+                mode = state.currentMode,
+                modifier = Modifier.fillMaxWidth().height(260.dp),
+            )
+            GlassCard {
+                Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    SectionTitle(TablerGlyph.TERMINAL, "Command", AppMuted)
+                    Text(
+                        state.command,
+                        color = AppMuted,
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 13.sp,
+                        lineHeight = 19.sp,
+                    )
+                }
+            }
+            FocusButton("Cancel test", TablerGlyph.STOP, Red, onCancel)
+        }
+    }
+}
+
+@Composable
+private fun LiveHero(state: RunState) {
+    val live = state.live
+    val primary = live.downloadBitsPerSecond ?: live.uploadBitsPerSecond
+    GlassCard {
+        Column(
+            Modifier.fillMaxWidth().padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            if (state.currentMode == TestMode.DETECT) {
+                IconOrb(TablerGlyph.SERVER, Orange, 82.dp)
+                Text("Confirming iperf3", color = AppText, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                Text(live.connection ?: "Waiting for the server response", color = AppMuted, fontSize = 15.sp)
+            } else if (primary != null) {
+                val parts = formatRateParts(primary)
+                Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(parts.first, color = colorForMode(state.currentMode), fontSize = 62.sp, fontWeight = FontWeight.Bold)
+                    Text(parts.second, color = AppMuted, fontSize = 22.sp, modifier = Modifier.padding(bottom = 10.dp))
+                }
+                Text(
+                    "Running ${live.elapsedSeconds.toInt()} of ${state.config.durationSeconds} seconds",
+                    color = AppMuted,
+                    fontSize = 15.sp,
+                )
+                if (state.currentMode == TestMode.TCP_BIDIRECTIONAL) {
+                    Text(
+                        "Download ${formatRate(live.downloadBitsPerSecond ?: 0.0)}   Upload ${formatRate(live.uploadBitsPerSecond ?: 0.0)}",
+                        color = AppText,
+                        fontSize = 15.sp,
+                    )
+                }
+                if (live.jitterMs != null || live.lossPercent != null) {
+                    Text(
+                        "Jitter ${formatMilliseconds(live.jitterMs ?: 0.0)}   Loss ${formatPercent(live.lossPercent ?: 0.0)}",
+                        color = AppText,
+                        fontSize = 15.sp,
+                    )
+                }
+            } else {
+                Text("Connecting", color = Orange, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                Text("Opening the iperf3 control connection", color = AppMuted, fontSize = 15.sp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ResultsScreen(
+    session: CompletedSession,
+    engine: IperfEngine,
+    onBack: () -> Unit,
+    onRetry: () -> Unit,
+    copyText: (String, String) -> Unit,
+    shareText: (String, String) -> Unit,
+) {
+    val context = LocalContext.current
+    val measuredResults = session.results.filter { it.mode != TestMode.DETECT }
+    var selectedIndex by remember { mutableStateOf(0) }
+    val selected = measuredResults.getOrNull(selectedIndex)
+    BoxWithConstraints(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
+        val contentWidth = if (maxWidth > 1100.dp) 1040.dp else maxWidth
+        Column(
+            Modifier
+                .width(contentWidth)
+                .align(Alignment.TopCenter)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = if (maxWidth > 600.dp) 28.dp else 18.dp, vertical = 14.dp)
+                .padding(bottom = 36.dp),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+        ) {
+            ResultTopBar(
+                failure = session.failure != null,
+                onBack = onBack,
+                onShare = {
+                    val report = if (session.failure == null) {
+                        buildResultReport(session.title, session.config, session.results, engine, safe = true)
+                    } else {
+                        buildDiagnosticReport(
+                            context,
+                            session.title,
+                            session.config,
+                            session.failure.mode,
+                            session.results,
+                            session.failure.error,
+                            safe = true,
+                        )
+                    }
+                    shareText("Free iperf3 Client ${session.title}", report)
+                },
+            )
+            if (session.failure != null) {
+                FailureContent(session, onRetry, copyText)
+            } else if (selected != null) {
+                if (measuredResults.size > 1) {
+                    ResultSelector(measuredResults, selectedIndex) { selectedIndex = it }
+                }
+                ResultHero(selected, session.config)
+                ThroughputChart(
+                    samples = selected.samples,
+                    mode = selected.mode,
+                    modifier = Modifier.fillMaxWidth().height(280.dp),
+                )
+                ResultStats(selected)
+                if (selected.mode == TestMode.UDP_DOWNLOAD || selected.mode == TestMode.UDP_UPLOAD) {
+                    UdpQualityCard(selected, session.config)
+                }
+                DetailsCard(selected)
+                CommandCard(selected, session.config, engine, copyText)
+                FocusButton("Copy privacy-safe summary", TablerGlyph.SHIELD, Teal) {
+                    copyText(
+                        "Safe summary",
+                        buildResultReport(session.title, session.config, session.results, engine, safe = true),
+                    )
+                }
+            } else {
+                GlassCard {
+                    Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        SectionTitle(TablerGlyph.CHECK, "Server detected", Green)
+                        Text("The iperf3 server responded correctly.", color = AppMuted)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ResultTopBar(failure: Boolean, onBack: () -> Unit, onShare: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().height(68.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        VectorIconButton(TablerGlyph.ARROW_LEFT, "Back", onBack)
+        Text(
+            if (failure) "Test failed" else "Results",
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.Center,
+            color = AppText,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.SemiBold,
+        )
+        VectorIconButton(TablerGlyph.SHARE, "Share privacy-safe results", onShare)
+    }
+}
+
+@Composable
+private fun ResultSelector(results: List<TestResult>, selected: Int, onSelect: (Int) -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        results.forEachIndexed { index, result ->
+            val active = index == selected
+            val color = colorForMode(result.mode)
+            Surface(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .border(1.dp, if (active) color else AppBorder, CircleShape)
+                    .clickable { onSelect(index) }
+                    .focusable(),
+                color = if (active) color.copy(alpha = .14f) else AppSurface,
+                contentColor = if (active) color else AppMuted,
+            ) {
+                Text(result.mode.title, modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp), fontSize = 14.sp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ResultHero(result: TestResult, config: TestConfig) {
+    val accent = colorForMode(result.mode)
+    GlassCard {
+        Column(
+            Modifier.fillMaxWidth().padding(22.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(9.dp),
+        ) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                IconOrb(glyphForMode(result.mode), accent, 58.dp)
+                Spacer(Modifier.width(14.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(result.mode.title, color = accent, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                    Text(result.mode.subtitle, color = AppMuted, fontSize = 13.sp)
+                }
+                Text("Success", color = Green, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                Spacer(Modifier.width(8.dp))
+                TablerIcon(TablerGlyph.CHECK, null, Green, Modifier.size(26.dp))
+            }
+            Spacer(Modifier.height(3.dp))
+            if (result.mode == TestMode.TCP_BIDIRECTIONAL) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                    HeroRate("Download", result.downloadBitsPerSecond ?: 0.0, Blue)
+                    HeroRate("Upload", result.uploadBitsPerSecond ?: 0.0, Green)
+                }
+            } else {
+                HeroRate("Average throughput", resultRate(result), accent)
+            }
+            if (result.mode == TestMode.UDP_DOWNLOAD || result.mode == TestMode.UDP_UPLOAD) {
+                Text("Target ${config.udpTargetMbps} Mbit/s", color = AppMuted, fontSize = 14.sp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun HeroRate(label: String, rate: Double, accent: Color) {
+    val parts = formatRateParts(rate)
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+            Text(parts.first, color = accent, fontSize = 57.sp, fontWeight = FontWeight.Bold)
+            Text(parts.second, color = AppMuted, fontSize = 20.sp, modifier = Modifier.padding(bottom = 9.dp))
+        }
+        Text(label, color = AppMuted, fontSize = 14.sp)
+    }
+}
+
+@Composable
+private fun ResultStats(result: TestResult) {
+    val rates = result.samples.mapNotNull {
+        if (result.downloadBitsPerSecond != null) it.downloadBitsPerSecond else it.uploadBitsPerSecond
+    }
+    val average = resultRate(result)
+    val minimum = rates.minOrNull() ?: average
+    val maximum = rates.maxOrNull() ?: average
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        StatCard("MIN", minimum, Purple, Modifier.weight(1f))
+        StatCard("AVG", average, Blue, Modifier.weight(1f))
+        StatCard("MAX", maximum, Green, Modifier.weight(1f))
+    }
+    if (result.mode == TestMode.TCP_BIDIRECTIONAL) {
+        val uploadRates = result.samples.mapNotNull { it.uploadBitsPerSecond }
+        val uploadAverage = result.uploadBitsPerSecond ?: 0.0
+        Spacer(Modifier.height(10.dp))
+        Text("Upload statistics", color = AppMuted, fontSize = 13.sp)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            StatCard("MIN", uploadRates.minOrNull() ?: uploadAverage, Purple, Modifier.weight(1f))
+            StatCard("AVG", uploadAverage, Green, Modifier.weight(1f))
+            StatCard("MAX", uploadRates.maxOrNull() ?: uploadAverage, Orange, Modifier.weight(1f))
+        }
+    }
+}
+
+@Composable
+private fun StatCard(label: String, rate: Double, accent: Color, modifier: Modifier) {
+    GlassCard(modifier) {
+        val parts = formatRateParts(rate)
+        Column(
+            Modifier.fillMaxWidth().padding(vertical = 16.dp, horizontal = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(label, color = accent, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            Text(parts.first, color = AppText, fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
+            Text(parts.second, color = AppMuted, fontSize = 12.sp)
+        }
+    }
+}
+
+@Composable
+private fun UdpQualityCard(result: TestResult, config: TestConfig) {
+    val (score, grade) = scoreUdp(result, config)
+    val scoreColor = when {
+        score >= 90 -> Green
+        score >= 75 -> Teal
+        score >= 50 -> Orange
+        else -> Red
+    }
+    GlassCard {
+        Row(
+            Modifier.fillMaxWidth().padding(22.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(18.dp),
+        ) {
+            Box(
+                Modifier.size(88.dp).clip(CircleShape).background(scoreColor.copy(alpha = .12f)).border(2.dp, scoreColor, CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(score.toString(), color = scoreColor, fontSize = 30.sp, fontWeight = FontWeight.Bold)
+            }
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("UDP quality: $grade", color = scoreColor, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+                Text("Loss ${formatPercent(result.lossPercent ?: 0.0)}", color = AppText, fontSize = 15.sp)
+                Text("Jitter ${formatMilliseconds(result.jitterMs ?: 0.0)}", color = AppText, fontSize = 15.sp)
+                result.packets?.let { Text("Packets $it", color = AppMuted, fontSize = 13.sp) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DetailsCard(result: TestResult) {
+    var expanded by remember(result) { mutableStateOf(true) }
+    GlassCard {
+        Column {
+            Row(
+                Modifier.fillMaxWidth().clickable { expanded = !expanded }.focusable().padding(20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text("Details (per 1 second)", color = AppText, fontSize = 18.sp, modifier = Modifier.weight(1f))
+                TablerIcon(
+                    if (expanded) TablerGlyph.CLOSE else TablerGlyph.CHEVRON_RIGHT,
+                    null,
+                    AppMuted,
+                    Modifier.size(22.dp).graphicsLayer(rotationZ = if (expanded) 45f else 90f),
+                )
+            }
+            AnimatedVisibility(expanded) {
+                Column {
+                    HorizontalDivider(color = AppBorder)
+                    Text(
+                        intervalTable(result),
+                        modifier = Modifier.fillMaxWidth().padding(18.dp).horizontalScroll(rememberScrollState()),
+                        color = AppMuted,
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 12.sp,
+                        lineHeight = 19.sp,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CommandCard(
+    result: TestResult,
+    config: TestConfig,
+    engine: IperfEngine,
+    copyText: (String, String) -> Unit,
+) {
+    var show by remember(result) { mutableStateOf(false) }
+    GlassCard {
+        Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(13.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                SectionTitle(TablerGlyph.TERMINAL, "Command view", AppText, Modifier.weight(1f))
+                Switch(
+                    checked = show,
+                    onCheckedChange = { show = it },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color.White,
+                        checkedTrackColor = Teal,
+                        uncheckedThumbColor = AppMuted,
+                        uncheckedTrackColor = AppBorder,
+                    ),
+                )
+            }
+            AnimatedVisibility(show) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        commandAndOutput(config, result, engine).take(12_000),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(Color.Black.copy(alpha = .22f))
+                            .padding(16.dp),
+                        color = AppMuted,
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 12.sp,
+                        lineHeight = 18.sp,
+                    )
+                    Text(
+                        "Full command output contains the server address. Review it before sharing.",
+                        color = Orange,
+                        fontSize = 12.sp,
+                    )
+                    FocusButton("Copy full command and output", TablerGlyph.COPY, AppMuted) {
+                        copyText("Command and output", commandAndOutput(config, result, engine))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun FailureContent(
+    session: CompletedSession,
+    onRetry: () -> Unit,
+    copyText: (String, String) -> Unit,
+) {
+    val context = LocalContext.current
+    val failure = session.failure ?: return
+    var details by remember { mutableStateOf(false) }
+    GlassCard(border = Red.copy(alpha = .7f)) {
+        Column(
+            Modifier.fillMaxWidth().padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            IconOrb(TablerGlyph.ALERT, Red, 86.dp)
+            Text("${failure.mode.title} failed", color = Red, fontSize = 26.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+            Text(friendlyError(failure.error), color = AppText, fontSize = 17.sp, textAlign = TextAlign.Center)
+            Text("No test was allowed to continue blindly after this failure.", color = AppMuted, fontSize = 14.sp, textAlign = TextAlign.Center)
+        }
+    }
+    FocusButton("Retry", TablerGlyph.REFRESH, Teal, onRetry)
+    FocusButton("Copy privacy-safe diagnostics", TablerGlyph.SHIELD, AppMuted) {
+        copyText(
+            "Safe diagnostics",
+            buildDiagnosticReport(
+                context,
+                session.title,
+                session.config,
+                failure.mode,
+                session.results,
+                failure.error,
+                safe = true,
+            ),
+        )
+    }
+    GlassCard {
+        Column {
+            Row(
+                Modifier.fillMaxWidth().clickable { details = !details }.focusable().padding(20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                SectionTitle(TablerGlyph.TERMINAL, "Technical details", AppText, Modifier.weight(1f))
+                TablerIcon(TablerGlyph.CHEVRON_RIGHT, null, AppMuted, Modifier.size(24.dp).graphicsLayer(rotationZ = if (details) 90f else 0f))
+            }
+            AnimatedVisibility(details) {
+                Column(Modifier.padding(horizontal = 18.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        buildDiagnosticReport(
+                            context,
+                            session.title,
+                            session.config,
+                            failure.mode,
+                            session.results,
+                            failure.error,
+                            safe = false,
+                        ).take(12_000),
+                        color = AppMuted,
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 12.sp,
+                        lineHeight = 18.sp,
+                    )
+                    Text("Full diagnostics contain the server and device model.", color = Orange, fontSize = 12.sp)
+                    FocusButton("Copy full diagnostics", TablerGlyph.COPY, Red) {
+                        copyText(
+                            "Full diagnostics",
+                            buildDiagnosticReport(
+                                context,
+                                session.title,
+                                session.config,
+                                failure.mode,
+                                session.results,
+                                failure.error,
+                                safe = false,
+                            ),
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ThroughputChart(samples: List<IntervalSample>, mode: TestMode, modifier: Modifier = Modifier) {
+    val download = samples.mapNotNull { sample -> sample.downloadBitsPerSecond?.let { sample.endSeconds to it } }
+    val upload = samples.mapNotNull { sample -> sample.uploadBitsPerSecond?.let { sample.endSeconds to it } }
+    val allRates = (download + upload).map { it.second }
+    val maxRate = max(1_000_000.0, allRates.maxOrNull() ?: 1_000_000.0)
+    val roundedMax = ceil(maxRate / 100_000_000.0).coerceAtLeast(1.0) * 100_000_000.0
+    val maxTime = max(1.0, samples.maxOfOrNull { it.endSeconds } ?: 1.0)
+    GlassCard {
+        Column(Modifier.padding(18.dp)) {
+            Text("Mbit/s", color = AppMuted, fontSize = 12.sp)
+            Canvas(
+                modifier = modifier
+                    .semantics { contentDescription = "Throughput over time chart" }
+                    .padding(top = 8.dp),
+            ) {
+                val leftPad = 42.dp.toPx()
+                val rightPad = 6.dp.toPx()
+                val topPad = 8.dp.toPx()
+                val bottomPad = 28.dp.toPx()
+                val plotWidth = size.width - leftPad - rightPad
+                val plotHeight = size.height - topPad - bottomPad
+                val labelPaint = Paint().apply {
+                    color = android.graphics.Color.rgb(160, 173, 184)
+                    textSize = 11.sp.toPx()
+                    isAntiAlias = true
+                }
+                repeat(5) { index ->
+                    val fraction = index / 4f
+                    val y = topPad + plotHeight * fraction
+                    drawLine(AppBorder.copy(alpha = .7f), Offset(leftPad, y), Offset(leftPad + plotWidth, y), 1.dp.toPx())
+                    val value = roundedMax * (1f - fraction)
+                    drawContext.canvas.nativeCanvas.drawText(
+                        formatNumber(value / 1_000_000.0, 0),
+                        0f,
+                        y + 4.dp.toPx(),
+                        labelPaint,
+                    )
+                }
+                repeat(6) { index ->
+                    val fraction = index / 5f
+                    val x = leftPad + plotWidth * fraction
+                    drawContext.canvas.nativeCanvas.drawText(
+                        formatNumber(maxTime * fraction, 0) + "s",
+                        x - 7.dp.toPx(),
+                        size.height - 4.dp.toPx(),
+                        labelPaint,
+                    )
+                }
+                fun drawSeries(points: List<Pair<Double, Double>>, color: Color, fill: Boolean) {
+                    if (points.isEmpty()) return
+                    val path = Path()
+                    points.forEachIndexed { index, (time, rate) ->
+                        val x = leftPad + (time / maxTime).toFloat() * plotWidth
+                        val y = topPad + (1f - (rate / roundedMax).toFloat().coerceIn(0f, 1f)) * plotHeight
+                        if (index == 0) path.moveTo(x, y) else path.lineTo(x, y)
+                    }
+                    if (fill && points.size > 1) {
+                        val area = Path().apply {
+                            val firstX = leftPad + (points.first().first / maxTime).toFloat() * plotWidth
+                            val lastX = leftPad + (points.last().first / maxTime).toFloat() * plotWidth
+                            moveTo(firstX, topPad + plotHeight)
+                            points.forEach { (time, rate) ->
+                                lineTo(
+                                    leftPad + (time / maxTime).toFloat() * plotWidth,
+                                    topPad + (1f - (rate / roundedMax).toFloat().coerceIn(0f, 1f)) * plotHeight,
+                                )
+                            }
+                            lineTo(lastX, topPad + plotHeight)
+                            close()
+                        }
+                        drawPath(area, Brush.verticalGradient(listOf(color.copy(alpha = .28f), Color.Transparent)))
+                    }
+                    drawPath(path, color, style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round))
+                    points.forEach { (time, rate) ->
+                        drawCircle(
+                            color,
+                            3.2.dp.toPx(),
+                            Offset(
+                                leftPad + (time / maxTime).toFloat() * plotWidth,
+                                topPad + (1f - (rate / roundedMax).toFloat().coerceIn(0f, 1f)) * plotHeight,
+                            ),
+                        )
+                    }
+                }
+                drawSeries(download, Blue, fill = mode != TestMode.TCP_BIDIRECTIONAL)
+                drawSeries(upload, if (mode == TestMode.TCP_BIDIRECTIONAL) Green else colorForMode(mode), fill = download.isEmpty())
+            }
+            if (mode == TestMode.TCP_BIDIRECTIONAL) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    LegendDot(Blue, "Download")
+                    Spacer(Modifier.width(22.dp))
+                    LegendDot(Green, "Upload")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LegendDot(color: Color, label: String) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+        Box(Modifier.size(9.dp).clip(CircleShape).background(color))
+        Text(label, color = AppMuted, fontSize = 12.sp)
+    }
+}
+
+private fun intervalTable(result: TestResult): String = buildString {
+    appendLine("Interval       Transfer      Bitrate")
+    result.samples.forEach { sample ->
+        val rate = if (result.downloadBitsPerSecond != null) sample.downloadBitsPerSecond else sample.uploadBitsPerSecond
+        val bytes = if (result.downloadBitsPerSecond != null) sample.downloadBytes else sample.uploadBytes
+        append(formatNumber(sample.startSeconds, 2).padStart(5))
+        append("-")
+        append(formatNumber(sample.endSeconds, 2).padEnd(6))
+        append("  ")
+        append((bytes?.let(::formatBytes) ?: "-").padEnd(12))
+        append("  ")
+        appendLine(rate?.let(::formatRate) ?: "-")
+        if (result.mode == TestMode.TCP_BIDIRECTIONAL && sample.uploadBitsPerSecond != null) {
+            append("  Upload       ")
+            append((sample.uploadBytes?.let(::formatBytes) ?: "-").padEnd(12))
+            append("  ")
+            appendLine(formatRate(sample.uploadBitsPerSecond))
+        }
+    }
+}
+
+@Composable
+private fun ScreenTopBar(title: String, onAction: () -> Unit, glyph: TablerGlyph, description: String) {
+    Row(Modifier.fillMaxWidth().height(68.dp), verticalAlignment = Alignment.CenterVertically) {
+        Spacer(Modifier.width(48.dp))
+        Text(title, color = AppText, fontSize = 24.sp, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center, modifier = Modifier.weight(1f))
+        VectorIconButton(glyph, description, onAction)
+    }
+}
+
+@Composable
+private fun VectorIconButton(glyph: TablerGlyph, description: String, onClick: () -> Unit) {
+    IconButton(onClick = onClick, modifier = Modifier.size(48.dp)) {
+        TablerIcon(glyph, description, AppText, Modifier.size(28.dp))
+    }
+}
+
+@Composable
+private fun SectionTitle(glyph: TablerGlyph, title: String, color: Color, modifier: Modifier = Modifier) {
+    Row(modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        TablerIcon(glyph, null, color, Modifier.size(23.dp))
+        Text(title, color = color, fontSize = 18.sp, fontWeight = FontWeight.Medium)
+    }
+}
+
+@Composable
+private fun IconOrb(glyph: TablerGlyph, accent: Color, size: Dp) {
+    Box(
+        Modifier
+            .size(size)
+            .clip(RoundedCornerShape(size / 3))
+            .background(accent.copy(alpha = .11f))
+            .border(1.dp, accent.copy(alpha = .25f), RoundedCornerShape(size / 3)),
+        contentAlignment = Alignment.Center,
+    ) {
+        TablerIcon(glyph, null, accent, Modifier.size(size * .55f))
+    }
+}
+
+@Composable
+private fun GlassCard(
+    modifier: Modifier = Modifier,
+    border: Color = AppBorder,
+    content: @Composable () -> Unit,
+) {
+    val shape = RoundedCornerShape(24.dp)
+    Box(
+        modifier
+            .clip(shape)
+            .background(Brush.linearGradient(listOf(AppSurfaceRaised.copy(alpha = .96f), AppSurface.copy(alpha = .96f))))
+            .border(1.dp, border, shape),
+    ) { content() }
+}
+
+@Composable
+private fun FocusableGlassCard(
+    selected: Boolean,
+    accent: Color,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    content: @Composable () -> Unit,
+) {
+    var focused by remember { mutableStateOf(false) }
+    val scale by animateFloatAsState(if (focused) 1.025f else 1f, tween(120), label = "cardFocus")
+    val shape = RoundedCornerShape(24.dp)
+    Box(
+        modifier
+            .graphicsLayer(scaleX = scale, scaleY = scale)
+            .onFocusChanged { focused = it.isFocused }
+            .clip(shape)
+            .background(
+                Brush.linearGradient(
+                    if (selected) listOf(accent.copy(alpha = .16f), AppSurface)
+                    else listOf(AppSurfaceRaised, AppSurface),
+                ),
+            )
+            .border(
+                width = if (focused || selected) 2.dp else 1.dp,
+                color = when {
+                    focused -> accent
+                    selected -> accent.copy(alpha = .7f)
+                    else -> AppBorder
+                },
+                shape = shape,
+            )
+            .clickable(enabled = enabled, onClick = onClick)
+            .focusable(enabled),
+    ) { content() }
+}
+
+@Composable
+private fun FocusButton(
+    label: String,
+    glyph: TablerGlyph,
+    color: Color,
+    onClick: () -> Unit,
+) {
+    var focused by remember { mutableStateOf(false) }
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(58.dp)
+            .onFocusChanged { focused = it.isFocused }
+            .border(if (focused) 2.dp else 0.dp, color, RoundedCornerShape(16.dp)),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = color.copy(alpha = .13f),
+            contentColor = color,
+        ),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        TablerIcon(glyph, null, color, Modifier.size(23.dp))
+        Spacer(Modifier.width(10.dp))
+        Text(label, fontSize = 15.sp, fontWeight = FontWeight.Medium)
+    }
+}
+
+private fun glyphForMode(mode: TestMode): TablerGlyph = when (mode) {
+    TestMode.DETECT -> TablerGlyph.SERVER
+    TestMode.TCP_DOWNLOAD -> TablerGlyph.DOWNLOAD
+    TestMode.TCP_UPLOAD -> TablerGlyph.UPLOAD
+    TestMode.TCP_BIDIRECTIONAL -> TablerGlyph.ARROWS_EXCHANGE
+    TestMode.UDP_DOWNLOAD, TestMode.UDP_UPLOAD -> TablerGlyph.ACTIVITY
+}
+
+private fun colorForMode(mode: TestMode): Color = when (mode) {
+    TestMode.DETECT -> Teal
+    TestMode.TCP_DOWNLOAD -> Blue
+    TestMode.TCP_UPLOAD -> Green
+    TestMode.TCP_BIDIRECTIONAL -> Purple
+    TestMode.UDP_DOWNLOAD, TestMode.UDP_UPLOAD -> Orange
 }

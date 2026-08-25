@@ -2,6 +2,23 @@
 
 This file records the important implementation decisions behind Free iperf3 Client. User-facing guidance lives in the project wiki.
 
+## 2026-08-25 — v0.3.0
+
+- Replaced the programmatic AppCompat view tree with a single dark Jetpack Compose UI that adapts from portrait phones to landscape TV.
+- Built native Canvas line graphics from Tabler's 24×24/2-pixel-stroke geometry rather than emoji or a runtime icon package.
+- Added selected test cards, editable duration, server-status card, prominent run state, live chart, result hero, min/average/max cards, expandable intervals, and command/raw-output views.
+- Added privacy-safe copy/share paths that redact the endpoint and device model, while keeping an explicitly labelled full diagnostic for private troubleshooting.
+- Separated endpoint validation from throughput settings so **Check server** is useful even when a duration or UDP target still needs editing.
+- Preserved immediate malformed-input feedback, real-iperf preflight, bounded processes, and raw failure output.
+- Added explicit Back-button cancellation/navigation and TV editor dialogs with visible D-pad focus.
+- Added unit coverage for malformed IPv4, IPv6/hostname safety, endpoint-only validation, UDP scoring, and report redaction.
+
+## Test evidence for v0.3.0
+
+- Phone API 35: immediate malformed-address feedback; successful server check; TCP download; simultaneous TCP bidirectional; UDP download/upload with score/loss/jitter/packets; Run All; unreachable-server stop and privacy-safe diagnostics.
+- Google TV API 35: Leanback launch, responsive landscape layout, D-pad traversal, automatic focus scrolling, and configuration editor dialog.
+- Fresh `clean testDebugUnitTest lintDebug assembleDebug` passed. Private endpoints, measured rates, screenshots, and raw diagnostic output are intentionally omitted.
+
 ## 2026-08-25 — v0.2.0
 
 - Kept one activity and one APK while adding server detection, TCP bidirectional, two-way UDP quality, and full-sequence orchestration.
