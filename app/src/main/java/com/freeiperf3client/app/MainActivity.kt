@@ -137,19 +137,6 @@ import kotlin.math.min
 
 private const val REPOSITORY_URL = "https://github.com/Anders0lesen/free-iperf3-client"
 
-private val AppBackground = Color(0xFF05090D)
-private val AppSurface = Color(0xFF0B1218)
-private val AppSurfaceRaised = Color(0xFF101920)
-private val AppBorder = Color(0xFF24313A)
-private val AppText = Color(0xFFF4F7FA)
-private val AppMuted = Color(0xFFAEB9C2)
-private val Teal = Color(0xFF14D8C4)
-private val Blue = Color(0xFF2F80FF)
-private val Green = Color(0xFF35D05B)
-private val Purple = Color(0xFFC05EF5)
-private val Orange = Color(0xFFFF9800)
-private val Red = Color(0xFFFF6070)
-
 private enum class AppScreen { HOME, RUNNING, RESULTS }
 
 private enum class DetectionStatus { NOT_CHECKED, CHECKING, DETECTED, FAILED }
@@ -229,24 +216,6 @@ class MainActivity : ComponentActivity() {
         engine.cancel()
         super.onDestroy()
     }
-}
-
-@Composable
-private fun IperfTheme(content: @Composable () -> Unit) {
-    MaterialTheme(
-        colorScheme = darkColorScheme(
-            primary = Teal,
-            secondary = Blue,
-            tertiary = Purple,
-            background = AppBackground,
-            surface = AppSurface,
-            error = Red,
-            onPrimary = Color(0xFF001713),
-            onBackground = AppText,
-            onSurface = AppText,
-        ),
-        content = content,
-    )
 }
 
 @Composable
@@ -491,35 +460,6 @@ private fun IperfApp(
             }
         }
     }
-}
-
-@Composable
-private fun AppBackdrop(content: @Composable () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppBackground)
-            .drawBehind {
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(Teal.copy(alpha = .09f), Color.Transparent),
-                        center = Offset(size.width * .12f, size.height * .18f),
-                        radius = size.width * .8f,
-                    ),
-                    radius = size.width * .8f,
-                    center = Offset(size.width * .12f, size.height * .18f),
-                )
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(Blue.copy(alpha = .055f), Color.Transparent),
-                        center = Offset(size.width, size.height * .7f),
-                        radius = size.width * .7f,
-                    ),
-                    radius = size.width * .7f,
-                    center = Offset(size.width, size.height * .7f),
-                )
-            },
-    ) { content() }
 }
 
 @Composable
@@ -2052,18 +1992,3 @@ private fun FocusButton(
     }
 }
 
-private fun glyphForMode(mode: TestMode): TablerGlyph = when (mode) {
-    TestMode.DETECT -> TablerGlyph.SERVER
-    TestMode.TCP_DOWNLOAD -> TablerGlyph.DOWNLOAD
-    TestMode.TCP_UPLOAD -> TablerGlyph.UPLOAD
-    TestMode.TCP_BIDIRECTIONAL -> TablerGlyph.ARROWS_EXCHANGE
-    TestMode.UDP_DOWNLOAD, TestMode.UDP_UPLOAD -> TablerGlyph.ACTIVITY
-}
-
-private fun colorForMode(mode: TestMode): Color = when (mode) {
-    TestMode.DETECT -> Teal
-    TestMode.TCP_DOWNLOAD -> Blue
-    TestMode.TCP_UPLOAD -> Green
-    TestMode.TCP_BIDIRECTIONAL -> Purple
-    TestMode.UDP_DOWNLOAD, TestMode.UDP_UPLOAD -> Orange
-}
