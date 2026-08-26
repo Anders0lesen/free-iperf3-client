@@ -1,0 +1,13 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "title": "Home", "x": 0, "y": 0, "w": 390, "h": 1680 },
+    { "file": "Running.dc.html", "x": 480, "y": 0, "w": 390, "h": 1120 },
+    { "file": "Results.dc.html", "x": 960, "y": 0, "w": 390, "h": 1520 },
+    { "file": "Failure.dc.html", "x": 1440, "y": 0, "w": 390, "h": 780 },
+    { "file": "QrDialog.dc.html", "x": 1920, "y": 0, "w": 390, "h": 700 }
+  ],
+  "annotations": [
+    { "id": "note-intro", "x": 0, "y": -150, "w": 620, "text": "Free iperf3 Client — current UI recreated from source (exact tokens, layout, Tabler icons). Phone width 390. Drag cards around, restyle in the properties panel, then tell me what to back-port into MainActivity.kt." }
+  ],
+  "launch": { "view": "canvas" }
+}

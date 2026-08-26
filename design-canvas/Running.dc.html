@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    :root{
+      --bg:#05090D; --surf:#0B1218; --raised:#101920; --border:#24313A;
+      --text:#F4F7FA; --muted:#AEB9C2;
+      --teal:#14D8C4; --blue:#2F80FF; --green:#35D05B; --purple:#C05EF5; --orange:#FF9800; --red:#FF6070;
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;background:var(--bg);color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+    a{color:var(--teal);} a:hover{color:#0fb3a2;}
+    .screen{padding:14px 18px 32px;
+      background:radial-gradient(120% 80% at 12% 18%, rgba(20,216,196,.09), transparent 60%),
+                 radial-gradient(120% 90% at 100% 70%, rgba(47,128,255,.055), transparent 55%);}
+    .stack{display:flex;flex-direction:column;}
+    .row{display:flex;align-items:center;}
+    .card{border-radius:24px;border:1px solid var(--border);
+      background:linear-gradient(135deg,rgba(16,25,32,.96),rgba(11,18,24,.96));}
+    .orb{display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+    svg{display:block;}
+  </style>
+</helmet>
+
+<div class="screen stack" style="gap:18px;">
+
+  <!-- Top bar -->
+  <div class="row" style="height:68px;">
+    <div style="width:48px;"></div>
+    <div style="flex:1;text-align:center;font-size:24px;font-weight:600;">Testing</div>
+    <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F4F7FA" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </div>
+  </div>
+
+  <!-- Mode card -->
+  <div class="card row" style="gap:17px;padding:22px;">
+    <div class="orb" style="width:64px;height:64px;border-radius:21px;background:rgba(47,128,255,.11);border:1px solid rgba(47,128,255,.25);">
+      <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#2F80FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M7 11l5 5 5-5M5 21h14"/></svg>
+    </div>
+    <div class="stack" style="flex:1;gap:2px;">
+      <div style="color:var(--blue);font-size:20px;font-weight:600;">TCP Download</div>
+      <div style="font-size:16px;">Test running</div>
+      <div style="color:var(--muted);font-size:13px;">Stage 1 of 1</div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div style="height:8px;border-radius:50px;background:var(--border);overflow:hidden;">
+    <div style="height:100%;width:62%;background:var(--blue);border-radius:50px;"></div>
+  </div>
+
+  <!-- Live hero -->
+  <div class="card stack" style="align-items:center;padding:24px;gap:8px;">
+    <div class="row" style="align-items:flex-end;gap:8px;">
+      <div style="color:var(--blue);font-size:62px;font-weight:800;line-height:1;">642</div>
+      <div style="color:var(--muted);font-size:22px;padding-bottom:10px;">Mbit/s</div>
+    </div>
+    <div style="color:var(--muted);font-size:15px;">Running 6 of 10 seconds</div>
+  </div>
+
+  <!-- Throughput chart -->
+  <div class="card stack" style="padding:18px;">
+    <div style="color:var(--muted);font-size:12px;">Mbit/s</div>
+    <div style="height:260px;position:relative;margin-top:8px;">
+      <svg width="100%" height="260" viewBox="0 0 354 260" preserveAspectRatio="none">
+        <g stroke="#24313A" stroke-width="1" opacity="0.7">
+          <line x1="42" y1="8" x2="348" y2="8"/><line x1="42" y1="66" x2="348" y2="66"/>
+          <line x1="42" y1="124" x2="348" y2="124"/><line x1="42" y1="182" x2="348" y2="182"/>
+          <line x1="42" y1="232" x2="348" y2="232"/>
+        </g>
+        <defs><linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2F80FF" stop-opacity="0.28"/><stop offset="1" stop-color="#2F80FF" stop-opacity="0"/>
+        </linearGradient></defs>
+        <path d="M42 232 L60 150 L100 96 L140 120 L180 78 L220 92 L260 70 L300 84 L300 232 Z" fill="url(#fill)"/>
+        <polyline points="60,150 100,96 140,120 180,78 220,92 260,70 300,84" fill="none" stroke="#2F80FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <g fill="#2F80FF">
+          <circle cx="60" cy="150" r="3.2"/><circle cx="100" cy="96" r="3.2"/><circle cx="140" cy="120" r="3.2"/>
+          <circle cx="180" cy="78" r="3.2"/><circle cx="220" cy="92" r="3.2"/><circle cx="260" cy="70" r="3.2"/><circle cx="300" cy="84" r="3.2"/>
+        </g>
+      </svg>
+      <div class="mono" style="position:absolute;left:0;top:0;color:#A0ADB8;font-size:11px;">800</div>
+      <div class="mono" style="position:absolute;left:0;top:120px;color:#A0ADB8;font-size:11px;">400</div>
+      <div class="mono" style="position:absolute;left:0;bottom:24px;color:#A0ADB8;font-size:11px;">0</div>
+      <div class="mono" style="position:absolute;left:38px;bottom:4px;color:#A0ADB8;font-size:11px;">0s</div>
+      <div class="mono" style="position:absolute;right:6px;bottom:4px;color:#A0ADB8;font-size:11px;">10s</div>
+    </div>
+  </div>
+
+  <!-- Command card -->
+  <div class="card stack" style="padding:20px;gap:10px;">
+    <div class="row" style="gap:10px;">
+      <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#AEB9C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></svg>
+      <div style="color:var(--muted);font-size:18px;font-weight:500;">Command</div>
+    </div>
+    <div class="mono" style="color:var(--muted);font-size:13px;line-height:19px;">iperf3 -c 192.168.1.50 -p 5201 -t 10 -R -J</div>
+  </div>
+
+  <!-- Cancel -->
+  <button style="width:100%;height:58px;border:none;border-radius:16px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    background:rgba(255,96,112,.13);color:var(--red);font-size:15px;font-weight:500;">
+    <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#FF6070" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+    Cancel test
+  </button>
+
+</div>
+</x-dc>
+</body>
+</html>
