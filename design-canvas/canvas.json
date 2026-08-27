@@ -1,13 +1,13 @@
 {
   "artboards": [
-    { "file": "Main.dc.html", "title": "Home", "x": 0, "y": 0, "w": 390, "h": 1680 },
-    { "file": "Running.dc.html", "x": 480, "y": 0, "w": 390, "h": 1120 },
-    { "file": "Results.dc.html", "x": 960, "y": 0, "w": 390, "h": 1520 },
-    { "file": "Failure.dc.html", "x": 1440, "y": 0, "w": 390, "h": 780 },
-    { "file": "QrDialog.dc.html", "x": 1920, "y": 0, "w": 390, "h": 700 }
+    { "file": "Main.dc.html", "title": "Home", "x": 0, "y": 0, "w": 390, "h": 720 },
+    { "file": "Running.dc.html", "x": 480, "y": 0, "w": 390, "h": 660 },
+    { "file": "Results.dc.html", "x": 960, "y": 0, "w": 390, "h": 740 },
+    { "file": "Failure.dc.html", "x": 1440, "y": 0, "w": 390, "h": 400 },
+    { "file": "QrDialog.dc.html", "x": 1920, "y": 0, "w": 390, "h": 560 }
   ],
   "annotations": [
-    { "id": "note-intro", "x": 0, "y": -150, "w": 620, "text": "Free iperf3 Client — current UI recreated from source (exact tokens, layout, Tabler icons). Phone width 390. Drag cards around, restyle in the properties panel, then tell me what to back-port into MainActivity.kt." }
+    { "id": "note-density", "x": 0, "y": -170, "w": 660, "text": "Compact density pass — everything sized to fit one phone screen without scrolling. Config + all four test buttons + Start visible together. Orbs 40px, tighter type, subtitles trimmed, test buttons are small icon+label rows. Layout kept as clean flow (not absolute) so the responsive/TV columns survive the back-port to Compose." }
   ],
   "launch": { "view": "canvas" }
 }

@@ -18,22 +18,21 @@
     a{color:var(--teal);} a:hover{color:#0fb3a2;}
     .stack{display:flex;flex-direction:column;}
     .row{display:flex;align-items:center;}
-    .fbtn{width:100%;height:58px;border:none;border-radius:16px;cursor:pointer;
-      display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:500;}
+    .fbtn{height:44px;border:none;border-radius:14px;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:600;}
     svg{display:block;}
   </style>
 </helmet>
 
-<div style="min-height:640px;display:flex;align-items:center;justify-content:center;padding:24px;">
-  <div class="stack" style="width:100%;max-width:340px;gap:12px;padding:20px;align-items:center;
-    border-radius:28px;background:var(--raised);border:1px solid var(--border);">
+<div style="min-height:520px;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div class="stack" style="width:100%;max-width:300px;gap:12px;padding:18px;align-items:center;
+    border-radius:20px;background:var(--raised);border:1px solid var(--border);">
     <div class="row" style="gap:10px;align-self:flex-start;">
-      <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#2F80FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14v4h3M17 14h4M19 14v3M17 21h4M21 17v4"/></svg>
-      <div style="color:var(--blue);font-size:18px;font-weight:500;">Scan result on your phone</div>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2F80FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14v4h3M17 14h4M19 14v3M17 21h4M21 17v4"/></svg>
+      <div style="color:var(--blue);font-size:16px;font-weight:600;">Scan on your phone</div>
     </div>
 
-    <!-- QR placeholder (stylized) -->
-    <div style="width:280px;height:280px;border-radius:14px;background:#FFFFFF;padding:14px;">
+    <div style="width:220px;height:220px;border-radius:12px;background:#FFFFFF;padding:12px;">
       <svg width="100%" height="100%" viewBox="0 0 100 100" shape-rendering="crispEdges">
         <rect width="100" height="100" fill="#fff"/>
         <g fill="#000">
@@ -54,11 +53,11 @@
       </svg>
     </div>
 
-    <div style="color:var(--muted);font-size:13px;text-align:center;">Generated locally. Includes the selected server address and command, but not raw output.</div>
+    <div style="color:var(--muted);font-size:12px;text-align:center;">Generated locally · server address and command, no raw output.</div>
 
-    <button class="fbtn" style="background:rgba(20,216,196,.13);color:var(--teal);">
-      <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#14D8C4" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      Close QR
+    <button class="fbtn" style="width:100%;background:rgba(20,216,196,.13);color:var(--teal);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14D8C4" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      Close
     </button>
   </div>
 </div>
