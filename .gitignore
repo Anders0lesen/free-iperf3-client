@@ -4,3 +4,6 @@
 local.properties
 *.iml
 .idea/
+
+# Generated Claude Design canvas (re-seeded from design-canvas/*.dc.html)
+design-canvas/free-iperf3-client-ui.html

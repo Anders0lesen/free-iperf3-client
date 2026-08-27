@@ -27,7 +27,7 @@ docker compose ps
 docker compose logs iperf3
 ```
 
-Free iperf3 Client v0.3.1 uses TCP `5201` for control/TCP tests and UDP `5201` for UDP quality tests, so publish both mappings.
+Free iperf3 Client uses TCP `5201` for control/TCP tests and UDP `5201` for UDP quality tests, so publish both mappings.
 
 ## Check from another computer
 

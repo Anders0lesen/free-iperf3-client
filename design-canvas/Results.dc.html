@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    :root{
+      --bg:#05090D; --surf:#0B1218; --raised:#101920; --border:#24313A;
+      --text:#F4F7FA; --muted:#AEB9C2;
+      --teal:#14D8C4; --blue:#2F80FF; --green:#35D05B; --purple:#C05EF5; --orange:#FF9800; --red:#FF6070;
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;background:var(--bg);color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+    a{color:var(--teal);} a:hover{color:#0fb3a2;}
+    .screen{padding:8px 16px 16px;
+      background:radial-gradient(120% 80% at 12% 18%, rgba(20,216,196,.09), transparent 60%),
+                 radial-gradient(120% 90% at 100% 70%, rgba(47,128,255,.055), transparent 55%);}
+    .stack{display:flex;flex-direction:column;}
+    .row{display:flex;align-items:center;}
+    .card{border-radius:18px;border:1px solid var(--border);
+      background:linear-gradient(135deg,rgba(16,25,32,.96),rgba(11,18,24,.96));}
+    .orb{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+    .fbtn{height:44px;border:none;border-radius:14px;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:600;}
+    svg{display:block;}
+  </style>
+</helmet>
+
+<div class="screen stack" style="gap:12px;">
+
+  <!-- Top bar -->
+  <div class="row" style="height:40px;">
+    <div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F4F7FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M10 6l-6 6 6 6"/></svg>
+    </div>
+    <div style="flex:1;text-align:center;font-size:20px;font-weight:600;">Results</div>
+    <div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F4F7FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 11l8-4M8 13l8 4"/></svg>
+    </div>
+  </div>
+
+  <!-- Result hero (compact, single row) -->
+  <div class="card row" style="gap:14px;padding:14px 16px;">
+    <div class="orb" style="background:rgba(47,128,255,.11);border:1px solid rgba(47,128,255,.25);">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F80FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M7 11l5 5 5-5M5 21h14"/></svg>
+    </div>
+    <div class="stack" style="gap:1px;">
+      <div style="color:var(--blue);font-size:13px;font-weight:600;">TCP Download</div>
+      <div class="row" style="align-items:baseline;gap:6px;">
+        <div style="color:var(--text);font-size:30px;font-weight:800;line-height:1;">648</div>
+        <div style="color:var(--muted);font-size:13px;">Mbit/s avg</div>
+      </div>
+    </div>
+    <div style="flex:1;"></div>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#35D05B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+  </div>
+
+  <!-- Stats row -->
+  <div class="row" style="gap:10px;align-items:stretch;">
+    <div class="card stack" style="flex:1;align-items:center;padding:10px 8px;">
+      <div style="color:var(--purple);font-size:11px;font-weight:800;">MIN</div>
+      <div style="font-size:20px;font-weight:600;">421</div>
+    </div>
+    <div class="card stack" style="flex:1;align-items:center;padding:10px 8px;">
+      <div style="color:var(--blue);font-size:11px;font-weight:800;">AVG</div>
+      <div style="font-size:20px;font-weight:600;">648</div>
+    </div>
+    <div class="card stack" style="flex:1;align-items:center;padding:10px 8px;">
+      <div style="color:var(--green);font-size:11px;font-weight:800;">MAX</div>
+      <div style="font-size:20px;font-weight:600;">793</div>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="card stack" style="padding:14px;">
+    <div style="color:var(--muted);font-size:11px;">Mbit/s</div>
+    <div style="height:150px;position:relative;margin-top:6px;">
+      <svg width="100%" height="150" viewBox="0 0 354 150" preserveAspectRatio="none">
+        <g stroke="#24313A" stroke-width="1" opacity="0.7">
+          <line x1="34" y1="6" x2="348" y2="6"/><line x1="34" y1="42" x2="348" y2="42"/>
+          <line x1="34" y1="78" x2="348" y2="78"/><line x1="34" y1="114" x2="348" y2="114"/>
+        </g>
+        <defs><linearGradient id="f2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2F80FF" stop-opacity="0.28"/><stop offset="1" stop-color="#2F80FF" stop-opacity="0"/>
+        </linearGradient></defs>
+        <path d="M40 132 L40 84 L100 56 L160 72 L220 46 L280 42 L330 50 L330 132 Z" fill="url(#f2)"/>
+        <polyline points="40,84 100,56 160,72 220,46 280,42 330,50" fill="none" stroke="#2F80FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <g fill="#2F80FF"><circle cx="40" cy="84" r="3"/><circle cx="100" cy="56" r="3"/><circle cx="160" cy="72" r="3"/><circle cx="220" cy="46" r="3"/><circle cx="280" cy="42" r="3"/><circle cx="330" cy="50" r="3"/></g>
+      </svg>
+      <div class="mono" style="position:absolute;left:0;top:0;color:#A0ADB8;font-size:10px;">800</div>
+      <div class="mono" style="position:absolute;left:0;top:72px;color:#A0ADB8;font-size:10px;">400</div>
+      <div class="mono" style="position:absolute;left:0;bottom:2px;color:#A0ADB8;font-size:10px;">0</div>
+    </div>
+  </div>
+
+  <!-- Details (collapsed, compact) -->
+  <div class="card row" style="padding:12px 16px;">
+    <div style="flex:1;font-size:14px;">Details (per 1 second)</div>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#AEB9C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+  </div>
+
+  <!-- Actions -->
+  <div class="row" style="gap:10px;">
+    <button class="fbtn" style="flex:1;background:rgba(47,128,255,.13);color:var(--blue);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2F80FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14v4h3M17 14h4M19 14v3M17 21h4M21 17v4"/></svg>
+      QR for phone
+    </button>
+    <button class="fbtn" style="flex:1;background:rgba(20,216,196,.13);color:var(--teal);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14D8C4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3-1 8-3 5-4 2-4-2-3-5-1-8 8-3M9 12l2 2 4-4"/></svg>
+      Copy summary
+    </button>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>
