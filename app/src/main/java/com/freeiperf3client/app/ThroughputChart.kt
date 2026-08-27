@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -40,11 +41,13 @@ internal fun ThroughputChart(samples: List<IntervalSample>, mode: TestMode, modi
     val maxRate = max(1_000_000.0, allRates.maxOrNull() ?: 1_000_000.0)
     val roundedMax = ceil(maxRate / 100_000_000.0).coerceAtLeast(1.0) * 100_000_000.0
     val maxTime = max(1.0, samples.maxOfOrNull { it.endSeconds } ?: 1.0)
-    GlassCard {
-        Column(Modifier.padding(18.dp)) {
+    GlassCard(modifier = modifier) {
+        Column(Modifier.fillMaxSize().padding(18.dp)) {
             Text("Mbit/s", color = AppMuted, fontSize = 12.sp)
             Canvas(
-                modifier = modifier
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
                     .semantics { contentDescription = "Throughput over time chart" }
                     .padding(top = 8.dp),
             ) {

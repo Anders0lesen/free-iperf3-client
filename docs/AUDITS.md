@@ -1,5 +1,31 @@
 # Audit record
 
+## v0.3.4 — 2026-08-27
+
+### Functional sanity check
+
+- Fresh `clean testDebugUnitTest lintDebug assembleDebug` passed with seven unit tests and no lint failure.
+- Phone API 35 completed a real TCP test with live state, chart, and command feedback; the result survived portrait-to-landscape rotation and the verified endpoint remained available in recent servers after reinstall.
+- Google TV API 36 launched through Leanback, accepted D-pad editor/start navigation, completed a real TCP test, and displayed the wide live/result charts and local result QR without clipping.
+- Runtime review found and fixed narrow-phone action wrapping and a collapsed wide-screen chart before release.
+
+Private endpoints, measured throughput, QR payloads, raw reports, emulator dumps, and screenshots are intentionally omitted.
+
+### Security audit
+
+- The packaged manifest declares only `INTERNET`, prompt-free `ACCESS_NETWORK_STATE`, and Android's app-scoped non-exported dynamic-receiver permission. Backup and debugger attachment remain disabled; there is no service or app receiver.
+- The refactor adds no ad, analytics, telemetry, account, WebView, dynamic-code, automatic-upload, file/storage, camera, location, microphone, notification, or background-service behavior.
+- Input remains validated and passed to `ProcessBuilder` without a shell; all measurements still require a real iperf3 preflight and retain process cancellation/watchdog handling.
+- OSV Scanner 2.5.1 resolved and queried all 85 Maven runtime coordinates against the official OSV data on 2026-08-27: zero findings.
+- All four bundled iperf3 3.21 SHA-256 hashes still match `THIRD_PARTY_NOTICES.md`.
+- Final local APK SHA-256 before CI release: `8A690450414F5091B1458C973A366ED401DA239F7FB4F085F067FA64F393EA8D` (GitHub Actions independently rebuilds and signs the release asset).
+
+### Personal-information audit
+
+- Scanned tracked text, filenames, diff, resources, workflow inputs, image inventory, and generated APK inputs for private endpoints, Tailscale addresses, local Windows paths, clipboard filenames, personal names/details, emails, credentials, tokens, screenshots, and diagnostic output.
+- Replaced private-range placeholder addresses in the design artboards with the RFC 5737 documentation address `192.0.2.10`; no real test endpoint, throughput figure, QR payload, or emulator artifact is tracked.
+- The existing public GitHub repository identity is the only personal-style identifier. The tracked images are non-personal app artwork only.
+
 ## v0.3.1 — 2026-08-25
 
 ### Functional sanity check

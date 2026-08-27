@@ -1,5 +1,15 @@
 # Development log
 
+## 2026-08-27 — v0.3.4
+
+- Split the Compose UI into reusable theme, component, chart, home, running, result, and orchestration files.
+- Redesigned the phone setup screen for higher information density while retaining immediate validation and visible focus.
+- Added purpose-built landscape and TV compositions for setup, testing, results, failures, and local QR export.
+- Preserved LAN discovery, recent servers, rotation-safe sessions, live command/output feedback, and privacy-safe sharing.
+- Rechecked a clean build, unit tests, lint, phone rotation, a real TCP test, TV launch/navigation, dependency security, and repository personal-information exposure before release.
+
+No private endpoint, throughput figure, QR payload, diagnostic output, emulator dump, or test screenshot is published.
+
 ## 2026-08-25 — v0.3.1
 
 - Kept active tests and entered/selected server state intact through device rotation.

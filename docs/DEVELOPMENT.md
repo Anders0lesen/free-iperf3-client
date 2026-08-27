@@ -2,6 +2,20 @@
 
 This file records the important implementation decisions behind Free iperf3 Client. User-facing guidance lives in the project wiki.
 
+## 2026-08-27 — v0.3.4
+
+- Split the Compose interface into focused theme, component, chart, home, running, result, and orchestration files while leaving the native iperf3 execution model intact.
+- Back-ported the compact Claude Design artboards into the real Compose UI, including separate portrait and wide-screen compositions.
+- Kept immediate validation, LAN discovery, recent servers, live progress/commands, rotation-safe sessions, privacy-safe sharing, and local QR export.
+- Corrected two runtime-only layout regressions found during release review: wrapped/truncated narrow-phone actions and a collapsed wide-screen chart caused by applying the caller's size modifier to the inner canvas rather than the chart card.
+
+## Test evidence for v0.3.4
+
+- Fresh `clean testDebugUnitTest lintDebug assembleDebug` passed with seven unit tests and no lint failure.
+- Phone API 35 completed a real TCP test, displayed live progress/chart/command data, retained the completed session through rotation, and preserved the verified server in the recent-server picker.
+- Google TV API 36 launched through Leanback, accepted D-pad address editing and start navigation, completed a real TCP test, rendered the corrected two-column live/result charts, and opened the local result QR with D-pad input.
+- Private endpoints, measured rates, screenshots, QR payloads, emulator dumps, and raw output are intentionally omitted.
+
 ## 2026-08-25 — v0.3.1
 
 - Preserved the activity and its native iperf process across orientation/screen-size changes so an active run, selected endpoint, live samples, and final result survive rotation.

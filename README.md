@@ -15,7 +15,14 @@ A deliberately free non-ad supported local only simple iperf3 client for Android
 
 [Download the latest APK](https://github.com/Anders0lesen/free-iperf3-client/releases/latest) · [Documentation](wiki/Home.md) · [Report a problem](https://github.com/Anders0lesen/free-iperf3-client/issues)
 
-## Version 0.3.1
+## Version 0.3.4
+
+- Refactors the Compose interface into focused, reusable screen and component files without changing the local-only iperf3 engine.
+- Reworks phone layouts for denser one-screen setup, clearer selection states, and a compact but readable start action.
+- Reflows landscape, tablet, Android TV, and Google TV screens into purpose-built wide layouts for setup, live tests, results, failures, and QR export.
+- Keeps live progress, charts, command visibility, D-pad focus, rotation survival, LAN discovery, recent servers, and privacy-safe result sharing from v0.3.1.
+
+### Added in 0.3.1
 
 - Keeps an active test, progress, selected server, and results intact when the device rotates.
 - **Find iperf3 servers** scans the current local IPv4 network without requiring an address first, then accepts a result only after a real iperf3 exchange.

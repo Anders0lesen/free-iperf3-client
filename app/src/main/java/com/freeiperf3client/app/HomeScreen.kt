@@ -513,7 +513,7 @@ private fun ChoiceRow(
         selected = selected,
         accent = accent,
         onClick = onClick,
-        modifier = modifier.height(if (showSubtitle) 72.dp else 56.dp),
+        modifier = modifier.height(if (showSubtitle) 72.dp else 64.dp),
     ) {
         Row(
             Modifier.fillMaxSize().padding(horizontal = 14.dp),
@@ -522,7 +522,14 @@ private fun ChoiceRow(
         ) {
             IconOrb(glyph, accent, 40.dp)
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(1.dp)) {
-                Text(choice.title, color = AppText, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(
+                    choice.title,
+                    color = AppText,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = if (showSubtitle) 1 else 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
                 if (showSubtitle) {
                     Text(choice.subtitle, color = AppMuted, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
@@ -582,7 +589,7 @@ private fun StartCard(choice: TestChoice, enabled: Boolean, helper: String, wide
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(if (wide) 72.dp else 56.dp)
+            .height(72.dp)
             .onFocusChanged { focused = it.isFocused }
             .clip(shape)
             .background(
@@ -602,15 +609,41 @@ private fun StartCard(choice: TestChoice, enabled: Boolean, helper: String, wide
             ) {
                 TablerIcon(TablerGlyph.PLAY, null, if (enabled) Color.White else AppMuted, Modifier.size(circle * .58f))
             }
-            Text("Start Test", color = if (enabled) Teal else AppMuted, fontSize = if (wide) 19.sp else 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-            Text(
-                if (enabled) choice.title else helper,
-                color = AppMuted,
-                fontSize = 13.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                textAlign = TextAlign.End,
-            )
+            if (wide) {
+                Text(
+                    "Start Test",
+                    color = if (enabled) Teal else AppMuted,
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    modifier = Modifier.weight(1f),
+                )
+                Text(
+                    if (enabled) choice.title else helper,
+                    color = AppMuted,
+                    fontSize = 13.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.End,
+                )
+            } else {
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                    Text(
+                        "Start Test",
+                        color = if (enabled) Teal else AppMuted,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                    )
+                    Text(
+                        if (enabled) choice.title else helper,
+                        color = AppMuted,
+                        fontSize = 11.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
         }
     }
 }
