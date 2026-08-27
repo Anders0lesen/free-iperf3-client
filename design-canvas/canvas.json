@@ -1,13 +1,20 @@
 {
+  "pages": [
+    { "id": "phone", "name": "Phone (portrait)" },
+    { "id": "tv", "name": "Landscape / TV" }
+  ],
   "artboards": [
-    { "file": "Main.dc.html", "title": "Home", "x": 0, "y": 0, "w": 390, "h": 720 },
-    { "file": "Running.dc.html", "x": 480, "y": 0, "w": 390, "h": 660 },
-    { "file": "Results.dc.html", "x": 960, "y": 0, "w": 390, "h": 740 },
-    { "file": "Failure.dc.html", "x": 1440, "y": 0, "w": 390, "h": 400 },
-    { "file": "QrDialog.dc.html", "x": 1920, "y": 0, "w": 390, "h": 560 }
+    { "file": "Main.dc.html", "title": "Home", "page": "phone", "x": 0, "y": 0, "w": 390, "h": 720 },
+    { "file": "Running.dc.html", "page": "phone", "x": 480, "y": 0, "w": 390, "h": 660 },
+    { "file": "Results.dc.html", "page": "phone", "x": 960, "y": 0, "w": 390, "h": 740 },
+    { "file": "Failure.dc.html", "page": "phone", "x": 1440, "y": 0, "w": 390, "h": 400 },
+    { "file": "QrDialog.dc.html", "page": "phone", "x": 1920, "y": 0, "w": 390, "h": 560 },
+    { "file": "TvHome.dc.html", "title": "Home — landscape / TV", "page": "tv", "x": 0, "y": 0, "w": 960, "h": 540 },
+    { "file": "TvRunning.dc.html", "title": "Running — landscape / TV", "page": "tv", "x": 1040, "y": 0, "w": 960, "h": 540 }
   ],
   "annotations": [
-    { "id": "note-density", "x": 0, "y": -170, "w": 660, "text": "Compact density pass — everything sized to fit one phone screen without scrolling. Config + all four test buttons + Start visible together. Orbs 40px, tighter type, subtitles trimmed, test buttons are small icon+label rows. Layout kept as clean flow (not absolute) so the responsive/TV columns survive the back-port to Compose." }
+    { "id": "note-phone", "page": "phone", "x": 0, "y": -170, "w": 660, "text": "Compact density pass — everything sized to fit one phone screen without scrolling. Config + all four test buttons + Start visible together. GitHub mark pinned 3px from the top-right corner." },
+    { "id": "note-tv", "page": "tv", "x": 0, "y": -150, "w": 900, "text": "Landscape / TV reflow (also what a tilted phone or tablet gets): a genuine two-column layout rather than a stretched phone view — configuration on the left, choose-a-test and Start on the right, so nothing scrolls off a wide screen. The blue tile shows the D-pad focus ring for TV remotes. First stab — tell me what to change." }
   ],
-  "launch": { "view": "canvas" }
+  "launch": { "view": "canvas", "page": "tv" }
 }
