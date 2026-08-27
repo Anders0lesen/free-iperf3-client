@@ -72,16 +72,16 @@ internal fun ResultsScreen(
     var qrPayload by remember { mutableStateOf<String?>(null) }
     val selected = measuredResults.getOrNull(selectedIndex)
     BoxWithConstraints(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
-        val wideLayout = maxWidth >= 800.dp
+        val wideLayout = maxWidth >= 800.dp || maxWidth > maxHeight
         val contentWidth = if (maxWidth > 1240.dp) 1200.dp else maxWidth
         Column(
             Modifier
                 .width(contentWidth)
                 .align(Alignment.TopCenter)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = if (maxWidth > 600.dp) 28.dp else 18.dp, vertical = 14.dp)
-                .padding(bottom = 36.dp),
-            verticalArrangement = Arrangement.spacedBy(18.dp),
+                .padding(horizontal = if (maxWidth > 600.dp) 22.dp else 16.dp, vertical = 10.dp)
+                .padding(bottom = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             ResultTopBar(
                 failure = session.failure != null,
@@ -112,21 +112,21 @@ internal fun ResultsScreen(
                 if (wideLayout) {
                     Row(
                         Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(22.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.Top,
                     ) {
-                        Column(Modifier.weight(.86f), verticalArrangement = Arrangement.spacedBy(18.dp)) {
+                        Column(Modifier.weight(.86f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             ResultHero(selected, session.config)
                             ResultStats(selected)
                             if (selected.mode == TestMode.UDP_DOWNLOAD || selected.mode == TestMode.UDP_UPLOAD) {
                                 UdpQualityCard(selected, session.config)
                             }
                         }
-                        Column(Modifier.weight(1.14f), verticalArrangement = Arrangement.spacedBy(18.dp)) {
+                        Column(Modifier.weight(1.14f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             ThroughputChart(
                                 samples = selected.samples,
                                 mode = selected.mode,
-                                modifier = Modifier.fillMaxWidth().height(350.dp),
+                                modifier = Modifier.fillMaxWidth().height(300.dp),
                             )
                             DetailsCard(selected)
                         }
@@ -136,7 +136,7 @@ internal fun ResultsScreen(
                     ThroughputChart(
                         samples = selected.samples,
                         mode = selected.mode,
-                        modifier = Modifier.fillMaxWidth().height(280.dp),
+                        modifier = Modifier.fillMaxWidth().height(180.dp),
                     )
                     ResultStats(selected)
                     if (selected.mode == TestMode.UDP_DOWNLOAD || selected.mode == TestMode.UDP_UPLOAD) {
@@ -146,7 +146,7 @@ internal fun ResultsScreen(
                 }
                 CommandCard(selected, session.config, engine, copyText)
                 if (wideLayout) {
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(18.dp)) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         Box(Modifier.weight(1f)) {
                             FocusButton("Show result QR for phone", TablerGlyph.QR_CODE, Blue) {
                                 qrPayload = buildResultReport(session.title, session.config, listOf(selected), engine, safe = false)
@@ -258,7 +258,7 @@ private fun createQrBitmap(payload: String, size: Int): Bitmap {
 @Composable
 private fun ResultTopBar(failure: Boolean, onBack: () -> Unit, onShare: () -> Unit) {
     Row(
-        Modifier.fillMaxWidth().height(68.dp),
+        Modifier.fillMaxWidth().height(52.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         VectorIconButton(TablerGlyph.ARROW_LEFT, "Back", onBack)
@@ -267,7 +267,7 @@ private fun ResultTopBar(failure: Boolean, onBack: () -> Unit, onShare: () -> Un
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center,
             color = AppText,
-            fontSize = 24.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
         )
         VectorIconButton(TablerGlyph.SHARE, "Share privacy-safe results", onShare)
@@ -303,22 +303,21 @@ private fun ResultHero(result: TestResult, config: TestConfig) {
     val accent = colorForMode(result.mode)
     GlassCard {
         Column(
-            Modifier.fillMaxWidth().padding(22.dp),
+            Modifier.fillMaxWidth().padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(9.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                IconOrb(glyphForMode(result.mode), accent, 58.dp)
-                Spacer(Modifier.width(14.dp))
+                IconOrb(glyphForMode(result.mode), accent, 44.dp)
+                Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
-                    Text(result.mode.title, color = accent, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                    Text(result.mode.subtitle, color = AppMuted, fontSize = 13.sp)
+                    Text(result.mode.title, color = accent, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                    Text(result.mode.subtitle, color = AppMuted, fontSize = 12.sp)
                 }
-                Text("Success", color = Green, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                Text("Success", color = Green, fontSize = 13.sp, fontWeight = FontWeight.Medium)
                 Spacer(Modifier.width(8.dp))
-                TablerIcon(TablerGlyph.CHECK, null, Green, Modifier.size(26.dp))
+                TablerIcon(TablerGlyph.CHECK, null, Green, Modifier.size(22.dp))
             }
-            Spacer(Modifier.height(3.dp))
             if (result.mode == TestMode.TCP_BIDIRECTIONAL) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     HeroRate("Download", result.downloadBitsPerSecond ?: 0.0, Blue, Modifier.weight(1f), compact = true)
@@ -348,22 +347,22 @@ private fun HeroRate(
             Text(
                 parts.first,
                 color = accent,
-                fontSize = if (compact) 42.sp else 57.sp,
+                fontSize = if (compact) 28.sp else 38.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 softWrap = false,
             )
-            Spacer(Modifier.width(if (compact) 4.dp else 7.dp))
+            Spacer(Modifier.width(if (compact) 4.dp else 6.dp))
             Text(
                 parts.second,
                 color = AppMuted,
-                fontSize = if (compact) 14.sp else 20.sp,
-                modifier = Modifier.padding(bottom = if (compact) 7.dp else 9.dp),
+                fontSize = if (compact) 13.sp else 15.sp,
+                modifier = Modifier.padding(bottom = if (compact) 4.dp else 6.dp),
                 maxLines = 1,
                 softWrap = false,
             )
         }
-        Text(label, color = AppMuted, fontSize = 14.sp, maxLines = 1)
+        Text(label, color = AppMuted, fontSize = 12.sp, maxLines = 1)
     }
 }
 
@@ -398,12 +397,12 @@ private fun StatCard(label: String, rate: Double, accent: Color, modifier: Modif
     GlassCard(modifier) {
         val parts = formatRateParts(rate)
         Column(
-            Modifier.fillMaxWidth().padding(vertical = 16.dp, horizontal = 8.dp),
+            Modifier.fillMaxWidth().padding(vertical = 10.dp, horizontal = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(label, color = accent, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-            Text(parts.first, color = AppText, fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
-            Text(parts.second, color = AppMuted, fontSize = 12.sp)
+            Text(label, color = accent, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+            Text(parts.first, color = AppText, fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
+            Text(parts.second, color = AppMuted, fontSize = 11.sp)
         }
     }
 }
@@ -419,15 +418,15 @@ private fun UdpQualityCard(result: TestResult, config: TestConfig) {
     }
     GlassCard {
         Row(
-            Modifier.fillMaxWidth().padding(22.dp),
+            Modifier.fillMaxWidth().padding(14.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(18.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             Box(
-                Modifier.size(88.dp).clip(CircleShape).background(scoreColor.copy(alpha = .12f)).border(2.dp, scoreColor, CircleShape),
+                Modifier.size(64.dp).clip(CircleShape).background(scoreColor.copy(alpha = .12f)).border(2.dp, scoreColor, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(score.toString(), color = scoreColor, fontSize = 30.sp, fontWeight = FontWeight.Bold)
+                Text(score.toString(), color = scoreColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text("UDP quality: $grade", color = scoreColor, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
@@ -534,15 +533,17 @@ private fun FailureContent(
     val failure = session.failure ?: return
     var details by remember { mutableStateOf(false) }
     GlassCard(border = Red.copy(alpha = .7f)) {
-        Column(
-            Modifier.fillMaxWidth().padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+        Row(
+            Modifier.fillMaxWidth().padding(16.dp),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            IconOrb(TablerGlyph.ALERT, Red, 86.dp)
-            Text("${failure.mode.title} failed", color = Red, fontSize = 26.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
-            Text(friendlyError(failure.error), color = AppText, fontSize = 17.sp, textAlign = TextAlign.Center)
-            Text("No test was allowed to continue blindly after this failure.", color = AppMuted, fontSize = 14.sp, textAlign = TextAlign.Center)
+            IconOrb(TablerGlyph.ALERT, Red, 44.dp)
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                Text("${failure.mode.title} failed", color = Red, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                Text(friendlyError(failure.error), color = AppText, fontSize = 14.sp)
+                Text("No test continued blindly after this failure.", color = AppMuted, fontSize = 12.sp)
+            }
         }
     }
     FocusButton("Retry", TablerGlyph.REFRESH, Teal, onRetry)

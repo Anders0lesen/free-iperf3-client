@@ -2,12 +2,10 @@ package com.freeiperf3client.app
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -17,7 +15,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -51,10 +48,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
@@ -106,50 +101,48 @@ internal fun HomeScreen(
             .navigationBarsPadding()
             .imePadding(),
     ) {
-        val wideLayout = maxWidth >= 800.dp
+        // Landscape (tilted phone/tablet) or a genuinely wide screen (TV, big tablet)
+        // gets the two-column reflow; portrait phones get the tall single column.
+        val wide = maxWidth >= 800.dp || maxWidth > maxHeight
         val contentWidth = if (maxWidth > 1240.dp) 1200.dp else maxWidth
+        val hPad = if (maxWidth > 600.dp) 22.dp else 16.dp
+        val startEnabled = validation.valid && detectionStatus != DetectionStatus.CHECKING
+        val startHelper = validation.firstError ?: "Ready to test"
+
         Column(
             modifier = Modifier
                 .width(contentWidth)
                 .align(Alignment.TopCenter)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = if (maxWidth > 600.dp) 28.dp else 18.dp)
-                .padding(bottom = 32.dp),
-            verticalArrangement = Arrangement.spacedBy(22.dp),
+                .padding(horizontal = hPad)
+                .padding(top = 8.dp, bottom = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            HomeHeader(openRepository)
-            if (wideLayout) {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(22.dp), verticalAlignment = Alignment.Top) {
-                    Column(Modifier.weight(.9f), verticalArrangement = Arrangement.spacedBy(18.dp)) {
+            HomeHeader()
+            if (wide) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.Top,
+                ) {
+                    Column(Modifier.weight(.9f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         ConfigCard(
                             host, port, duration, udpTarget, attemptedStart, validation,
                             onHostChange, onPortChange, onDurationChange, onUdpChange,
                         ) { focusManager.clearFocus() }
                         if (recentServers.isNotEmpty()) {
-                            RecentServersCard(
-                                recentServers, host, port.toIntOrNull(),
-                                onRecentSelect, onRecentRemove, onRecentClear,
-                            )
+                            RecentServersCard(recentServers, host, port.toIntOrNull(), onRecentSelect, onRecentRemove, onRecentClear)
                         }
                     }
-                    Column(Modifier.weight(1.1f), verticalArrangement = Arrangement.spacedBy(18.dp)) {
-                        TestChoiceGrid(selectedChoice, onChoice, compact = true)
-                        WideChoiceCard(
-                            TestChoice.RUN_ALL, TablerGlyph.LAYERS, Teal,
-                            selectedChoice == TestChoice.RUN_ALL,
-                        ) { onChoice(TestChoice.RUN_ALL) }
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(18.dp), verticalAlignment = Alignment.Top) {
-                            Box(Modifier.weight(1f)) { DetectionCard(detectionStatus, detectionMessage, onDetect, compact = true) }
+                    Column(Modifier.weight(1.1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        TestChoiceGrid(selectedChoice, onChoice, showSubtitle = true)
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             Box(Modifier.weight(1f)) {
-                                StartCard(
-                                    selectedChoice,
-                                    validation.valid && detectionStatus != DetectionStatus.CHECKING,
-                                    validation.firstError ?: "Ready to test",
-                                    onStart,
-                                    compact = true,
-                                )
+                                ChoiceRow(TestChoice.RUN_ALL, TablerGlyph.LAYERS, Teal, selectedChoice == TestChoice.RUN_ALL, false, Modifier.fillMaxWidth()) { onChoice(TestChoice.RUN_ALL) }
                             }
+                            Box(Modifier.weight(1f)) { DetectionCard(detectionStatus, detectionMessage, onDetect, Modifier.fillMaxWidth()) }
                         }
+                        StartCard(selectedChoice, startEnabled, startHelper, wide = true, onClick = onStart)
                     }
                 }
             } else {
@@ -158,71 +151,49 @@ internal fun HomeScreen(
                     onHostChange, onPortChange, onDurationChange, onUdpChange,
                 ) { focusManager.clearFocus() }
                 if (recentServers.isNotEmpty()) {
-                    RecentServersCard(
-                        recentServers, host, port.toIntOrNull(),
-                        onRecentSelect, onRecentRemove, onRecentClear,
-                    )
+                    RecentServersCard(recentServers, host, port.toIntOrNull(), onRecentSelect, onRecentRemove, onRecentClear)
                 }
-                TestChoiceGrid(selectedChoice, onChoice)
-                WideChoiceCard(
-                    TestChoice.RUN_ALL, TablerGlyph.LAYERS, Teal,
-                    selectedChoice == TestChoice.RUN_ALL,
-                ) { onChoice(TestChoice.RUN_ALL) }
-                DetectionCard(detectionStatus, detectionMessage, onDetect)
-                StartCard(
-                    selectedChoice,
-                    validation.valid && detectionStatus != DetectionStatus.CHECKING,
-                    validation.firstError ?: "Ready to test",
-                    onStart,
-                )
+                TestChoiceGrid(selectedChoice, onChoice, showSubtitle = false)
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Box(Modifier.weight(1f)) {
+                        ChoiceRow(TestChoice.RUN_ALL, TablerGlyph.LAYERS, Teal, selectedChoice == TestChoice.RUN_ALL, false, Modifier.fillMaxWidth()) { onChoice(TestChoice.RUN_ALL) }
+                    }
+                    Box(Modifier.weight(1f)) { DetectionCard(detectionStatus, detectionMessage, onDetect, Modifier.fillMaxWidth()) }
+                }
+                StartCard(selectedChoice, startEnabled, startHelper, wide = false, onClick = onStart)
             }
         }
+
+        // GitHub mark, pinned 3dp from the top-right corner.
+        GitHubMark(Modifier.align(Alignment.TopEnd).padding(top = 3.dp, end = 3.dp), openRepository)
     }
 }
 
 @Composable
-private fun HomeHeader(openRepository: () -> Unit) {
-    Box(Modifier.fillMaxWidth().height(142.dp)) {
-        Column(
-            modifier = Modifier.align(Alignment.BottomStart).padding(bottom = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-        ) {
-            Text(
-                "Free iperf3 Client",
-                color = AppText,
-                fontSize = 34.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = (-1).sp,
-            )
-            Text("Simply free.", color = Teal, fontSize = 20.sp, fontWeight = FontWeight.Medium)
-        }
-        GitHubFold(Modifier.align(Alignment.TopEnd), openRepository)
-    }
-}
-
-@Composable
-private fun GitHubFold(modifier: Modifier, onClick: () -> Unit) {
-    Box(
-        modifier = modifier
-            .size(96.dp)
-            .clip(RoundedCornerShape(bottomStart = 34.dp))
-            .background(
-                Brush.linearGradient(
-                    listOf(Color(0xFF1C252D), Color(0xFF0A1015)),
-                    start = Offset.Zero,
-                    end = Offset.Infinite,
-                ),
-            )
-            .clickable(onClick = onClick)
-            .focusable()
-            .semantics { contentDescription = "Open project on GitHub" },
-        contentAlignment = Alignment.Center,
+private fun HomeHeader() {
+    Column(
+        Modifier.fillMaxWidth().height(52.dp),
+        verticalArrangement = Arrangement.Bottom,
     ) {
+        Text(
+            "Free iperf3 Client",
+            color = AppText,
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = (-.5).sp,
+        )
+        Text("Simply free.", color = Teal, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+    }
+}
+
+@Composable
+private fun GitHubMark(modifier: Modifier, onClick: () -> Unit) {
+    IconButton(onClick = onClick, modifier = modifier.size(32.dp).semantics { contentDescription = "Open project on GitHub" }) {
         Icon(
             painter = painterResource(R.drawable.ic_github),
             contentDescription = null,
             tint = AppMuted,
-            modifier = Modifier.size(34.dp),
+            modifier = Modifier.size(24.dp),
         )
     }
 }
@@ -328,11 +299,11 @@ private fun RecentServersCard(
     GlassCard {
         Column(Modifier.fillMaxWidth()) {
             Row(
-                Modifier.fillMaxWidth().padding(start = 20.dp, end = 10.dp, top = 12.dp, bottom = 8.dp),
+                Modifier.fillMaxWidth().padding(start = 16.dp, end = 6.dp, top = 6.dp, bottom = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text("Recent servers", color = AppText, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
-                TextButton(onClick = onClear) { Text("Clear all", color = AppMuted) }
+                Text("Recent servers", color = AppText, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
+                TextButton(onClick = onClear) { Text("Clear all", color = AppMuted, fontSize = 13.sp) }
             }
             HorizontalDivider(color = AppBorder)
             servers.forEachIndexed { index, server ->
@@ -346,20 +317,20 @@ private fun RecentServersCard(
                         .border(if (focused) 2.dp else 0.dp, Teal, RoundedCornerShape(12.dp))
                         .clickable { onSelect(server) }
                         .focusable()
-                        .padding(start = 20.dp, end = 8.dp, top = 10.dp, bottom = 10.dp),
+                        .padding(start = 16.dp, end = 4.dp, top = 8.dp, bottom = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    TablerIcon(TablerGlyph.SERVER, null, if (selected) Teal else AppMuted, Modifier.size(25.dp))
-                    Spacer(Modifier.width(14.dp))
+                    TablerIcon(TablerGlyph.SERVER, null, if (selected) Teal else AppMuted, Modifier.size(22.dp))
+                    Spacer(Modifier.width(12.dp))
                     Column(Modifier.weight(1f)) {
-                        Text(server.endpoint, color = if (selected) Teal else AppText, fontSize = 16.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        Text(if (selected) "Selected" else "Tap to use", color = AppMuted, fontSize = 12.sp)
+                        Text(server.endpoint, color = if (selected) Teal else AppText, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(if (selected) "Selected" else "Tap to use", color = AppMuted, fontSize = 11.sp)
                     }
                     IconButton(onClick = { onRemove(server) }, modifier = Modifier.semantics { contentDescription = "Forget ${server.endpoint}" }) {
-                        TablerIcon(TablerGlyph.CLOSE, null, AppMuted, Modifier.size(20.dp))
+                        TablerIcon(TablerGlyph.CLOSE, null, AppMuted, Modifier.size(18.dp))
                     }
                 }
-                if (index != servers.lastIndex) HorizontalDivider(color = AppBorder, modifier = Modifier.padding(horizontal = 20.dp))
+                if (index != servers.lastIndex) HorizontalDivider(color = AppBorder, modifier = Modifier.padding(horizontal = 16.dp))
             }
         }
     }
@@ -408,22 +379,25 @@ private fun ConfigRow(
                     )
                     .clickable { editorOpen = true }
                     .focusable()
-            } else Modifier
+            } else {
+                // Tapping anywhere on the row (the pen included) opens the keyboard on the field.
+                Modifier.clickable { focusRequester.requestFocus() }
+            }
         )
-        .padding(horizontal = 20.dp, vertical = 17.dp)
+        .padding(horizontal = 16.dp, vertical = 11.dp)
     Row(
         modifier = rowModifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        IconOrb(glyph, Teal, 52.dp)
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-            Text(label, color = AppMuted, fontSize = 14.sp)
+        IconOrb(glyph, Teal, 40.dp)
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(1.dp)) {
+            Text(label, color = AppMuted, fontSize = 12.sp)
             if (isTelevision) {
                 Text(
                     text = value.ifBlank { placeholder } + if (value.isNotBlank()) suffix else "",
                     color = if (value.isBlank()) AppMuted.copy(alpha = .55f) else AppText,
-                    fontSize = 20.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                 )
             } else {
@@ -445,9 +419,9 @@ private fun ConfigRow(
                             color = if (focused) Teal.copy(alpha = .75f) else Color.Transparent,
                             shape = RoundedCornerShape(8.dp),
                         )
-                        .padding(horizontal = 8.dp, vertical = 5.dp),
+                        .padding(horizontal = 6.dp, vertical = 4.dp),
                     singleLine = true,
-                    textStyle = TextStyle(color = AppText, fontSize = 20.sp, fontWeight = FontWeight.Medium),
+                    textStyle = TextStyle(color = AppText, fontSize = 16.sp, fontWeight = FontWeight.Medium),
                     keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
                     keyboardActions = KeyboardActions(
                         onNext = { focusManager.moveFocus(FocusDirection.Next) },
@@ -457,21 +431,21 @@ private fun ConfigRow(
                     decorationBox = { inner ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Box(Modifier.weight(1f)) {
-                                if (value.isBlank()) Text(placeholder, color = AppMuted.copy(alpha = .55f), fontSize = 19.sp)
+                                if (value.isBlank()) Text(placeholder, color = AppMuted.copy(alpha = .55f), fontSize = 15.sp)
                                 inner()
                             }
                             if (value.isNotBlank() && suffix.isNotBlank()) {
-                                Text(suffix, color = AppMuted, fontSize = 17.sp)
+                                Text(suffix, color = AppMuted, fontSize = 13.sp)
                             }
                         }
                     },
                 )
             }
             AnimatedVisibility(error != null) {
-                Text(error.orEmpty(), color = Red, fontSize = 12.sp, modifier = Modifier.padding(top = 2.dp))
+                Text(error.orEmpty(), color = Red, fontSize = 11.sp, modifier = Modifier.padding(top = 2.dp))
             }
         }
-        TablerIcon(TablerGlyph.EDIT, null, AppMuted, Modifier.size(25.dp))
+        TablerIcon(TablerGlyph.EDIT, null, AppMuted, Modifier.size(20.dp))
     }
     if (editorOpen) {
         AlertDialog(
@@ -503,30 +477,22 @@ private fun ConfigRow(
 
 @Composable
 private fun ConfigDivider() {
-    HorizontalDivider(color = AppBorder.copy(alpha = .65f), modifier = Modifier.padding(horizontal = 20.dp))
+    HorizontalDivider(color = AppBorder.copy(alpha = .65f), modifier = Modifier.padding(horizontal = 16.dp))
 }
 
 @Composable
-private fun TestChoiceGrid(selected: TestChoice, onChoice: (TestChoice) -> Unit, compact: Boolean = false) {
+private fun TestChoiceGrid(selected: TestChoice, onChoice: (TestChoice) -> Unit, showSubtitle: Boolean) {
     val choices = listOf(
         Triple(TestChoice.TCP_DOWNLOAD, TablerGlyph.DOWNLOAD, Blue),
         Triple(TestChoice.TCP_UPLOAD, TablerGlyph.UPLOAD, Green),
         Triple(TestChoice.TCP_BIDIRECTIONAL, TablerGlyph.ARROWS_EXCHANGE, Purple),
         Triple(TestChoice.UDP_QUALITY, TablerGlyph.ACTIVITY, Orange),
     )
-    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         choices.chunked(2).forEach { rowChoices ->
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 rowChoices.forEach { (choice, glyph, accent) ->
-                    ChoiceCard(
-                        choice = choice,
-                        glyph = glyph,
-                        accent = accent,
-                        selected = selected == choice,
-                        onClick = { onChoice(choice) },
-                        modifier = Modifier.weight(1f),
-                        compact = compact,
-                    )
+                    ChoiceRow(choice, glyph, accent, selected == choice, showSubtitle, Modifier.weight(1f)) { onChoice(choice) }
                 }
             }
         }
@@ -534,66 +500,39 @@ private fun TestChoiceGrid(selected: TestChoice, onChoice: (TestChoice) -> Unit,
 }
 
 @Composable
-private fun ChoiceCard(
+private fun ChoiceRow(
     choice: TestChoice,
     glyph: TablerGlyph,
     accent: Color,
     selected: Boolean,
-    onClick: () -> Unit,
+    showSubtitle: Boolean,
     modifier: Modifier = Modifier,
-    compact: Boolean = false,
-) {
-    FocusableGlassCard(
-        selected = selected,
-        accent = accent,
-        onClick = onClick,
-        modifier = modifier.height(if (compact) 158.dp else 190.dp),
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(if (compact) 14.dp else 18.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            IconOrb(glyph, accent, if (compact) 58.dp else 82.dp)
-            Spacer(Modifier.height(if (compact) 7.dp else 13.dp))
-            Text(choice.title, color = AppText, fontSize = if (compact) 15.sp else 18.sp, textAlign = TextAlign.Center, fontWeight = FontWeight.Medium)
-            Spacer(Modifier.height(3.dp))
-            Text(choice.subtitle, color = AppMuted, fontSize = if (compact) 12.sp else 14.sp, textAlign = TextAlign.Center, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        }
-    }
-}
-
-@Composable
-private fun WideChoiceCard(
-    choice: TestChoice,
-    glyph: TablerGlyph,
-    accent: Color,
-    selected: Boolean,
     onClick: () -> Unit,
 ) {
     FocusableGlassCard(
         selected = selected,
         accent = accent,
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth().height(116.dp),
+        modifier = modifier.height(if (showSubtitle) 72.dp else 56.dp),
     ) {
         Row(
-            Modifier.fillMaxSize().padding(horizontal = 22.dp),
+            Modifier.fillMaxSize().padding(horizontal = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(18.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            IconOrb(glyph, accent, 68.dp)
-            Column(Modifier.weight(1f)) {
-                Text(choice.title, color = AppText, fontSize = 21.sp, fontWeight = FontWeight.SemiBold)
-                Text(choice.subtitle, color = AppMuted, fontSize = 15.sp)
+            IconOrb(glyph, accent, 40.dp)
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                Text(choice.title, color = AppText, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                if (showSubtitle) {
+                    Text(choice.subtitle, color = AppMuted, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
             }
-            TablerIcon(TablerGlyph.CHEVRON_RIGHT, null, AppMuted, Modifier.size(28.dp))
         }
     }
 }
 
 @Composable
-private fun DetectionCard(status: DetectionStatus, message: String, onClick: () -> Unit, compact: Boolean = false) {
+private fun DetectionCard(status: DetectionStatus, message: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val accent = when (status) {
         DetectionStatus.NOT_CHECKED -> AppMuted
         DetectionStatus.CHECKING -> Orange
@@ -607,46 +546,43 @@ private fun DetectionCard(status: DetectionStatus, message: String, onClick: () 
         DetectionStatus.FAILED -> TablerGlyph.ALERT
     }
     val title = when (status) {
-        DetectionStatus.NOT_CHECKED -> "Find iperf3 servers"
-        DetectionStatus.CHECKING -> "Scanning current network"
-        DetectionStatus.DETECTED -> "iperf3 server found"
-        DetectionStatus.FAILED -> "Network scan finished"
+        DetectionStatus.NOT_CHECKED -> "Find servers"
+        DetectionStatus.CHECKING -> "Scanning…"
+        DetectionStatus.DETECTED -> "Server found"
+        DetectionStatus.FAILED -> "Scan finished"
     }
     FocusableGlassCard(
         selected = status == DetectionStatus.DETECTED,
         accent = accent,
         onClick = onClick,
         enabled = status != DetectionStatus.CHECKING,
-        modifier = Modifier.fillMaxWidth().heightIn(min = if (compact) 110.dp else 116.dp),
+        modifier = modifier.height(56.dp),
     ) {
         Row(
-            Modifier.fillMaxWidth().padding(if (compact) 14.dp else 22.dp),
+            Modifier.fillMaxSize().padding(horizontal = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(if (compact) 10.dp else 18.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            IconOrb(glyph, accent, if (compact) 46.dp else 68.dp)
-            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                Text(title, color = AppText, fontSize = if (compact) 15.sp else 19.sp, fontWeight = FontWeight.Medium, maxLines = if (compact) 2 else Int.MAX_VALUE)
-                Text(message, color = if (status == DetectionStatus.FAILED) Red else AppMuted, fontSize = if (compact) 11.sp else 14.sp, maxLines = if (compact) 2 else Int.MAX_VALUE, overflow = TextOverflow.Ellipsis)
-            }
-            if (status != DetectionStatus.CHECKING) {
-                TablerIcon(TablerGlyph.CHEVRON_RIGHT, null, AppMuted, Modifier.size(if (compact) 20.dp else 28.dp))
+            IconOrb(glyph, accent, 40.dp)
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                Text(title, color = AppText, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                if (status != DetectionStatus.NOT_CHECKED) {
+                    Text(message, color = if (status == DetectionStatus.FAILED) Red else AppMuted, fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
             }
         }
     }
 }
 
 @Composable
-private fun StartCard(choice: TestChoice, enabled: Boolean, helper: String, onClick: () -> Unit, compact: Boolean = false) {
+private fun StartCard(choice: TestChoice, enabled: Boolean, helper: String, wide: Boolean, onClick: () -> Unit) {
     var focused by remember { mutableStateOf(false) }
-    val scale by animateFloatAsState(if (focused) 1.015f else 1f, label = "startFocus")
-    val shape = RoundedCornerShape(28.dp)
-    val interaction = remember { MutableInteractionSource() }
+    val shape = RoundedCornerShape(16.dp)
+    val circle = if (wide) 40.dp else 38.dp
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(if (compact) 110.dp else 136.dp)
-            .graphicsLayer(scaleX = scale, scaleY = scale)
+            .height(if (wide) 72.dp else 56.dp)
             .onFocusChanged { focused = it.isFocused }
             .clip(shape)
             .background(
@@ -654,22 +590,27 @@ private fun StartCard(choice: TestChoice, enabled: Boolean, helper: String, onCl
                 else Brush.horizontalGradient(listOf(AppSurface, AppSurfaceRaised)),
             )
             .border(1.dp, if (focused) Teal else AppBorder, shape)
-            .clickable(enabled = enabled, interactionSource = interaction, indication = null, onClick = onClick)
+            .clickable(enabled = enabled, onClick = onClick)
             .focusable(enabled)
-            .padding(horizontal = if (compact) 16.dp else 26.dp),
+            .padding(horizontal = 20.dp),
         contentAlignment = Alignment.CenterStart,
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(if (compact) 12.dp else 20.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
             Box(
-                Modifier.size(if (compact) 54.dp else 78.dp).clip(CircleShape).background(if (enabled) Teal else AppBorder),
+                Modifier.size(circle).clip(CircleShape).background(if (enabled) Teal else AppBorder),
                 contentAlignment = Alignment.Center,
             ) {
-                TablerIcon(TablerGlyph.PLAY, null, if (enabled) Color.White else AppMuted, Modifier.size(if (compact) 28.dp else 38.dp))
+                TablerIcon(TablerGlyph.PLAY, null, if (enabled) Color.White else AppMuted, Modifier.size(circle * .58f))
             }
-            Column(Modifier.weight(1f)) {
-                Text("Start Test", color = if (enabled) Teal else AppMuted, fontSize = if (compact) 19.sp else 25.sp, fontWeight = FontWeight.Bold)
-                Text(if (enabled) choice.title else helper, color = AppMuted, fontSize = if (compact) 12.sp else 15.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
-            }
+            Text("Start Test", color = if (enabled) Teal else AppMuted, fontSize = if (wide) 19.sp else 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+            Text(
+                if (enabled) choice.title else helper,
+                color = AppMuted,
+                fontSize = 13.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = TextAlign.End,
+            )
         }
     }
 }
