@@ -2,6 +2,7 @@ package com.freeiperf3client.app
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.Network
 import android.net.NetworkCapabilities
 import java.net.Inet4Address
 import java.net.InetSocketAddress
@@ -26,6 +27,7 @@ internal data class DiscoveryNetwork(
     val localAddress: String,
     val prefixLength: Int,
     val candidates: List<String>,
+    val link: Network,
 )
 
 internal data class DiscoveredServer(
@@ -60,7 +62,10 @@ internal class ServerDiscovery(
         val semaphore = Semaphore(MAX_PARALLEL_CONNECTIONS)
         val openHosts = candidates.map { hostname ->
             async(Dispatchers.IO) {
-                val open = semaphore.withPermit { isPortOpen(hostname, port) }
+                val bindToLan = isIpv4InSubnet(hostname, network.localAddress, network.prefixLength)
+                val open = semaphore.withPermit {
+                    isPortOpen(hostname, port, network.link.takeIf { bindToLan })
+                }
                 val completed = checked.incrementAndGet()
                 if (open) openCount.incrementAndGet()
                 if (open || completed == candidates.size || completed % 8 == 0) {
@@ -80,6 +85,9 @@ internal class ServerDiscovery(
                     engine.execute(
                         TestConfig(hostname, port, durationSeconds = 1, udpTargetMbps = 50),
                         TestMode.DETECT,
+                        bindAddress = network.localAddress.takeIf {
+                            isIpv4InSubnet(hostname, network.localAddress, network.prefixLength)
+                        },
                     ) { }
                 }
             }.getOrNull()
@@ -100,34 +108,59 @@ internal class ServerDiscovery(
                 else -> 3
             }
         }
-        val address = preferredNetworks.firstNotNullOfOrNull { network ->
-            connectivityManager.getLinkProperties(network)?.linkAddresses?.firstOrNull {
+        for (network in preferredNetworks) {
+            val linkAddress = connectivityManager.getLinkProperties(network)?.linkAddresses?.firstOrNull {
                 it.address is Inet4Address &&
                     !it.address.isLoopbackAddress &&
                     !it.address.isLinkLocalAddress &&
                     it.prefixLength in 1..30
-            }
-        } ?: return null
-        val ipv4 = address.address as Inet4Address
-        return DiscoveryNetwork(
-            localAddress = ipv4.hostAddress ?: return null,
-            prefixLength = address.prefixLength,
-            candidates = subnetCandidates(ipv4.hostAddress ?: return null, address.prefixLength),
-        )
+            } ?: continue
+            val host = (linkAddress.address as Inet4Address).hostAddress ?: continue
+            return DiscoveryNetwork(
+                localAddress = host,
+                prefixLength = linkAddress.prefixLength,
+                candidates = subnetCandidates(host, linkAddress.prefixLength),
+                link = network,
+            )
+        }
+        return null
     }
 
-    private fun isPortOpen(hostname: String, port: Int): Boolean = runCatching {
-        Socket().use { socket ->
-            socket.connect(InetSocketAddress(hostname, port), CONNECT_TIMEOUT_MS)
+    internal fun bindAddressFor(hostname: String): String? {
+        val network = activeNetwork() ?: return null
+        return network.localAddress.takeIf {
+            isIpv4InSubnet(hostname, network.localAddress, network.prefixLength)
+        }
+    }
+
+    private fun isPortOpen(hostname: String, port: Int, link: Network?): Boolean = runCatching {
+        // Subnet scan probes are explicitly bound to the LAN network. Saved hostnames and
+        // off-subnet endpoints intentionally use Android's normal routing path.
+        (link?.socketFactory?.createSocket() ?: Socket()).use {
+            it.connect(InetSocketAddress(hostname, port), CONNECT_TIMEOUT_MS)
         }
         true
     }.getOrDefault(false)
 
     private companion object {
-        const val CONNECT_TIMEOUT_MS = 350
+        const val CONNECT_TIMEOUT_MS = 600
         const val MAX_PARALLEL_CONNECTIONS = 32
         const val MAX_VERIFICATION_CANDIDATES = 8
     }
+}
+
+internal fun isIpv4InSubnet(address: String, localAddress: String, prefixLength: Int): Boolean {
+    val target = ipv4ValueOrNull(address) ?: return false
+    val local = ipv4ValueOrNull(localAddress) ?: return false
+    val prefix = prefixLength.coerceIn(1, 32)
+    val mask = (0xFFFF_FFFFL shl (32 - prefix)) and 0xFFFF_FFFFL
+    return target and mask == local and mask
+}
+
+private fun ipv4ValueOrNull(address: String): Long? {
+    val octets = address.split('.').map { it.toIntOrNull() }
+    if (octets.size != 4 || octets.any { it == null || it !in 0..255 }) return null
+    return octets.fold(0L) { value, octet -> (value shl 8) or octet!!.toLong() }
 }
 
 internal fun subnetCandidates(localAddress: String, prefixLength: Int): List<String> {

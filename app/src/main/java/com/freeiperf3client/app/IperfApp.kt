@@ -140,6 +140,9 @@ internal fun IperfApp(
     fun startTests(choice: TestChoice = selectedChoice) {
         attemptedStart = true
         val config = validation.config ?: return
+        // Bind same-subnet LAN tests to Wi-Fi/Ethernet, but leave Tailscale/VPN,
+        // hostname, and remote tests on Android's normal routing path.
+        val bindAddress = serverDiscovery.bindAddressFor(config.hostname)
         val modes = modesFor(choice)
         val title = choice.title
         val totalDuration = modes.sumOf { engine.durationFor(config, it) }.coerceAtLeast(1)
@@ -162,12 +165,12 @@ internal fun IperfApp(
                         currentIndex = index,
                         stage = if (mode == TestMode.DETECT) "Checking the iperf3 server" else "Opening the iperf3 connection",
                         progress = completedDuration.toFloat() / totalDuration,
-                        command = engine.displayCommand(config, mode),
+                        command = engine.displayCommand(config, mode, bindAddress),
                         completed = completed.toList(),
                     )
                     val currentSamples = mutableListOf<IntervalSample>()
                     val result = withContext(Dispatchers.IO) {
-                        engine.execute(config, mode) { update ->
+                        engine.execute(config, mode, bindAddress) { update ->
                             activity.runOnUiThread {
                                 update.sample?.let(currentSamples::add)
                                 val elapsed = update.elapsedSeconds.coerceIn(0.0, modeDuration.toDouble())

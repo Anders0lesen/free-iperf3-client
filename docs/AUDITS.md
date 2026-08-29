@@ -1,5 +1,33 @@
 # Audit record
 
+## v0.3.5 — 2026-08-29
+
+### Functional sanity check
+
+- A clean `testDebugUnitTest lintDebug assembleDebug` passed with eight unit tests and no lint failure.
+- A fresh phone emulator kept validated Wi-Fi and mobile networks connected simultaneously. With the server field blank, discovery found and selected an iperf3 endpoint on the Wi-Fi subnet.
+- The discovered same-subnet endpoint showed the network-bound native command and completed a real TCP download test. A manually entered off-subnet endpoint showed no forced bind and also completed successfully.
+- Discovery and native routing behavior were reviewed together so the fix does not break hostname, Tailscale, VPN, or other routed manual tests.
+
+Private endpoints, measured throughput, commands, raw reports, emulator dumps, and screenshots are intentionally omitted.
+
+### Security audit
+
+- Discovery sockets are created by Android's selected Wi-Fi/Ethernet network socket factory. A failed bind now fails that candidate instead of falling back to an unbound socket.
+- Native `-B` is limited to validated numeric addresses inside the selected LAN subnet; hostnames and off-subnet addresses remain on Android's normal routing path.
+- The packaged manifest declares only `INTERNET`, prompt-free `ACCESS_NETWORK_STATE`, and Android's app-scoped non-exported dynamic-receiver permission. Backup and debugger attachment remain disabled.
+- No ad, analytics, telemetry, account, WebView, dynamic-code, automatic-upload, file/storage, camera, location, microphone, notification, or background-service behavior was added.
+- Inputs remain validated and passed as individual `ProcessBuilder` arguments without a shell; real-iperf preflight, cancellation, and watchdog handling remain in place.
+- OSV Scanner 2.5.1 resolved and queried all 85 Maven runtime coordinates against the official OSV data on 2026-08-29: zero findings.
+- All four bundled iperf3 3.21 SHA-256 hashes match `THIRD_PARTY_NOTICES.md`.
+- Final local APK SHA-256 before CI release: `47011CB9A6794F8C16BD4B34A758FDE48156A065D002A1602C10402215566CEE` (GitHub Actions independently rebuilds and signs the release asset).
+
+### Personal-information audit
+
+- Tracked text, filenames, diff, resources, workflow inputs, image inventory, and generated APK inputs were checked for private endpoints, local paths, clipboard filenames, personal details, credentials, tokens, screenshots, and diagnostics.
+- Test-only endpoint data, UI dumps, relay code, commands, rates, and screenshots are excluded from the repository and release.
+- Documentation uses only standards-reserved example addresses; the existing public GitHub repository identity is the only personal-style identifier.
+
 ## v0.3.4 — 2026-08-27
 
 ### Functional sanity check

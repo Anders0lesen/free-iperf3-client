@@ -1,5 +1,14 @@
 # Development log
 
+## 2026-08-29 — v0.3.5
+
+- Fixed LAN discovery on devices that keep Wi-Fi or Ethernet connected alongside mobile data, a VPN, or another network.
+- Bound each Java discovery probe to the selected local network and bound native iperf3 only for numeric addresses inside that network's subnet.
+- Preserved Android's normal routing for hostnames and routed endpoints such as Tailscale or VPN addresses.
+- Repeated a clean build, unit tests, lint, real blank-address discovery with simultaneous Wi-Fi and mobile connectivity, dependency security checks, and repository personal-information checks before release.
+
+No private endpoint, throughput figure, command payload, diagnostic output, emulator dump, or test screenshot is published.
+
 ## 2026-08-27 — v0.3.4
 
 - Split the Compose UI into reusable theme, component, chart, home, running, result, and orchestration files.

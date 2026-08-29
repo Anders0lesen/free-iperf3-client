@@ -16,6 +16,8 @@ Every throughput/quality button automatically performs the server-detection pref
 
 **Find iperf3 servers** scans the current Wi-Fi/Ethernet IPv4 subnet on the selected port. It can also recheck saved recent servers, including routed or VPN endpoints. It may not discover a new server across VLANs, guest-Wi-Fi isolation, a VPN-only route, or a subnet larger than the local `/24`; enter that address manually once and it will join the recent list after a successful verification.
 
+On devices with mobile data and Wi-Fi active together, v0.3.5 and newer explicitly send scan probes through Wi-Fi/Ethernet. Same-subnet numeric test addresses use that interface too. Manually entered hostnames and off-subnet addresses continue through Android's normal route so VPN and Tailscale access are not forced onto the LAN.
+
 If the scan finds nothing, confirm that Android is on the expected LAN, the container publishes TCP port `5201`, and local client isolation is disabled. UDP-only availability is insufficient because iperf3 control begins over TCP.
 
 ## Sharing a failure

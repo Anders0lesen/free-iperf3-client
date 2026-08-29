@@ -89,6 +89,7 @@ internal class IperfEngine(private val context: Context) {
     fun execute(
         config: TestConfig,
         mode: TestMode,
+        bindAddress: String? = null,
         onUpdate: (LiveUpdate) -> Unit,
     ): TestResult {
         val executable = File(context.applicationInfo.nativeLibraryDir, "libiperf3.so")
@@ -97,7 +98,7 @@ internal class IperfEngine(private val context: Context) {
         }
 
         val duration = durationFor(config, mode)
-        val process = ProcessBuilder(buildCommand(config, mode, executable.absolutePath))
+        val process = ProcessBuilder(buildCommand(config, mode, executable.absolutePath, bindAddress))
             .redirectErrorStream(true)
             .start()
         activeProcess = process
@@ -159,8 +160,8 @@ internal class IperfEngine(private val context: Context) {
         return parseFinalResult(mode, finalData, connection, samples, raw.toString())
     }
 
-    fun displayCommand(config: TestConfig, mode: TestMode): String =
-        buildCommand(config, mode, "iperf3").joinToString(" ") { argument ->
+    fun displayCommand(config: TestConfig, mode: TestMode, bindAddress: String? = null): String =
+        buildCommand(config, mode, "iperf3", bindAddress).joinToString(" ") { argument ->
             if (argument.any(Char::isWhitespace)) {
                 "\"${argument.replace("\"", "\\\"")}\""
             } else {
@@ -168,12 +169,22 @@ internal class IperfEngine(private val context: Context) {
             }
         }
 
-    private fun buildCommand(config: TestConfig, mode: TestMode, executable: String): List<String> {
+    private fun buildCommand(
+        config: TestConfig,
+        mode: TestMode,
+        executable: String,
+        bindAddress: String? = null,
+    ): List<String> {
         val command = mutableListOf(
             executable,
             "-c", config.hostname,
             "-p", config.port.toString(),
         )
+        // Bind the client's source address to the local interface (usually Wi-Fi) so
+        // traffic to a LAN server is not routed out over cellular/VPN.
+        if (!bindAddress.isNullOrBlank()) {
+            command += listOf("-B", bindAddress)
+        }
         command += if (mode == TestMode.DETECT) {
             listOf("-n", "1")
         } else {
