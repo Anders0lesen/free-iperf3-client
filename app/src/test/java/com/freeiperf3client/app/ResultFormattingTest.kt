@@ -79,4 +79,12 @@ class ResultFormattingTest {
         assertTrue(candidates.all { it.startsWith("198.51.100.") })
         assertEquals(253, candidates.size)
     }
+
+    @Test
+    fun lanBindingIsLimitedToNumericAddressesOnTheSelectedSubnet() {
+        assertTrue(isIpv4InSubnet("192.0.2.10", "192.0.2.44", 24))
+        assertFalse(isIpv4InSubnet("192.0.3.10", "192.0.2.44", 24))
+        assertFalse(isIpv4InSubnet("100.64.0.10", "192.0.2.44", 24))
+        assertFalse(isIpv4InSubnet("nas.example.test", "192.0.2.44", 24))
+    }
 }

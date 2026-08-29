@@ -8,7 +8,7 @@ Free iperf3 Client deliberately has a small surface area:
 - iperf3 3.21 executables are bundled for Android ARM and x86 architectures.
 - The app starts the selected executable with `--json-stream --forceflush` and parses each event as it arrives.
 - Every measurement is preceded by a tiny `-n 1` iperf3 exchange.
-- User-triggered discovery enumerates at most the active LAN `/24`, probes the selected port with 32 bounded workers, and verifies at most eight open candidates through that same real iperf3 exchange.
+- User-triggered discovery enumerates at most the selected Wi-Fi/Ethernet LAN `/24`, sends probes through that Android network with 32 bounded workers, and verifies at most eight open candidates through a real iperf3 exchange. Native tests use the LAN interface bind only for numeric addresses inside that same subnet, leaving hostnames and routed VPN/Tailscale endpoints to Android's normal routing.
 - Up to eight verified endpoints are stored in app-private preferences for the recent-server picker; they are excluded from backup and removable in the UI.
 - TCP upload, reverse/download, and `--bidir` provide the three TCP modes.
 - UDP reverse/download and upload run at the selected `-b` target; final receiver values provide rate, loss, jitter, and packet count.

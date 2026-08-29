@@ -140,9 +140,9 @@ internal fun IperfApp(
     fun startTests(choice: TestChoice = selectedChoice) {
         attemptedStart = true
         val config = validation.config ?: return
-        // Bind tests to the local Wi-Fi/Ethernet address so LAN traffic is not routed
-        // out over cellular or a VPN when several networks are active.
-        val bindAddress = serverDiscovery.activeNetwork()?.localAddress
+        // Bind same-subnet LAN tests to Wi-Fi/Ethernet, but leave Tailscale/VPN,
+        // hostname, and remote tests on Android's normal routing path.
+        val bindAddress = serverDiscovery.bindAddressFor(config.hostname)
         val modes = modesFor(choice)
         val title = choice.title
         val totalDuration = modes.sumOf { engine.durationFor(config, it) }.coerceAtLeast(1)

@@ -15,7 +15,13 @@ A deliberately free non-ad supported local only simple iperf3 client for Android
 
 [Download the latest APK](https://github.com/Anders0lesen/free-iperf3-client/releases/latest) · [Documentation](wiki/Home.md) · [Report a problem](https://github.com/Anders0lesen/free-iperf3-client/issues)
 
-## Version 0.3.4
+## Version 0.3.5
+
+- Fixes LAN discovery when Android keeps Wi-Fi or Ethernet connected alongside mobile data, a VPN, or another active network.
+- Sends discovery probes through the selected local-network interface instead of relying on Android's default route.
+- Binds native iperf3 only for numeric addresses on that same local subnet; hostnames, Tailscale, VPN, and other routed endpoints keep Android's normal routing.
+
+### Added in 0.3.4
 
 - Refactors the Compose interface into focused, reusable screen and component files without changing the local-only iperf3 engine.
 - Reworks phone layouts for denser one-screen setup, clearer selection states, and a compact but readable start action.

@@ -2,6 +2,21 @@
 
 This file records the important implementation decisions behind Free iperf3 Client. User-facing guidance lives in the project wiki.
 
+## 2026-08-29 — v0.3.5
+
+- Bound discovery sockets to the selected Wi-Fi/Ethernet `Network.socketFactory`, preventing simultaneous mobile data or VPN routing from diverting local subnet probes.
+- Removed the unbound-socket fallback so a failed network bind cannot silently reintroduce the original discovery fault.
+- Added subnet-aware native binding: a numeric same-subnet destination receives iperf3 `-B <local-address>`, while hostnames and off-subnet destinations remain under Android's normal route selection.
+- Added unit coverage for same-subnet, off-subnet, routed private, and hostname binding decisions.
+
+## Test evidence for v0.3.5
+
+- A clean `testDebugUnitTest lintDebug assembleDebug` passed with eight unit tests and no lint failure.
+- On a fresh phone emulator with validated Wi-Fi and mobile networks connected simultaneously, a blank-address scan found and selected an iperf3 endpoint on the Wi-Fi subnet.
+- The discovered same-subnet endpoint displayed the expected bound command and completed a real TCP download test.
+- A manually entered off-subnet endpoint displayed no `-B` argument and completed through Android's normal route.
+- Private endpoints, measured rates, commands, screenshots, emulator dumps, and raw output are intentionally omitted.
+
 ## 2026-08-27 — v0.3.4
 
 - Split the Compose interface into focused theme, component, chart, home, running, result, and orchestration files while leaving the native iperf3 execution model intact.
