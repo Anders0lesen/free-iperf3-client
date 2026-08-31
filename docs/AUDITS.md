@@ -1,5 +1,33 @@
 # Audit record
 
+## v0.3.6 — 2026-08-31
+
+### Functional sanity check
+
+- A clean `testDebugUnitTest lintDebug assembleDebug` passed with ten unit tests and no lint failure.
+- The exact published v0.3.5 APK merged manifest was inspected: it contains `INTERNET`, `ACCESS_NETWORK_STATE`, and only Android's app-scoped non-exported dynamic-receiver permission. Four native iperf3 ABIs and one activity are packaged.
+- The same locally built v0.3.6 APK completed a real TCP download on a phone emulator using Wi-Fi and a Google TV emulator using Ethernet. The displayed native command contains no source-address `-B` argument.
+- The network preflight executed before server validation and captured the selected transport, local IPv4 prefix, and gateway. With Wi-Fi and mobile data deliberately disabled, the app stopped at `Network access failed`, stated that the server had not been tested, and did not start native iperf3.
+- Physical Android 12 TV confirmation remains an owner acceptance step after the published APK is installed; emulator testing cannot claim that hardware result in advance.
+
+Private endpoints, device identity, measured throughput, commands, raw reports, emulator dumps, and supplied photographs are intentionally omitted.
+
+### Security audit
+
+- The v0.3.5 and v0.3.6 packaged manifests both declare `INTERNET` and `ACCESS_NETWORK_STATE`. v0.3.6 retains `allowBackup=false`, native-library extraction, one activity, four supported native ABIs, and no app service/provider/receiver.
+- Native iperf3 source-address binding was removed. Java discovery still uses Android's selected `Network`, while native control/data sockets use Android's normal routing on every form factor.
+- Network preflight verifies TCP and UDP socket creation before server contact. Inputs remain validated and are passed as individual `ProcessBuilder` arguments without a shell; cancellation and watchdog handling remain in place.
+- No ad, analytics, telemetry, account, WebView, dynamic-code, automatic-upload, file/storage, camera, location, microphone, notification, or background-service behavior was added.
+- OSV Scanner 2.5.1 resolved and queried all 85 packaged debug-runtime Maven coordinates against the official OSV data on 2026-08-31: zero findings. A separate broad all-configuration pass found advisories only in non-packaged build tooling; those components are absent from the APK and have no runtime path in the app.
+- All four bundled iperf3 3.21 SHA-256 hashes match `THIRD_PARTY_NOTICES.md`.
+- Final local APK SHA-256 before CI release: `11458F743D2889993A521F2334D25691E22C88042EE8F05EA8EEE047E7004BFD` (GitHub Actions independently rebuilds and signs the release asset).
+
+### Personal-information audit
+
+- Tracked text, filenames, diff, resources, workflow inputs, image inventory, and release inputs were checked for private endpoints, local paths, clipboard filenames, device identity, personal details, credentials, tokens, photographs, screenshots, emulator dumps, commands, rates, and diagnostics.
+- The supplied TV photographs and all temporary UI dumps remain local and are excluded from source and release assets. Runtime test endpoints and device details are not recorded in the repository.
+- Documentation uses only standards-reserved examples; the existing public GitHub repository identity is the only personal-style identifier.
+
 ## v0.3.5 — 2026-08-29
 
 ### Functional sanity check

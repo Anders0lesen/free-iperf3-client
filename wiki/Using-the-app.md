@@ -8,7 +8,7 @@ You need a reachable [iperf3](https://github.com/esnet/iperf) server.
 4. Enter the UDP target rate in Mbit/s. For game streaming, use the bitrate the stream needs to sustain; `50` is a useful starting point.
 5. Choose a single test or **Run all tests**.
 
-Malformed input is rejected immediately. Before any measurement, the app performs a small real iperf3 control-and-data exchange. It proceeds only if the endpoint answers as iperf3.
+Malformed input is rejected immediately. Before discovery or measurement, the app identifies the active Android network, records its transport/address/prefix/gateway, and verifies that TCP and UDP sockets can be created. Before a measurement it then performs a small real iperf3 control-and-data exchange. It proceeds only if both preflights pass.
 
 ## Tests
 
