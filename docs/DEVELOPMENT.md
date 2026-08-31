@@ -18,6 +18,7 @@ This file records the important implementation decisions behind Free iperf3 Clie
 - With the phone emulator's Wi-Fi and mobile data disabled, the sequence stopped at the distinct network-access stage and explicitly stated that the server had not been tested.
 - The TV emulator first encountered a busy control socket when both emulators competed for the single-client server; retrying it alone completed successfully. This is retained here to avoid misclassifying a server-capacity condition as a platform networking regression.
 - The physical Android 12 TV still requires owner verification with the published v0.3.6 APK; emulator success does not substitute for that final hardware acceptance test.
+- After publication, the exact GitHub release APK was downloaded, signature/package-inspected, freshly installed on both emulators, and completed sequential phone/Wi-Fi and TV/Ethernet TCP downloads with no `-B` argument.
 - Private endpoints, device identity, rates, screenshots, raw reports, and emulator dumps are intentionally omitted.
 
 ## 2026-08-29 — v0.3.5
