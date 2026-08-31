@@ -21,6 +21,8 @@ Private endpoints, device identity, measured throughput, commands, raw reports, 
 - OSV Scanner 2.5.1 resolved and queried all 85 packaged debug-runtime Maven coordinates against the official OSV data on 2026-08-31: zero findings. A separate broad all-configuration pass found advisories only in non-packaged build tooling; those components are absent from the APK and have no runtime path in the app.
 - All four bundled iperf3 3.21 SHA-256 hashes match `THIRD_PARTY_NOTICES.md`.
 - Final local APK SHA-256 before CI release: `11458F743D2889993A521F2334D25691E22C88042EE8F05EA8EEE047E7004BFD` (GitHub Actions independently rebuilds and signs the release asset).
+- The exact public `free-iperf3-client-v0.3.6.apk` release asset was downloaded after publication. It reports version `0.3.6`/code `7`, passes APK Signature Scheme v2 verification, packages both required network permissions and all four native ABIs, and has SHA-256 `216C9E108F5319FF86D990798D1CDB4721D56702CE8F645B5A28231DF542E5F3`.
+- That same downloaded public APK was freshly installed on both emulators. A real phone/Wi-Fi TCP download and a sequential TV/Ethernet TCP download both completed successfully, and both live commands omitted `-B`.
 
 ### Personal-information audit
 
