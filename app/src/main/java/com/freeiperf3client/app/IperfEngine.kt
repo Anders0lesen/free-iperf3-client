@@ -89,7 +89,6 @@ internal class IperfEngine(private val context: Context) {
     fun execute(
         config: TestConfig,
         mode: TestMode,
-        bindAddress: String? = null,
         onUpdate: (LiveUpdate) -> Unit,
     ): TestResult {
         val executable = File(context.applicationInfo.nativeLibraryDir, "libiperf3.so")
@@ -98,7 +97,7 @@ internal class IperfEngine(private val context: Context) {
         }
 
         val duration = durationFor(config, mode)
-        val process = ProcessBuilder(buildCommand(config, mode, executable.absolutePath, bindAddress))
+        val process = ProcessBuilder(buildIperfCommand(config, mode, executable.absolutePath))
             .redirectErrorStream(true)
             .start()
         activeProcess = process
@@ -160,49 +159,14 @@ internal class IperfEngine(private val context: Context) {
         return parseFinalResult(mode, finalData, connection, samples, raw.toString())
     }
 
-    fun displayCommand(config: TestConfig, mode: TestMode, bindAddress: String? = null): String =
-        buildCommand(config, mode, "iperf3", bindAddress).joinToString(" ") { argument ->
+    fun displayCommand(config: TestConfig, mode: TestMode): String =
+        buildIperfCommand(config, mode, "iperf3").joinToString(" ") { argument ->
             if (argument.any(Char::isWhitespace)) {
                 "\"${argument.replace("\"", "\\\"")}\""
             } else {
                 argument
             }
         }
-
-    private fun buildCommand(
-        config: TestConfig,
-        mode: TestMode,
-        executable: String,
-        bindAddress: String? = null,
-    ): List<String> {
-        val command = mutableListOf(
-            executable,
-            "-c", config.hostname,
-            "-p", config.port.toString(),
-        )
-        // Bind the client's source address to the local interface (usually Wi-Fi) so
-        // traffic to a LAN server is not routed out over cellular/VPN.
-        if (!bindAddress.isNullOrBlank()) {
-            command += listOf("-B", bindAddress)
-        }
-        command += if (mode == TestMode.DETECT) {
-            listOf("-n", "1")
-        } else {
-            listOf("-t", config.durationSeconds.toString())
-        }
-        command += listOf(
-            "-i", "1", "--connect-timeout", "3000", "--json-stream", "--forceflush",
-        )
-        when (mode) {
-            TestMode.DETECT -> Unit
-            TestMode.TCP_DOWNLOAD -> command += "-R"
-            TestMode.TCP_UPLOAD -> Unit
-            TestMode.TCP_BIDIRECTIONAL -> command += "--bidir"
-            TestMode.UDP_DOWNLOAD -> command += listOf("-u", "-b", "${config.udpTargetMbps}M", "-R")
-            TestMode.UDP_UPLOAD -> command += listOf("-u", "-b", "${config.udpTargetMbps}M")
-        }
-        return command
-    }
 
     private fun parseLiveUpdate(mode: TestMode, data: JSONObject): LiveUpdate {
         val sum = data.optJSONObject("sum")
@@ -323,4 +287,33 @@ internal class IperfEngine(private val context: Context) {
 
     private fun JSONObject.optionalDouble(key: String): Double? =
         if (has(key) && !isNull(key)) optDouble(key) else null
+}
+
+internal fun buildIperfCommand(
+    config: TestConfig,
+    mode: TestMode,
+    executable: String,
+): List<String> {
+    val command = mutableListOf(
+        executable,
+        "-c", config.hostname,
+        "-p", config.port.toString(),
+    )
+    command += if (mode == TestMode.DETECT) {
+        listOf("-n", "1")
+    } else {
+        listOf("-t", config.durationSeconds.toString())
+    }
+    command += listOf(
+        "-i", "1", "--connect-timeout", "3000", "--json-stream", "--forceflush",
+    )
+    when (mode) {
+        TestMode.DETECT -> Unit
+        TestMode.TCP_DOWNLOAD -> command += "-R"
+        TestMode.TCP_UPLOAD -> Unit
+        TestMode.TCP_BIDIRECTIONAL -> command += "--bidir"
+        TestMode.UDP_DOWNLOAD -> command += listOf("-u", "-b", "${config.udpTargetMbps}M", "-R")
+        TestMode.UDP_UPLOAD -> command += listOf("-u", "-b", "${config.udpTargetMbps}M")
+    }
+    return command
 }

@@ -56,8 +56,13 @@ internal fun RunningScreen(state: RunState?, onCancel: () -> Unit) {
                 ) {
                     IconOrb(glyphForMode(state.currentMode), colorForMode(state.currentMode), 40.dp)
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(1.dp)) {
-                        Text(state.currentMode.title, color = colorForMode(state.currentMode), fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
-                        Text("${state.stage} · stage ${state.currentIndex + 1} of ${state.modes.size}", color = AppMuted, fontSize = 12.sp)
+                        Text(
+                            if (state.networkPreflight) "Network access" else state.currentMode.title,
+                            color = colorForMode(state.currentMode),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                        Text("${state.stage} · stage ${state.currentIndex + 1} of ${state.totalStages}", color = AppMuted, fontSize = 12.sp)
                     }
                 }
             }
@@ -75,7 +80,7 @@ internal fun RunningScreen(state: RunState?, onCancel: () -> Unit) {
                 ) {
                     Column(Modifier.weight(.85f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         LiveHero(state, big = true)
-                        RunningCommandCard(state.command)
+                        if (state.command.isNotBlank()) RunningCommandCard(state.command)
                         FocusButton("Cancel test", TablerGlyph.STOP, Red, onCancel)
                     }
                     ThroughputChart(
@@ -91,7 +96,7 @@ internal fun RunningScreen(state: RunState?, onCancel: () -> Unit) {
                     mode = state.currentMode,
                     modifier = Modifier.fillMaxWidth().height(180.dp),
                 )
-                RunningCommandCard(state.command)
+                if (state.command.isNotBlank()) RunningCommandCard(state.command)
                 FocusButton("Cancel test", TablerGlyph.STOP, Red, onCancel)
             }
         }
@@ -130,7 +135,15 @@ private fun LiveHero(state: RunState, big: Boolean) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            if (state.currentMode == TestMode.DETECT) {
+            if (state.networkPreflight) {
+                IconOrb(TablerGlyph.PORT, Teal, 48.dp)
+                Text("Checking network access", color = AppText, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    state.networkInfo?.summary ?: "Inspecting the active Android network and TCP/UDP sockets",
+                    color = AppMuted,
+                    fontSize = 13.sp,
+                )
+            } else if (state.currentMode == TestMode.DETECT) {
                 IconOrb(TablerGlyph.SERVER, Orange, 48.dp)
                 Text("Confirming iperf3", color = AppText, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 Text(live.connection ?: "Waiting for the server response", color = AppMuted, fontSize = 13.sp)

@@ -15,11 +15,18 @@ A deliberately free non-ad supported local only simple iperf3 client for Android
 
 [Download the latest APK](https://github.com/Anders0lesen/free-iperf3-client/releases/latest) · [Documentation](wiki/Home.md) · [Report a problem](https://github.com/Anders0lesen/free-iperf3-client/issues)
 
-## Version 0.3.5
+## Version 0.3.6
+
+- Fixes an Android TV regression where v0.3.5 could make native iperf3 fail while creating a data stream because the app forced a local source-address bind.
+- Lets Android choose the normal route for every native iperf3 process; LAN discovery probes remain explicitly attached to the selected Wi-Fi/Ethernet network.
+- Adds an Android network preflight before discovery or testing. It identifies transport, local IPv4 address, prefix, and gateway, then verifies that the app can create both TCP and UDP sockets.
+- Reports network/socket setup failures as **Network access failed** before contacting the server, instead of mislabelling them as a server failure.
+
+### Added in 0.3.5
 
 - Fixes LAN discovery when Android keeps Wi-Fi or Ethernet connected alongside mobile data, a VPN, or another active network.
 - Sends discovery probes through the selected local-network interface instead of relying on Android's default route.
-- Binds native iperf3 only for numeric addresses on that same local subnet; hostnames, Tailscale, VPN, and other routed endpoints keep Android's normal routing.
+- Originally added a native same-subnet source bind; v0.3.6 removes that bind after it proved incompatible with some Android TV devices.
 
 ### Added in 0.3.4
 
@@ -74,7 +81,7 @@ Android will ask you to allow installation from the browser or file manager used
 3. For UDP, enter the target rate you want to test in Mbit/s.
 4. Choose one test or **Run all tests**.
 
-Input errors are shown immediately. For valid input, the app first performs a small real iperf3 exchange. A throughput test starts only after that preflight succeeds.
+Input errors are shown immediately. For valid input, the app first checks Android's active network and TCP/UDP socket access, then performs a small real iperf3 exchange. A throughput test starts only after both preflights succeed.
 
 Android/Google TV is remote-control navigable. Configuration rows use D-pad-friendly editor dialogs, every interactive control has a visible focus state, and wide screens arrange configuration/results into useful side-by-side panels. On a result, choose **Show result QR for phone** to scan the selected command and summary; the QR contains the entered server address but omits raw iperf output and is generated only on the device.
 

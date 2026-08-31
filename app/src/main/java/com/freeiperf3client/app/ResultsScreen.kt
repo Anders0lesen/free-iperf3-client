@@ -94,7 +94,8 @@ internal fun ResultsScreen(
                             context,
                             session.title,
                             session.config,
-                            session.failure.mode,
+                            session.failure.stageTitle,
+                            session.networkInfo,
                             session.results,
                             session.failure.error,
                             safe = true,
@@ -540,8 +541,15 @@ private fun FailureContent(
         ) {
             IconOrb(TablerGlyph.ALERT, Red, 44.dp)
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                Text("${failure.mode.title} failed", color = Red, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                Text("${failure.stageTitle} failed", color = Red, fontSize = 17.sp, fontWeight = FontWeight.Bold)
                 Text(friendlyError(failure.error), color = AppText, fontSize = 14.sp)
+                if (failure.error is NetworkAccessFailure) {
+                    Text(
+                        "The server has not been tested yet. Android could not prepare the required TCP/UDP sockets.",
+                        color = AppMuted,
+                        fontSize = 12.sp,
+                    )
+                }
                 Text("No test continued blindly after this failure.", color = AppMuted, fontSize = 12.sp)
             }
         }
@@ -554,7 +562,8 @@ private fun FailureContent(
                 context,
                 session.title,
                 session.config,
-                failure.mode,
+                failure.stageTitle,
+                session.networkInfo,
                 session.results,
                 failure.error,
                 safe = true,
@@ -577,7 +586,8 @@ private fun FailureContent(
                             context,
                             session.title,
                             session.config,
-                            failure.mode,
+                            failure.stageTitle,
+                            session.networkInfo,
                             session.results,
                             failure.error,
                             safe = false,
@@ -595,7 +605,8 @@ private fun FailureContent(
                                 context,
                                 session.title,
                                 session.config,
-                                failure.mode,
+                                failure.stageTitle,
+                                session.networkInfo,
                                 session.results,
                                 failure.error,
                                 safe = false,
@@ -628,5 +639,4 @@ private fun intervalTable(result: TestResult): String = buildString {
         }
     }
 }
-
 

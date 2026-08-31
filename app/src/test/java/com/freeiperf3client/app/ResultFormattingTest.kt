@@ -81,10 +81,33 @@ class ResultFormattingTest {
     }
 
     @Test
-    fun lanBindingIsLimitedToNumericAddressesOnTheSelectedSubnet() {
+    fun lanProbeBindingIsLimitedToNumericAddressesOnTheSelectedSubnet() {
         assertTrue(isIpv4InSubnet("192.0.2.10", "192.0.2.44", 24))
         assertFalse(isIpv4InSubnet("192.0.3.10", "192.0.2.44", 24))
         assertFalse(isIpv4InSubnet("100.64.0.10", "192.0.2.44", 24))
         assertFalse(isIpv4InSubnet("nas.example.test", "192.0.2.44", 24))
+    }
+
+    @Test
+    fun nativeIperfCommandDoesNotForceSourceAddressBinding() {
+        val command = buildIperfCommand(
+            TestConfig("192.0.2.10", 5201, 10, 50),
+            TestMode.TCP_DOWNLOAD,
+            "iperf3",
+        )
+
+        assertFalse(command.contains("-B"))
+        assertTrue(command.contains("-R"))
+    }
+
+    @Test
+    fun networkAccessFailureIsReportedSeparately() {
+        val error = NetworkAccessFailure(
+            message = "The app could not create a network connection",
+            technicalDetails = "SocketException: Permission denied",
+        )
+
+        assertTrue(friendlyError(error).startsWith("Network access failed:"))
+        assertFalse(friendlyError(error).contains("Server check"))
     }
 }
