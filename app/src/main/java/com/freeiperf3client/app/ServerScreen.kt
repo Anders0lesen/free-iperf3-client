@@ -1,6 +1,6 @@
 package com.freeiperf3client.app
 
-import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -40,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -62,7 +61,7 @@ internal fun ServerScreen(
     onExit: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val activity = LocalContext.current as Activity
+    val activity = LocalActivity.current
     var port by remember { mutableStateOf("5201") }
     var oneOff by remember { mutableStateOf(false) }
     var running by remember { mutableStateOf(false) }
@@ -98,10 +97,10 @@ internal fun ServerScreen(
             try {
                 withContext(Dispatchers.IO) {
                     engine.runServer(ServerConfig(port = p, oneOff = oneOff)) { line ->
-                        activity.runOnUiThread { append(line) }
+                        activity?.runOnUiThread { append(line) }
                     }
                 }
-                activity.runOnUiThread {
+                activity?.runOnUiThread {
                     running = false
                     status = "Stopped"
                     append("— server stopped —")
@@ -109,7 +108,7 @@ internal fun ServerScreen(
             } catch (_: CancellationException) {
                 // Stopped by the user.
             } catch (error: Throwable) {
-                activity.runOnUiThread {
+                activity?.runOnUiThread {
                     running = false
                     status = friendlyError(error)
                     append("Error: ${error.message ?: error.javaClass.simpleName}")
