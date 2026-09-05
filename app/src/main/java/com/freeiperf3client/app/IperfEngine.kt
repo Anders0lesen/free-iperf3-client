@@ -35,6 +35,12 @@ internal data class TestConfig(
     val udpTargetMbps: Int,
 )
 
+internal data class ServerConfig(
+    val port: Int,
+    val oneOff: Boolean = false,
+    val bindAddress: String? = null,
+)
+
 internal data class IntervalSample(
     val startSeconds: Double,
     val endSeconds: Double,
@@ -78,9 +84,49 @@ internal class IperfEngine(private val context: Context) {
     @Volatile
     private var activeProcess: Process? = null
 
+    @Volatile
+    private var serverProcess: Process? = null
+
     fun cancel() {
         activeProcess?.destroyForcibly()
         activeProcess = null
+    }
+
+    fun stopServer() {
+        serverProcess?.destroyForcibly()
+        serverProcess = null
+    }
+
+    fun serverCommand(config: ServerConfig): String =
+        buildServerCommand(config, "iperf3").joinToString(" ")
+
+    /**
+     * Runs iperf3 in server mode (foreground only). Blocks on the calling
+     * (IO) thread, streaming each output line to [onLine], until the client
+     * calls [stopServer] or the process exits.
+     */
+    fun runServer(config: ServerConfig, onLine: (String) -> Unit) {
+        val executable = File(context.applicationInfo.nativeLibraryDir, "libiperf3.so")
+        if (!executable.canExecute()) {
+            throw IllegalStateException("The bundled iperf3 engine is unavailable on this device")
+        }
+        val process = ProcessBuilder(buildServerCommand(config, executable.absolutePath))
+            .redirectErrorStream(true)
+            .start()
+        serverProcess = process
+        try {
+            process.inputStream.bufferedReader().useLines { lines -> lines.forEach(onLine) }
+            process.waitFor()
+        } finally {
+            if (serverProcess === process) serverProcess = null
+        }
+    }
+
+    private fun buildServerCommand(config: ServerConfig, executable: String): List<String> {
+        val command = mutableListOf(executable, "-s", "-p", config.port.toString(), "--forceflush")
+        if (config.oneOff) command += "-1"
+        if (!config.bindAddress.isNullOrBlank()) command += listOf("-B", config.bindAddress)
+        return command
     }
 
     fun durationFor(config: TestConfig, mode: TestMode): Int =

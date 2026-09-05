@@ -12,8 +12,8 @@ android {
         applicationId = "com.freeiperf3client.app"
         minSdk = 28
         targetSdk = 35
-        versionCode = 7
-        versionName = "0.3.6"
+        versionCode = 8
+        versionName = "0.4.0"
     }
 
     compileOptions {
