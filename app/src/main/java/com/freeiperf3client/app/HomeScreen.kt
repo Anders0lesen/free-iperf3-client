@@ -92,6 +92,7 @@ internal fun HomeScreen(
     onDetect: () -> Unit,
     onStart: () -> Unit,
     openRepository: () -> Unit,
+    onExit: () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
     BoxWithConstraints(
@@ -118,7 +119,7 @@ internal fun HomeScreen(
                 .padding(top = 8.dp, bottom = 20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            HomeHeader()
+            HomeHeader(onExit)
             if (wide) {
                 Row(
                     Modifier.fillMaxWidth(),
@@ -170,19 +171,19 @@ internal fun HomeScreen(
 }
 
 @Composable
-private fun HomeHeader() {
-    Column(
-        Modifier.fillMaxWidth().height(52.dp),
-        verticalArrangement = Arrangement.Bottom,
-    ) {
-        Text(
-            "Free iperf3 Client",
-            color = AppText,
-            fontSize = 26.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = (-.5).sp,
-        )
-        Text("Simply free.", color = Teal, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+private fun HomeHeader(onExit: () -> Unit) {
+    Row(Modifier.fillMaxWidth().height(52.dp), verticalAlignment = Alignment.Bottom) {
+        VectorIconButton(TablerGlyph.ARROW_LEFT, "Back to selection", onExit)
+        Column(Modifier.padding(start = 2.dp, bottom = 4.dp)) {
+            Text(
+                "Free iperf3 Client",
+                color = AppText,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = (-.5).sp,
+            )
+            Text("Simply free.", color = Teal, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+        }
     }
 }
 

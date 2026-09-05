@@ -15,6 +15,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+internal enum class AppMode { CHOOSER, CLIENT, SERVER }
+
 internal enum class AppScreen { HOME, RUNNING, RESULTS }
 
 internal enum class DetectionStatus { NOT_CHECKED, CHECKING, DETECTED, FAILED }
@@ -44,6 +46,7 @@ internal data class CompletedSession(
     val results: List<TestResult>,
     val failure: SessionFailure? = null,
 )
+
 @Composable
 internal fun IperfApp(
     engine: IperfEngine,
@@ -52,10 +55,50 @@ internal fun IperfApp(
     shareText: (String, String) -> Unit,
 ) {
     val context = LocalContext.current
+    val serverDiscovery = remember { ServerDiscovery(context.applicationContext, engine) }
+    var mode by remember { mutableStateOf(AppMode.CHOOSER) }
+
+    // From client or server, Back returns to the role chooser (the client's own
+    // Back for its sub-screens takes priority while it is on Running/Results).
+    BackHandler(enabled = mode != AppMode.CHOOSER) { mode = AppMode.CHOOSER }
+
+    AppBackdrop {
+        when (mode) {
+            AppMode.CHOOSER -> ChooserScreen(
+                onClient = { mode = AppMode.CLIENT },
+                onServer = { mode = AppMode.SERVER },
+                openRepository = openRepository,
+            )
+            AppMode.CLIENT -> ClientFlow(
+                engine = engine,
+                serverDiscovery = serverDiscovery,
+                openRepository = openRepository,
+                copyText = copyText,
+                shareText = shareText,
+                onExit = { mode = AppMode.CHOOSER },
+            )
+            AppMode.SERVER -> ServerScreen(
+                engine = engine,
+                serverDiscovery = serverDiscovery,
+                onExit = { mode = AppMode.CHOOSER },
+            )
+        }
+    }
+}
+
+@Composable
+private fun ClientFlow(
+    engine: IperfEngine,
+    serverDiscovery: ServerDiscovery,
+    openRepository: () -> Unit,
+    copyText: (String, String) -> Unit,
+    shareText: (String, String) -> Unit,
+    onExit: () -> Unit,
+) {
+    val context = LocalContext.current
     val activity = context as Activity
     val scope = rememberCoroutineScope()
     val recentServersStore = remember { RecentServersStore(context.applicationContext) }
-    val serverDiscovery = remember { ServerDiscovery(context.applicationContext, engine) }
     val initiallyRecent = remember { recentServersStore.load() }
     var screen by remember { mutableStateOf(AppScreen.HOME) }
     var recentServers by remember { mutableStateOf(initiallyRecent) }
@@ -234,59 +277,58 @@ internal fun IperfApp(
         }
     }
 
-    AppBackdrop {
-        when (screen) {
-            AppScreen.HOME -> HomeScreen(
-                host = host,
-                port = port,
-                duration = duration,
-                udpTarget = udpTarget,
-                selectedChoice = selectedChoice,
-                attemptedStart = attemptedStart,
-                validation = validation,
-                detectionStatus = detectionStatus,
-                detectionMessage = detectionMessage,
-                recentServers = recentServers,
-                onHostChange = { host = it; attemptedStart = false; invalidateDetection() },
-                onPortChange = { port = it.filter(Char::isDigit); attemptedStart = false; invalidateDetection() },
-                onDurationChange = { duration = it.filter(Char::isDigit); attemptedStart = false },
-                onUdpChange = { udpTarget = it.filter(Char::isDigit); attemptedStart = false },
-                onChoice = { selectedChoice = it },
-                onRecentSelect = { server ->
-                    host = server.hostname
-                    port = server.port.toString()
-                    attemptedStart = false
-                    detectionStatus = DetectionStatus.NOT_CHECKED
-                    detectionMessage = "Selected ${server.endpoint}; scan or start a test"
+    when (screen) {
+        AppScreen.HOME -> HomeScreen(
+            host = host,
+            port = port,
+            duration = duration,
+            udpTarget = udpTarget,
+            selectedChoice = selectedChoice,
+            attemptedStart = attemptedStart,
+            validation = validation,
+            detectionStatus = detectionStatus,
+            detectionMessage = detectionMessage,
+            recentServers = recentServers,
+            onHostChange = { host = it; attemptedStart = false; invalidateDetection() },
+            onPortChange = { port = it.filter(Char::isDigit); attemptedStart = false; invalidateDetection() },
+            onDurationChange = { duration = it.filter(Char::isDigit); attemptedStart = false },
+            onUdpChange = { udpTarget = it.filter(Char::isDigit); attemptedStart = false },
+            onChoice = { selectedChoice = it },
+            onRecentSelect = { server ->
+                host = server.hostname
+                port = server.port.toString()
+                attemptedStart = false
+                detectionStatus = DetectionStatus.NOT_CHECKED
+                detectionMessage = "Selected ${server.endpoint}; scan or start a test"
+            },
+            onRecentRemove = { server -> recentServers = recentServersStore.remove(server) },
+            onRecentClear = { recentServers = recentServersStore.clear() },
+            onDetect = ::runDiscovery,
+            onStart = { startTests() },
+            openRepository = openRepository,
+            onExit = onExit,
+        )
+        AppScreen.RUNNING -> RunningScreen(
+            state = runState,
+            onCancel = ::cancelRun,
+        )
+        AppScreen.RESULTS -> completedSession?.let { session ->
+            ResultsScreen(
+                session = session,
+                engine = engine,
+                onBack = {
+                    runState = null
+                    completedSession = null
+                    screen = AppScreen.HOME
                 },
-                onRecentRemove = { server -> recentServers = recentServersStore.remove(server) },
-                onRecentClear = { recentServers = recentServersStore.clear() },
-                onDetect = ::runDiscovery,
-                onStart = { startTests() },
-                openRepository = openRepository,
+                onRetry = {
+                    screen = AppScreen.HOME
+                    completedSession = null
+                    startTests(selectedChoice)
+                },
+                copyText = copyText,
+                shareText = shareText,
             )
-            AppScreen.RUNNING -> RunningScreen(
-                state = runState,
-                onCancel = ::cancelRun,
-            )
-            AppScreen.RESULTS -> completedSession?.let { session ->
-                ResultsScreen(
-                    session = session,
-                    engine = engine,
-                    onBack = {
-                        runState = null
-                        completedSession = null
-                        screen = AppScreen.HOME
-                    },
-                    onRetry = {
-                        screen = AppScreen.HOME
-                        completedSession = null
-                        startTests(selectedChoice)
-                    },
-                    copyText = copyText,
-                    shareText = shareText,
-                )
-            }
         }
     }
 }

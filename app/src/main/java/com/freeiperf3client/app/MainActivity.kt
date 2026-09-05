@@ -62,6 +62,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         engine.cancel()
+        engine.stopServer()
         super.onDestroy()
     }
 }
