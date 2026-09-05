@@ -2,6 +2,40 @@
 
 This file records the important implementation decisions behind Free iperf3 Client. User-facing guidance lives in the project wiki.
 
+## 2026-08-31 — v0.3.6
+
+- Diagnosed a physical Android 12 TV failure where native iperf3 3.21 reported `unable to create a new stream: Permission denied` immediately after the control exchange.
+- Inspected the exact published v0.3.5 APK rather than relying on source configuration. Its merged manifest contains `INTERNET` and `ACCESS_NETWORK_STATE`, and its native process started and emitted valid JSON on the TV, ruling out a missing permission, missing ABI, extraction failure, or inability to execute the bundled engine.
+- Identified the v0.3.5 native `-B <local-address>` addition as the regression boundary. Removed native source binding entirely so Android's normal routing owns every iperf3 data socket. Java LAN-discovery probes remain bound to the selected Android `Network` because that separate mechanism is required when multiple networks are active.
+- Added a Java network preflight before discovery and every test sequence. It selects a usable Ethernet/Wi-Fi IPv4 network, records transport/address/prefix/gateway, and verifies TCP and UDP socket creation through that Android network.
+- Added a dedicated `Network access` failure stage. A socket failure now stops before server validation and clearly states that the server has not been tested.
+- Kept network details in full local diagnostics while redacting local addresses and gateways in the privacy-safe report.
+
+## Test evidence for v0.3.6
+
+- The same locally built APK completed a real TCP download on a phone emulator using Wi-Fi and a Google TV emulator using Ethernet.
+- The displayed phone command and live TV command contained no `-B` argument.
+- With the phone emulator's Wi-Fi and mobile data disabled, the sequence stopped at the distinct network-access stage and explicitly stated that the server had not been tested.
+- The TV emulator first encountered a busy control socket when both emulators competed for the single-client server; retrying it alone completed successfully. This is retained here to avoid misclassifying a server-capacity condition as a platform networking regression.
+- The physical Android 12 TV still requires owner verification with the published v0.3.6 APK; emulator success does not substitute for that final hardware acceptance test.
+- After publication, the exact GitHub release APK was downloaded, signature/package-inspected, freshly installed on both emulators, and completed sequential phone/Wi-Fi and TV/Ethernet TCP downloads with no `-B` argument.
+- Private endpoints, device identity, rates, screenshots, raw reports, and emulator dumps are intentionally omitted.
+
+## 2026-08-29 — v0.3.5
+
+- Bound discovery sockets to the selected Wi-Fi/Ethernet `Network.socketFactory`, preventing simultaneous mobile data or VPN routing from diverting local subnet probes.
+- Removed the unbound-socket fallback so a failed network bind cannot silently reintroduce the original discovery fault.
+- Added subnet-aware native binding: a numeric same-subnet destination receives iperf3 `-B <local-address>`, while hostnames and off-subnet destinations remain under Android's normal route selection.
+- Added unit coverage for same-subnet, off-subnet, routed private, and hostname binding decisions.
+
+## Test evidence for v0.3.5
+
+- A clean `testDebugUnitTest lintDebug assembleDebug` passed with eight unit tests and no lint failure.
+- On a fresh phone emulator with validated Wi-Fi and mobile networks connected simultaneously, a blank-address scan found and selected an iperf3 endpoint on the Wi-Fi subnet.
+- The discovered same-subnet endpoint displayed the expected bound command and completed a real TCP download test.
+- A manually entered off-subnet endpoint displayed no `-B` argument and completed through Android's normal route.
+- Private endpoints, measured rates, commands, screenshots, emulator dumps, and raw output are intentionally omitted.
+
 ## 2026-08-27 — v0.3.4
 
 - Split the Compose interface into focused theme, component, chart, home, running, result, and orchestration files while leaving the native iperf3 execution model intact.

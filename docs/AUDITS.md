@@ -1,5 +1,63 @@
 # Audit record
 
+## v0.3.6 — 2026-08-31
+
+### Functional sanity check
+
+- A clean `testDebugUnitTest lintDebug assembleDebug` passed with ten unit tests and no lint failure.
+- The exact published v0.3.5 APK merged manifest was inspected: it contains `INTERNET`, `ACCESS_NETWORK_STATE`, and only Android's app-scoped non-exported dynamic-receiver permission. Four native iperf3 ABIs and one activity are packaged.
+- The same locally built v0.3.6 APK completed a real TCP download on a phone emulator using Wi-Fi and a Google TV emulator using Ethernet. The displayed native command contains no source-address `-B` argument.
+- The network preflight executed before server validation and captured the selected transport, local IPv4 prefix, and gateway. With Wi-Fi and mobile data deliberately disabled, the app stopped at `Network access failed`, stated that the server had not been tested, and did not start native iperf3.
+- Physical Android 12 TV confirmation remains an owner acceptance step after the published APK is installed; emulator testing cannot claim that hardware result in advance.
+
+Private endpoints, device identity, measured throughput, commands, raw reports, emulator dumps, and supplied photographs are intentionally omitted.
+
+### Security audit
+
+- The v0.3.5 and v0.3.6 packaged manifests both declare `INTERNET` and `ACCESS_NETWORK_STATE`. v0.3.6 retains `allowBackup=false`, native-library extraction, one activity, four supported native ABIs, and no app service/provider/receiver.
+- Native iperf3 source-address binding was removed. Java discovery still uses Android's selected `Network`, while native control/data sockets use Android's normal routing on every form factor.
+- Network preflight verifies TCP and UDP socket creation before server contact. Inputs remain validated and are passed as individual `ProcessBuilder` arguments without a shell; cancellation and watchdog handling remain in place.
+- No ad, analytics, telemetry, account, WebView, dynamic-code, automatic-upload, file/storage, camera, location, microphone, notification, or background-service behavior was added.
+- OSV Scanner 2.5.1 resolved and queried all 85 packaged debug-runtime Maven coordinates against the official OSV data on 2026-08-31: zero findings. A separate broad all-configuration pass found advisories only in non-packaged build tooling; those components are absent from the APK and have no runtime path in the app.
+- All four bundled iperf3 3.21 SHA-256 hashes match `THIRD_PARTY_NOTICES.md`.
+- Final local APK SHA-256 before CI release: `11458F743D2889993A521F2334D25691E22C88042EE8F05EA8EEE047E7004BFD` (GitHub Actions independently rebuilds and signs the release asset).
+- The exact public `free-iperf3-client-v0.3.6.apk` release asset was downloaded after publication. It reports version `0.3.6`/code `7`, passes APK Signature Scheme v2 verification, packages both required network permissions and all four native ABIs, and has SHA-256 `216C9E108F5319FF86D990798D1CDB4721D56702CE8F645B5A28231DF542E5F3`.
+- That same downloaded public APK was freshly installed on both emulators. A real phone/Wi-Fi TCP download and a sequential TV/Ethernet TCP download both completed successfully, and both live commands omitted `-B`.
+
+### Personal-information audit
+
+- Tracked text, filenames, diff, resources, workflow inputs, image inventory, and release inputs were checked for private endpoints, local paths, clipboard filenames, device identity, personal details, credentials, tokens, photographs, screenshots, emulator dumps, commands, rates, and diagnostics.
+- The supplied TV photographs and all temporary UI dumps remain local and are excluded from source and release assets. Runtime test endpoints and device details are not recorded in the repository.
+- Documentation uses only standards-reserved examples; the existing public GitHub repository identity is the only personal-style identifier.
+
+## v0.3.5 — 2026-08-29
+
+### Functional sanity check
+
+- A clean `testDebugUnitTest lintDebug assembleDebug` passed with eight unit tests and no lint failure.
+- A fresh phone emulator kept validated Wi-Fi and mobile networks connected simultaneously. With the server field blank, discovery found and selected an iperf3 endpoint on the Wi-Fi subnet.
+- The discovered same-subnet endpoint showed the network-bound native command and completed a real TCP download test. A manually entered off-subnet endpoint showed no forced bind and also completed successfully.
+- Discovery and native routing behavior were reviewed together so the fix does not break hostname, Tailscale, VPN, or other routed manual tests.
+
+Private endpoints, measured throughput, commands, raw reports, emulator dumps, and screenshots are intentionally omitted.
+
+### Security audit
+
+- Discovery sockets are created by Android's selected Wi-Fi/Ethernet network socket factory. A failed bind now fails that candidate instead of falling back to an unbound socket.
+- Native `-B` is limited to validated numeric addresses inside the selected LAN subnet; hostnames and off-subnet addresses remain on Android's normal routing path.
+- The packaged manifest declares only `INTERNET`, prompt-free `ACCESS_NETWORK_STATE`, and Android's app-scoped non-exported dynamic-receiver permission. Backup and debugger attachment remain disabled.
+- No ad, analytics, telemetry, account, WebView, dynamic-code, automatic-upload, file/storage, camera, location, microphone, notification, or background-service behavior was added.
+- Inputs remain validated and passed as individual `ProcessBuilder` arguments without a shell; real-iperf preflight, cancellation, and watchdog handling remain in place.
+- OSV Scanner 2.5.1 resolved and queried all 85 Maven runtime coordinates against the official OSV data on 2026-08-29: zero findings.
+- All four bundled iperf3 3.21 SHA-256 hashes match `THIRD_PARTY_NOTICES.md`.
+- Final local APK SHA-256 before CI release: `47011CB9A6794F8C16BD4B34A758FDE48156A065D002A1602C10402215566CEE` (GitHub Actions independently rebuilds and signs the release asset).
+
+### Personal-information audit
+
+- Tracked text, filenames, diff, resources, workflow inputs, image inventory, and generated APK inputs were checked for private endpoints, local paths, clipboard filenames, personal details, credentials, tokens, screenshots, and diagnostics.
+- Test-only endpoint data, UI dumps, relay code, commands, rates, and screenshots are excluded from the repository and release.
+- Documentation uses only standards-reserved example addresses; the existing public GitHub repository identity is the only personal-style identifier.
+
 ## v0.3.4 — 2026-08-27
 
 ### Functional sanity check

@@ -24,6 +24,7 @@ internal enum class DetectionStatus { NOT_CHECKED, CHECKING, DETECTED, FAILED }
 internal data class SessionFailure(
     val mode: TestMode,
     val error: Throwable,
+    val stageTitle: String = mode.title,
 )
 
 internal data class RunState(
@@ -32,8 +33,11 @@ internal data class RunState(
     val modes: List<TestMode>,
     val currentMode: TestMode,
     val currentIndex: Int,
+    val totalStages: Int,
     val stage: String,
     val progress: Float,
+    val networkPreflight: Boolean = false,
+    val networkInfo: NetworkInfo? = null,
     val live: LiveUpdate = LiveUpdate(),
     val samples: List<IntervalSample> = emptyList(),
     val command: String = "",
@@ -44,6 +48,7 @@ internal data class CompletedSession(
     val title: String,
     val config: TestConfig,
     val results: List<TestResult>,
+    val networkInfo: NetworkInfo? = null,
     val failure: SessionFailure? = null,
 )
 
@@ -149,6 +154,11 @@ private fun ClientFlow(
                 val found = serverDiscovery.discover(
                     port = discoveryPort,
                     extraCandidates = recentServers.map(RecentServer::hostname),
+                    onNetworkReady = { network ->
+                        activity.runOnUiThread {
+                            detectionMessage = "Network ready: ${network.summary}; scanning port $discoveryPort"
+                        }
+                    },
                 ) { progress ->
                     activity.runOnUiThread {
                         detectionMessage = if (progress.verifying) {
@@ -183,37 +193,56 @@ private fun ClientFlow(
     fun startTests(choice: TestChoice = selectedChoice) {
         attemptedStart = true
         val config = validation.config ?: return
-        // Bind tests to the local Wi-Fi/Ethernet address so LAN traffic is not routed
-        // out over cellular or a VPN when several networks are active.
-        val bindAddress = serverDiscovery.activeNetwork()?.localAddress
         val modes = modesFor(choice)
         val title = choice.title
+        val totalStages = modes.size + 1
         val totalDuration = modes.sumOf { engine.durationFor(config, it) }.coerceAtLeast(1)
         var completedDuration = 0
         val completed = mutableListOf<TestResult>()
         detectionStatus = DetectionStatus.CHECKING
         completedSession = null
         screen = AppScreen.RUNNING
+        runState = RunState(
+            title = title,
+            config = config,
+            modes = modes,
+            currentMode = TestMode.DETECT,
+            currentIndex = 0,
+            totalStages = totalStages,
+            stage = "Checking Android network access",
+            progress = 0f,
+            networkPreflight = true,
+        )
         activeJob = scope.launch {
             var activeMode = modes.first()
+            var activeStageTitle = "Network access"
+            var networkInfo: NetworkInfo? = null
             try {
+                networkInfo = serverDiscovery.preflightNetwork()
+                runState = runState?.copy(
+                    stage = "Network ready: ${networkInfo.summary}",
+                    networkInfo = networkInfo,
+                )
                 modes.forEachIndexed { index, mode ->
                     activeMode = mode
+                    activeStageTitle = mode.title
                     val modeDuration = engine.durationFor(config, mode)
                     runState = RunState(
                         title = title,
                         config = config,
                         modes = modes,
                         currentMode = mode,
-                        currentIndex = index,
+                        currentIndex = index + 1,
+                        totalStages = totalStages,
                         stage = if (mode == TestMode.DETECT) "Checking the iperf3 server" else "Opening the iperf3 connection",
                         progress = completedDuration.toFloat() / totalDuration,
-                        command = engine.displayCommand(config, mode, bindAddress),
+                        networkInfo = networkInfo,
+                        command = engine.displayCommand(config, mode),
                         completed = completed.toList(),
                     )
                     val currentSamples = mutableListOf<IntervalSample>()
                     val result = withContext(Dispatchers.IO) {
-                        engine.execute(config, mode, bindAddress) { update ->
+                        engine.execute(config, mode) { update ->
                             activity.runOnUiThread {
                                 update.sample?.let(currentSamples::add)
                                 val elapsed = update.elapsedSeconds.coerceIn(0.0, modeDuration.toDouble())
@@ -244,7 +273,12 @@ private fun ClientFlow(
                         completed = completed.toList(),
                     )
                 }
-                completedSession = CompletedSession(title, config, completed.toList())
+                completedSession = CompletedSession(
+                    title = title,
+                    config = config,
+                    results = completed.toList(),
+                    networkInfo = networkInfo,
+                )
                 screen = AppScreen.RESULTS
             } catch (error: Throwable) {
                 if (error is CancellationException) return@launch
@@ -256,7 +290,8 @@ private fun ClientFlow(
                     title = title,
                     config = config,
                     results = completed.toList(),
-                    failure = SessionFailure(activeMode, error),
+                    networkInfo = (error as? NetworkAccessFailure)?.networkInfo ?: networkInfo,
+                    failure = SessionFailure(activeMode, error, activeStageTitle),
                 )
                 screen = AppScreen.RESULTS
             } finally {

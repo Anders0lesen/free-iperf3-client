@@ -212,7 +212,8 @@ internal fun buildDiagnosticReport(
     context: Context,
     title: String,
     config: TestConfig,
-    mode: TestMode,
+    failedStage: String,
+    networkInfo: NetworkInfo?,
     completed: List<TestResult>,
     error: Throwable,
     safe: Boolean,
@@ -226,13 +227,20 @@ internal fun buildDiagnosticReport(
         appendLine("Android: ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
         appendLine("Device: ${if (safe) "<redacted-device>" else "${Build.MANUFACTURER} ${Build.MODEL}"}")
         appendLine("ABIs: ${Build.SUPPORTED_ABIS.joinToString()}")
+        appendLine("Network transport: ${networkInfo?.transport ?: "Unavailable"}")
+        appendLine("Local address: ${if (safe && networkInfo != null) "<redacted-local-address>" else networkInfo?.localAddress ?: "Unavailable"}")
+        appendLine("Prefix length: ${networkInfo?.prefixLength ?: "Unavailable"}")
+        appendLine("Gateway: ${if (safe && networkInfo?.gateway != null) "<redacted-gateway>" else networkInfo?.gateway ?: "Unavailable"}")
         appendLine("Sequence: $title")
-        appendLine("Failed stage: ${mode.title}")
+        appendLine("Failed stage: $failedStage")
         appendLine("Server: ${if (safe) "<redacted-server>" else "${config.hostname}:${config.port}"}")
         appendLine("Duration: ${config.durationSeconds} seconds")
         appendLine("UDP target: ${config.udpTargetMbps} Mbit/s")
         appendLine("Error type: ${error.javaClass.name}")
         appendLine("Error: ${error.message ?: "(no message)"}")
+        if (error is NetworkAccessFailure) {
+            appendLine("Network technical details: ${error.technicalDetails}")
+        }
         if (completed.isNotEmpty()) {
             appendLine()
             appendLine("Completed results:")
@@ -263,9 +271,11 @@ internal fun commandAndOutput(
     append(result.rawOutput.trim())
 }
 
-internal fun friendlyError(error: Throwable): String =
-    error.message?.lineSequence()?.firstOrNull { it.isNotBlank() }
+internal fun friendlyError(error: Throwable): String = when (error) {
+    is NetworkAccessFailure -> "Network access failed: ${error.message}. Check the app's network permissions or device configuration."
+    else -> error.message?.lineSequence()?.firstOrNull { it.isNotBlank() }
         ?: error.javaClass.simpleName
+}
 
 internal fun redactSensitiveText(command: String, config: TestConfig): String =
     command.replace(config.hostname, "<redacted-server>")

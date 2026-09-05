@@ -1,5 +1,24 @@
 # Development log
 
+## 2026-08-31 — v0.3.6
+
+- Fixed a v0.3.5 Android TV regression by removing native iperf3 source-address binding and returning all native sockets to Android's normal routing.
+- Kept Java LAN discovery probes attached to the selected Wi-Fi/Ethernet `Network`, preserving the separate multi-network discovery fix.
+- Added a network preflight that reports transport, local address, prefix, and gateway and verifies TCP/UDP socket creation before discovery or server validation.
+- Added a distinct **Network access failed** stage so local socket/permission problems are never presented as evidence against the server.
+- Rechecked the exact v0.3.5 merged manifest, native execution/ABI evidence, phone Wi-Fi and TV Ethernet execution, build/lint/tests, dependency security, native hashes, and repository personal-information exposure.
+
+No private endpoint, device identity, rate, command payload, diagnostic output, emulator dump, or test photo is published.
+
+## 2026-08-29 — v0.3.5
+
+- Fixed LAN discovery on devices that keep Wi-Fi or Ethernet connected alongside mobile data, a VPN, or another network.
+- Bound each Java discovery probe to the selected local network and bound native iperf3 only for numeric addresses inside that network's subnet.
+- Preserved Android's normal routing for hostnames and routed endpoints such as Tailscale or VPN addresses.
+- Repeated a clean build, unit tests, lint, real blank-address discovery with simultaneous Wi-Fi and mobile connectivity, dependency security checks, and repository personal-information checks before release.
+
+No private endpoint, throughput figure, command payload, diagnostic output, emulator dump, or test screenshot is published.
+
 ## 2026-08-27 — v0.3.4
 
 - Split the Compose UI into reusable theme, component, chart, home, running, result, and orchestration files.
